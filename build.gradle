@@ -1,11 +1,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-import org.ajoberstar.grgit.*
 
 buildscript {
     repositories {
         mavenCentral()
         jcenter()
-
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
@@ -16,31 +14,30 @@ buildscript {
 }
 
 plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.1.0.RELEASE'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '1.6.5'
     id 'com.github.psxpaul.execfork' version '0.1.8'
+    id 'com.jfrog.artifactory' version '4.8.1'
+    id 'org.ajoberstar.grgit' version '3.0.0'
 }
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'application'
-apply plugin: 'maven-publish'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'jacoco'
-apply plugin: "findbugs"
-apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'org.ajoberstar.grgit'
 
 mainClassName = 'uk.gov.ons.fwmt.job_service_v2.ApplicationConfig'
 group = 'uk.gov.ons.fwmt'
-description = "fwmt-job-service"
+description = "fwmt-census-job-service"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
-version = '0.0.45-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 
 bootJar {
     group = 'uk.gov.ons.fwmt'
-    baseName = 'fwmt-job-service-v2'
+    baseName = 'fwmt-census-job-service'
     manifest {
     }
     version = version
@@ -89,7 +86,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'fwmt-job-service-v2'
+            artifactId = 'fwmt-census-job-service'
             version = version
 
             from components.java
@@ -139,43 +136,60 @@ task genJaxb {
 }
 
 dependencies {
+    jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    jaxb group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
+    jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+    jaxb group: 'com.sun.xml.bind', name: 'jaxb-xjc', version: '2.3.1'
+    jaxb group: 'javax.activation', name: 'activation', version: '1.1.1'
+
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+    compile group: 'com.sun.xml.bind', name: 'jaxb-xjc', version: '2.3.1'
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+
+    compile(files(genJaxb.classesDir).builtBy(genJaxb))
+
+    compile group: 'uk.gov.ons.fwmt', name: 'fwmt-gateway-common', version: '0.0.16-SNAPSHOT'
+
+    compile group: 'org.springframework', name: 'spring-aop', version: '5.0.8.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '1.5.13.RELEASE'
-    compile group: 'uk.gov.ons.fwmt', name: 'fwmt-gateway-common', version: '0.0.15-RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.13.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web-services', version: '1.5.13.RELEASE'
-    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
-    compile group: 'org.springframework', name: 'spring-aop', version: '5.0.8.RELEASE'
-    compile 'org.aspectj:aspectjweaver:1.9.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.13.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '1.5.13.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '1.2.5.RELEASE'
     compile(group: 'org.springframework.cloud', name: 'spring-cloud-spring-service-connector', version: '1.2.5.RELEASE') {
         exclude(module: 'log4j')
     }
     compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '1.2.5.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.13.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '1.5.13.RELEASE'
+    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
+
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.1'
+
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3') {
         exclude(module: 'commons-logging')
     }
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '1.2.5.RELEASE'
-    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3') {
-        exclude(module: 'commons-logging')
-    }
+
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
-    compile group: 'org.json', name: 'json', version: '20180130'
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.8'
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.19'
-    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.1'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.1'
-    compile(files(genJaxb.classesDir).builtBy(genJaxb))
-    jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.19'
+    compile group: 'org.json', name: 'json', version: '20180130'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.5'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
 
     testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.9.RELEASE') {
         exclude(module: 'android-json')
     }
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
     testCompile group: 'io.cucumber', name: 'cucumber-java8', version: '3.0.2'
     testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '3.0.2'
     testCompile group: 'io.cucumber', name: 'cucumber-spring', version: '3.0.2'
@@ -183,12 +197,12 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-core', version: '1.7.0'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.0'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.7.1'
-    testCompile "junit:junit:4.12"
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 
     integrationTestCompile 'org.assertj:assertj-core:3.0.0'
 
-    integrationTestRuntime group: 'uk.gov.ons.fwmt', name: 'fwmt-service-mocks', version: '1.0.1-SNAPSHOT'
+    integrationTestRuntime group: 'uk.gov.ons.fwmt', name: 'fwmt-service-mocks', version: '3.0.0-SNAPSHOT'
 }
 
 task integrationTest(type: Test) {
@@ -252,17 +266,16 @@ test.finalizedBy(project.tasks.jacocoTestReport)
 
 check.dependsOn jacocoTestReport
 
-findbugs {
-    ignoreFailures = false
-    sourceSets = [sourceSets.main]
-    reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = "max"
-}
+//findbugs {
+//    ignoreFailures = false
+//    sourceSets = [sourceSets.main]
+//    reportsDir = file("$project.buildDir/reports/findbugs")
+//    effort = "max"
+//}
 
-
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
+//tasks.withType(FindBugs) {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}

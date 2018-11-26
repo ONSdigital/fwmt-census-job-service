@@ -3,7 +3,6 @@ package uk.gov.ons.fwmt.job_service_v2.utils;
 import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import org.junit.Test;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
@@ -21,6 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class TMJobConverterTest {
+  DatatypeFactory datatypeFactory;
+
+  public TMJobConverterTest() throws DatatypeConfigurationException {
+    datatypeFactory = DatatypeFactory.newInstance();
+  }
 
   @Test
   public void createHHJobTest() throws CTPException {
@@ -48,7 +52,7 @@ public class TMJobConverterTest {
 
     assertEquals("1234", request.getCreateJobRequest().getJob().getIdentity().getReference());
     assertEquals("188961", request.getCreateJobRequest().getJob().getContact().getName());
-    assertEquals(XMLGregorianCalendarImpl.parse("2018-08-16T23:59:59.000Z"),
+    assertEquals(datatypeFactory.newXMLGregorianCalendar("2018-08-16T23:59:59.000Z"),
         request.getCreateJobRequest().getJob().getDueDate());
 
     assertEquals("\\OPTIMISE\\INPUT", request.getSendMessageRequestInfo().getQueueName());
@@ -81,7 +85,7 @@ public class TMJobConverterTest {
 
     assertEquals("1234", request.getCreateJobRequest().getJob().getIdentity().getReference());
     assertEquals("188961", request.getCreateJobRequest().getJob().getContact().getName());
-    assertEquals(XMLGregorianCalendarImpl.parse("2018-08-16T23:59:59.000Z"),
+    assertEquals(datatypeFactory.newXMLGregorianCalendar("2018-08-16T23:59:59.000Z"),
         request.getCreateJobRequest().getJob().getDueDate());
     assertEquals("Census - 188961", request.getCreateJobRequest().getJob().getDescription());
 
@@ -114,7 +118,7 @@ public class TMJobConverterTest {
 
     assertEquals("1234", request.getCreateJobRequest().getJob().getIdentity().getReference());
     assertEquals("188961", request.getCreateJobRequest().getJob().getContact().getName());
-    assertEquals(XMLGregorianCalendarImpl.parse("2018-08-16T23:59:59.000Z"),
+    assertEquals(datatypeFactory.newXMLGregorianCalendar("2018-08-16T23:59:59.000Z"),
         request.getCreateJobRequest().getJob().getDueDate());
     assertEquals("OHS", request.getCreateJobRequest().getJob().getDescription());
     assertEquals("OHS", request.getCreateJobRequest().getJob().getWorkType());
