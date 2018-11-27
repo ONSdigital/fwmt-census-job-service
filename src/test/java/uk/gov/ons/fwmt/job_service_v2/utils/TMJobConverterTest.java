@@ -3,7 +3,7 @@ package uk.gov.ons.fwmt.job_service_v2.utils;
 import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;

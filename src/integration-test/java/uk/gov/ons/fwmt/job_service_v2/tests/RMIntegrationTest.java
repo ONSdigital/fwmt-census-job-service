@@ -3,10 +3,10 @@ package uk.gov.ons.fwmt.job_service_v2.tests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
@@ -29,9 +29,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Component
 @Slf4j
@@ -57,35 +58,40 @@ public class RMIntegrationTest {
 
   @PostConstruct
   public void postConstruct() {
-    mockUrl = "http://localhost:" + Integer.toString(mockPort);
+    mockUrl = "http://localhost:" + mockPort;
   }
 
-  @Before
+  @BeforeAll
   public void testSetup() {
-    log.debug("Mock port: " + Integer.toString(mockPort));
+    log.debug("Mock port: " + mockPort);
     log.debug("Mock url: " + mockUrl);
     restTemplate.getForObject(mockUrl + "/logger/reset", Void.class);
   }
 
   @Test
-  @Ignore(" Broken test ")
+  @Disabled(" Broken test ")
   // TODO rewrite based on changes to queues coming from RM
   public void receiveRMCreateMessage_checkTMReceivedMessage() throws InterruptedException, JsonProcessingException {
     sendCreateMessage();
     Thread.sleep(7000);
     MockMessage[] messages = restTemplate.getForObject(mockUrl + "/logger/allMessages", MockMessage[].class);
+    assertNotNull(messages);
     assertEquals(1, messages.length);
   }
 
   @Test
-  @Ignore(" Broken test ")
+  @Disabled(" Broken test ")
   // TODO rewrite based on changes to queues going back to RM
   public void receiveRMCancelMessage_checkTMReceivedMessage() throws InterruptedException, JsonProcessingException {
-    int initialCount = restTemplate.getForObject(mockUrl + "/logger/allMessages", MockMessage[].class).length;
+    MockMessage[] initialMessages = restTemplate.getForObject(mockUrl + "/logger/allMessages", MockMessage[].class);
+    assertNotNull(initialMessages);
+    int initialCount = initialMessages.length;
     sendCancelMessage();
     Thread.sleep(7000);
-    int msgCount = restTemplate.getForObject(mockUrl + "/logger/allMessages", MockMessage[].class).length;
-    assertEquals(1, (msgCount-initialCount));
+    MockMessage[] finalMessages = restTemplate.getForObject(mockUrl + "/logger/allMessages", MockMessage[].class);
+    assertNotNull(finalMessages);
+    int finalCount = finalMessages.length;
+    assertEquals(1, (finalCount - initialCount));
   }
 
   private void sendCreateMessage() throws JsonProcessingException {

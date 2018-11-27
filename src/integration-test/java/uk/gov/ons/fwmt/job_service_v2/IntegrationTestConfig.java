@@ -63,5 +63,3 @@ public class IntegrationTestConfig {
     return  mapper;
   }
 }
-
-

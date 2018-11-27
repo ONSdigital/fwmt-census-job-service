@@ -9,9 +9,7 @@ import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.Sen
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendMessageRequest;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,20 +32,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class TMJobServiceImplTest {
+  // currently, this ExpectedException is not used, and thus throws linting errors
+  //  @Rule
+  //  public ExpectedException expectedException = ExpectedException.none();
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
   @InjectMocks
   private TMJobServiceImpl tmServiceImpl;
+
   @Mock
   private ObjectFactory objectFactory;
+
   @Mock
   private WebServiceTemplate webServiceTemplate;
+
   @Mock
   private JAXBElement<Object> jaxbElement;
-  @Mock
-  private Map<String, TMConverter> tmConvertors;
 
+  @Mock
+  private Map<String, TMConverter> tmConverters;
 
   @Before
   public void setUp() throws Exception {
@@ -60,13 +62,13 @@ public class TMJobServiceImplTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void sOAPLookupReceivesAMessageThatDoesNotMatchTM() {
+  public void soapLookupReceivesAMessageThatDoesNotMatchTM() {
     //When
     tmServiceImpl.lookupSOAPAction(Object.class);
   }
 
   @Test
-  public void sOAPLookupReceivesARequestMessage() {
+  public void soapLookupReceivesARequestMessage() {
     //Given
     String expectedResult = "expectedNamespaceQuery";
 
@@ -78,7 +80,7 @@ public class TMJobServiceImplTest {
   }
 
   @Test
-  public void sOAPLookupReceivesNonMappedRequestMessage() {
+  public void soapLookupReceivesNonMappedRequestMessage() {
     //Given
     String expectedResult = "expectedNamespaceSendAddJobTasksRequestMessage";
 
@@ -195,7 +197,7 @@ public class TMJobServiceImplTest {
     fwmtCreateJobRequest.setAddress(address);
     fwmtCreateJobRequest.setActionType("Create");
 
-    when(tmConvertors.get(any())).thenReturn(new HouseholdConverter());
+    when(tmConverters.get(any())).thenReturn(new HouseholdConverter());
     when(webServiceTemplate.marshalSendAndReceive(any(), any(), any())).thenReturn(jaxbElement);
     when(jaxbElement.getValue()).thenReturn(new Object());
 
