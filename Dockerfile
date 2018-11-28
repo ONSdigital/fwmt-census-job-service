@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jdk-slim
 MAINTAINER Kieran Wardle <kieran.wardle@ons.gov.uk>
 ARG jar
 VOLUME /tmp
