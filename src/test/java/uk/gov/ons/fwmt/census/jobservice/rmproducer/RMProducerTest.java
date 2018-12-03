@@ -1,0 +1,48 @@
+package uk.gov.ons.fwmt.census.jobservice.rmproducer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
+import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
+import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+import uk.gov.ons.fwmt.fwmtohsjobstatusnotification.FwmtOHSJobStatusNotification;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class RMProducerTest {
+
+  @InjectMocks
+  RMProducerImpl rmProducer;
+
+  @Mock
+  RabbitTemplate template;
+
+  @Mock
+  ObjectMapper objectMapper;
+
+  @Test
+  public void send() throws JsonProcessingException, CTPException {
+    //Given
+    FwmtOHSJobStatusNotification dummyTMResponse = new FwmtOHSJobStatusNotification();
+    dummyTMResponse.setJobIdentity("test");
+    when(objectMapper.writeValueAsString(eq(dummyTMResponse))).thenReturn("dummyResponseStr");
+
+    //When
+    rmProducer.send(dummyTMResponse);
+
+    //Then
+    verify(objectMapper).writeValueAsString(eq(dummyTMResponse));
+    verify(template).convertAndSend(QueueNames.JOBSVC_TO_ADAPTER_QUEUE,"dummyResponseStr");
+
+  }
+}

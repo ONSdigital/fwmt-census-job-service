@@ -10,8 +10,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:latest.release'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2'
         classpath 'org.ajoberstar:gradle-git:1.4.2'
 
     }
@@ -19,10 +19,12 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'idea'
     id 'application'
+    id 'idea'
+    id 'maven'
     id 'maven-publish'
     id 'org.springframework.boot' version '2.1.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
     id 'jacoco'
     id 'com.github.spotbugs' version '1.6.5'
     id 'com.github.psxpaul.execfork' version '0.1.8'
@@ -30,21 +32,16 @@ plugins {
     id 'org.ajoberstar.grgit' version '3.0.0'
 }
 
-mainClassName = 'uk.gov.ons.fwmt.job_service_v2.ApplicationConfig'
-
 description = 'fwmt-census-job-service'
-group = 'uk.gov.ons.fwmt'
+
 version = '3.0.0-SNAPSHOT'
+
+mainClassName = 'uk.gov.ons.fwmt.census.jobservice.ApplicationConfig'
+
+group = 'uk.gov.ons.fwmt'
+
 sourceCompatibility = 11
 targetCompatibility = 11
-
-bootJar {
-    group = 'uk.gov.ons.fwmt'
-    baseName = 'fwmt-census-job-service'
-    manifest {
-    }
-    version = version
-}
 
 repositories {
     mavenLocal()
@@ -57,46 +54,10 @@ repositories {
     maven { url 'http://repo.maven.apache.org/maven2' }
 }
 
-sourceSets {
-    integrationTest {
-        java.srcDir file('src/integration-test/java')
-        resources.srcDir file('src/integration-test/resources')
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-    }
-}
-
 configurations {
     jaxb
     integrationTestImplementation.extendsFrom implementation
     integrationTestRuntimeOnly.extendsFrom runtimeOnly
-}
-
-artifactory {
-    contextUrl = System.getenv('ARTIFACTORY_URL')
-    publish {
-        repository {
-            repoKey = 'libs-snapshot-local'
-            username = System.getenv('ARTIFACTORY_USERNAME')
-            password = System.getenv('ARTIFACTORY_PASSWORD')
-        }
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = group
-            artifactId = 'fwmt-census-job-service'
-            version = version
-
-            from components.java
-        }
-    }
-}
-
-artifactoryPublish {
-    publications('maven')
 }
 
 task genJaxb {
@@ -136,85 +97,140 @@ task genJaxb {
 }
 
 dependencies {
-    jaxb group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    jaxb group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
-    jaxb group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
-    jaxb group: 'com.sun.xml.bind', name: 'jaxb-xjc', version: '2.3.1'
-    jaxb group: 'javax.activation', name: 'activation', version: '1.1.1'
+    compile("uk.gov.ons.fwmt:fwmt-gateway-common:0.0.15-RELEASE")
 
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0.1'
-    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
-
+	jaxb("javax.xml.bind:jaxb-api:2.3.0")
+	jaxb("com.sun.xml.bind:jaxb-core:2.3.0.1")
+	jaxb("com.sun.xml.bind:jaxb-impl:2.3.1")
+	jaxb("com.sun.xml.bind:jaxb-xjc:2.3.1")
+	jaxb("javax.activation:activation:1.1.1")
+	compile("javax.xml.bind:jaxb-api:2.3.0")
     compile(files((String) genJaxb.classesDir).builtBy(genJaxb))
 
-    compile group: 'uk.gov.ons.fwmt', name: 'fwmt-gateway-common', version: '3.0.0-SNAPSHOT'
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-amqp")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework:spring-aop")
+    compile("org.springframework.retry:spring-retry") 
 
-    compile group: 'org.springframework', name: 'spring-aop', version: '5.1.2.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web-services', version: springBootVersion
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: springBootVersion
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: springBootVersion
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '2.0.4.RELEASE'
-    compile(group: 'org.springframework.cloud', name: 'spring-cloud-spring-service-connector', version: '2.0.4.RELEASE') {
-        exclude(module: 'log4j')
+    compile("org.springframework:spring-aop")
+    compile("org.springframework.boot:spring-boot-starter-web-services")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.cloud:spring-cloud-cloudfoundry-connector")
+    compile("org.springframework.cloud:spring-cloud-spring-service-connector") {
+        exclude(module: "log4j")
     }
-    compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
+    compile("org.springframework.retry:spring-retry")
+
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     // this dependency is required to fix spring-boot-starter-web-services (and saaj-impl), which depend on an old non-existent version
-    compile group: 'org.jvnet.mimepull', name: 'mimepull', version: '1.9.10'
+    compile("org.jvnet.mimepull:mimepull")
 
-    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.2'
+    compile("org.aspectj:aspectjweaver")
 
-    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6') {
+    compile("org.apache.commons:commons-csv:1.6")
+    compile("org.apache.commons:commons-lang3")
+    compile("org.apache.httpcomponents:httpclient") {
         exclude(module: 'commons-logging')
     }
 
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+    compile("org.jsoup:jsoup:1.11.3")
 
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    compile("io.springfox:springfox-swagger2:2.9.2")
+    compile("io.springfox:springfox-swagger-ui:2.9.2")
 
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.23'
-    compile group: 'org.json', name: 'json', version: '20180813'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
+    compile("org.yaml:snakeyaml")
+    compile("org.json:json:20180813")
 
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+    compile("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.3.2'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.2'
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion) {
-        exclude module: 'android-json'
-        exclude module: 'junit'
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testCompile("org.junit.jupiter:junit-jupiter-params:1.11.3")
+    testCompile("org.junit.jupiter:junit-jupiter-engine")
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude module: "android-json"
+        exclude module: "junit"
     }
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    testCompile("org.apache.commons:commons-lang3")
 
-    testCompile group: 'io.cucumber', name: 'cucumber-java8', version: '4.2.0'
-    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '4.2.0'
-    testCompile group: 'io.cucumber', name: 'cucumber-spring', version: '4.2.0'
+    testCompile("io.cucumber:cucumber-java8")
+    testCompile("io.cucumber:cucumber-junit")
+    testCompile("io.cucumber:cucumber-spring")
 
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
-    testCompile group: 'org.mockito', name: 'mockito-junit-jupiter', version: '2.23.4'
-    testCompile group: 'org.powermock', name: 'powermock-core', version: '1.7.4'
-    testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '1.7.4'
-    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
+    testCompile("org.mockito:mockito-core")
+    testCompile("org.mockito:mockito-junit-jupiter")
+    testCompile("org.powermock:powermock-core")
+    testCompile("org.powermock:powermock-api-mockito2")
+    testCompile("org.powermock:powermock-module-junit4")
 
+    testCompile("junit:junit")
+
+/*
     integrationTestCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
     integrationTestCompile group: 'org.assertj', name: 'assertj-core', version: '3.0.0'
     integrationTestCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion) {
-        exclude module: 'android-json'
-        exclude module: 'junit'
-    }
-    integrationTestRuntime group: 'uk.gov.ons.fwmt', name: 'fwmt-service-mocks', version: '3.0.0-SNAPSHOT'
+*/
 
-    integrationTestCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
-    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+ /*   integrationTestCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    integrationTestCompile("org.assertj:assertj-core:3.0.0")
+    integrationTestCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude module: "android-json"
+        exclude module: "junit"
+    }
+    integrationTestRuntime("uk.gov.ons.fwmt:fwmt-service-mocks")
+
+    integrationTestCompile("org.projectlombok:lombok")
+    integrationTestAnnotationProcessor("org.projectlombok:lombok")
+*/
+}
+
+bootJar {
+    group = 'uk.gov.ons.fwmt'
+    baseName = 'fwmt-census-job-service'
+    manifest {
+    }
+    version = version
+}
+
+sourceSets {
+    integrationTest {
+        java.srcDir file('src/integration-test/java')
+        resources.srcDir file('src/integration-test/resources')
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+
+artifactory {
+    contextUrl = System.getenv('ARTIFACTORY_URL')
+    publish {
+        repository {
+            repoKey = 'libs-snapshot-local'
+            username = System.getenv('ARTIFACTORY_USERNAME')
+            password = System.getenv('ARTIFACTORY_PASSWORD')
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'fwmt-census-job-service'
+            version = version
+
+            from components.java
+        }
+    }
+}
+
+artifactoryPublish {
+    publications('maven')
 }
 
 task integrationTest(type: Test) {
@@ -229,20 +245,20 @@ task integrationTest(type: Test) {
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
 
-task runMocks(type: com.github.psxpaul.task.JavaExecFork) {
-    String mockJarPath = configurations.integrationTestRuntime.find { it.name.startsWith('fwmt-service-mocks') }
-    classpath = sourceSets.main.runtimeClasspath
-    main = '-jar'
-    args = [mockJarPath]
-    jvmArgs = ['-Xmx500m']
-    workingDir = "$buildDir"
-    standardOutput = "$buildDir/fwmt-service-mocks.log"
-    errorOutput = "$buildDir/fwmt-service-mocks-errors.log"
-    stopAfter = integrationTest
-    waitForPort = 9099
-    waitForOutput = 'Started Application'
-}
-integrationTest.dependsOn runMocks
+// task runMocks(type: com.github.psxpaul.task.JavaExecFork) {
+//     String mockJarPath = configurations.integrationTestRuntime.find { it.name.startsWith('fwmt-service-mocks') }
+//     classpath = sourceSets.main.runtimeClasspath
+//     main = '-jar'
+//     args = [mockJarPath]
+//     jvmArgs = ['-Xmx500m']
+//     workingDir = "$buildDir"
+//     standardOutput = "$buildDir/fwmt-service-mocks.log"
+//     errorOutput = "$buildDir/fwmt-service-mocks-errors.log"
+//     stopAfter = integrationTest
+//     waitForPort = 9099
+//     waitForOutput = 'Started Application'
+// }
+// integrationTest.dependsOn runMocks
 
 processResources {
     filter ReplaceTokens, tokens: [
