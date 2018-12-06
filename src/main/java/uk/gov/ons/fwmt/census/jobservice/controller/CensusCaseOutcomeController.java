@@ -19,7 +19,6 @@ public class CensusCaseOutcomeController {
 
   @PostMapping(consumes = "application/json", produces = "application/json")
   public void CensusCaseOutcomeResponse(@RequestBody CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws CTPException {
-    log.info(censusCaseOutcomeDTO.toString());
     rmProducer.send(censusCaseOutcomeDTO);
   }
 
