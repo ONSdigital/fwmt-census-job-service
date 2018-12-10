@@ -6,5 +6,4 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
 public interface TMConverter {
   SendCreateJobRequestMessage convert(FWMTCreateJobRequest ingest) throws CTPException;
-
 }

@@ -2,8 +2,8 @@ package uk.gov.ons.fwmt.census.jobservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
+import uk.gov.ons.fwmt.census.jobservice.rest.client.impl.CometRestClientImpl;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 import uk.gov.ons.fwmt.census.jobservice.tm.client.TMClient;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;
@@ -19,8 +19,11 @@ public class JobServiceImpl implements JobService {
   @Autowired
   private RMProducerImpl rmProducer;
 
+  @Autowired
+  private CometRestClientImpl cometRestClient;
+
   @Override public void createJob(FWMTCreateJobRequest jobRequest) throws CTPException {
-    tmJobService.createJob(jobRequest);
+    cometRestClient.convertAndSendCreate(jobRequest);
   }
 
   @Override public void cancelJob(FWMTCancelJobRequest cancelRequest) {
