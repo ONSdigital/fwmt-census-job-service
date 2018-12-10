@@ -35,7 +35,7 @@ public class CensusCaseOutcomeControllerTest {
   }
 
   @Test
-  public void CensusCaseOutcomeResponseTest() throws Exception {
+  public void censusCaseOutcomeResponseTest() throws Exception {
     mockMvc.perform(post("/CensusCaseOutcome").contentType(MediaType.APPLICATION_JSON).content(CASE_OUTCOME_JSON)).andExpect(status().is2xxSuccessful());
   }
 
