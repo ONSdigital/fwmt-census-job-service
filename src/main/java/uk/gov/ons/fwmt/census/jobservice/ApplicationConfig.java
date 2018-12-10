@@ -1,10 +1,14 @@
 package uk.gov.ons.fwmt.census.jobservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Main entry point into the TM Gateway
@@ -18,8 +22,21 @@ import org.springframework.retry.annotation.EnableRetry;
 @EnableRetry
 public class ApplicationConfig {
 
+  @Value("${service.job.username}")
+  private String userName;
+  @Value("${service.job.password}")
+  private String password;
+
   public static void main(String[] args) {
     SpringApplication.run(ApplicationConfig.class, args);
     log.debug("Started application");
+  }
+
+  @Bean
+  public RestTemplate RestTemplate(RestTemplateBuilder restTemplateBuilder) {
+    return restTemplateBuilder
+        .basicAuthentication(userName, password)
+        .interceptors()
+        .build();
   }
 }
