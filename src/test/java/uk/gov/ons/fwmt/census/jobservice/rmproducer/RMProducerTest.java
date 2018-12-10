@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
@@ -33,16 +34,22 @@ public class RMProducerTest {
   @Test
   public void send() throws JsonProcessingException, CTPException {
     //Given
-    FwmtOHSJobStatusNotification dummyTMResponse = new FwmtOHSJobStatusNotification();
-    dummyTMResponse.setJobIdentity("test");
-    when(objectMapper.writeValueAsString(eq(dummyTMResponse))).thenReturn("dummyResponseStr");
+    CensusCaseOutcomeDTO censusCaseOutcomeDTO = new CensusCaseOutcomeDTO("1234567890","qwertyuiop","asdfghjkl","test","test");
+    final String responseJson = "{\n"
+        + "  \"caseId\": \"1234567890\",\n"
+        + "  \"caseReference\": \"qwertyuiop\",\n"
+        + "  \"outcome\": \"asdfghjkl\",\n"
+        + "  \"outcomeCategory\": \"test\",\n"
+        + "  \"outcomeNote\": \"test\"\n"
+        + "}";
+    when(objectMapper.writeValueAsString(eq(censusCaseOutcomeDTO))).thenReturn(responseJson);
 
     //When
-    rmProducer.send(dummyTMResponse);
+    rmProducer.send(censusCaseOutcomeDTO);
 
     //Then
-    verify(objectMapper).writeValueAsString(eq(dummyTMResponse));
-    verify(template).convertAndSend(QueueNames.JOBSVC_TO_ADAPTER_QUEUE,"dummyResponseStr");
+    verify(objectMapper).writeValueAsString(eq(censusCaseOutcomeDTO));
+    verify(template).convertAndSend(QueueNames.JOBSVC_TO_ADAPTER_QUEUE,responseJson);
 
   }
 }

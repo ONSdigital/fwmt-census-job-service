@@ -35,6 +35,9 @@ spring:
     host: localhost
     port: 5672
     virtualhost: /
+  security.user:
+    name: "user"
+    password: "password"
 
 logging:
   level:
@@ -50,10 +53,6 @@ logging:
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
     file:    "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
-
-security.user:
-  name: "user"
-  password: "password"
 
 totalmobile:
   username: "user"

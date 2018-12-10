@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.0.RELEASE'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2'
         classpath 'org.ajoberstar:gradle-git:1.4.2'
 
@@ -44,20 +44,21 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 repositories {
+    if (!project.hasProperty('omitSDCArtifactory')) {
+        maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
+        maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
+    }
     mavenLocal()
     mavenCentral()
-    if (!project.hasProperty('omitSDCArtifactory')) {
-        maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot-local' }
-        maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release-local' }
-    }
     maven { url 'https://oss.sonatype.org/content/repositories/libs-snapshot' }
     maven { url 'http://repo.maven.apache.org/maven2' }
 }
 
 configurations {
     jaxb
-    integrationTestImplementation.extendsFrom implementation
-    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
 }
 
 task genJaxb {
@@ -149,7 +150,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testCompile("org.junit.jupiter:junit-jupiter-params:1.11.3")
+    testCompile("org.junit.jupiter:junit-jupiter-params")
     testCompile("org.junit.jupiter:junit-jupiter-engine")
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude module: "android-json"
@@ -157,35 +158,16 @@ dependencies {
     }
     testCompile("org.apache.commons:commons-lang3")
 
-    testCompile("io.cucumber:cucumber-java8")
-    testCompile("io.cucumber:cucumber-junit")
-    testCompile("io.cucumber:cucumber-spring")
-
     testCompile("org.mockito:mockito-core")
     testCompile("org.mockito:mockito-junit-jupiter")
-    testCompile("org.powermock:powermock-core")
-    testCompile("org.powermock:powermock-api-mockito2")
-    testCompile("org.powermock:powermock-module-junit4")
+    testCompile("org.powermock:powermock-core:1.7.4")
+    testCompile("org.powermock:powermock-api-mockito2:1.7.4")
+    testCompile("org.powermock:powermock-module-junit4:1.7.4")
 
     testCompile("junit:junit")
 
-/*
-    integrationTestCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.2'
-    integrationTestCompile group: 'org.assertj', name: 'assertj-core', version: '3.0.0'
-    integrationTestCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion) {
-*/
-
- /*   integrationTestCompile("org.junit.jupiter:junit-jupiter-api:5.3.2")
-    integrationTestCompile("org.assertj:assertj-core:3.0.0")
-    integrationTestCompile("org.springframework.boot:spring-boot-starter-test") {
-        exclude module: "android-json"
-        exclude module: "junit"
-    }
-    integrationTestRuntime("uk.gov.ons.fwmt:fwmt-service-mocks")
-
-    integrationTestCompile("org.projectlombok:lombok")
-    integrationTestAnnotationProcessor("org.projectlombok:lombok")
-*/
+    integrationTestRuntime("uk.gov.ons.fwmt:fwmt-service-mocks:1.0.1-SNAPSHOT")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 bootJar {
@@ -311,3 +293,4 @@ tasks.withType(SpotBugsTask) {
         html.enabled = true
     }
 }
+
