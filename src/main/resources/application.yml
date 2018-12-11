@@ -35,6 +35,10 @@ spring:
     host: localhost
     port: 5672
     virtualhost: /
+  security:
+    user:
+      name: "user"
+      password: "password"
 
 logging:
   level:
@@ -51,10 +55,6 @@ logging:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
     file:    "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
 
-security.user:
-  name: "user"
-  password: "password"
-
 totalmobile:
   username: "user"
   password: "pass"
@@ -69,6 +69,17 @@ totalmobile:
   web:
     login-url: "/WebAdmin/Login"
     save-user-url: "/WebAdmin/Administration/Users/SaveUser"
+
+service:
+  mock:
+    username: "user"
+    password: "password"
+    baseUrl: "http://localhost:9099/"
+    operation:
+      case:
+        create:
+          path: "cases/{id}"
+
 
 rabbitmq:
   initialinterval: 5000

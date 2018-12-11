@@ -28,19 +28,19 @@ public class CometRestClientImpl implements CometRestClient {
   private transient String cometURL;
 
   @Autowired
-  private Map<String, CometConverter> CometConverters;
+  private Map<String, CometConverter> cometConverters;
 
   @Autowired
   public CometRestClientImpl(
       RestTemplate restTemplate,
-      @Value("${service.job.baseUrl}") String baseUrl,
-      @Value("${service.job.operation.jobs.create.path}") String jobServicePath) {
+      @Value("${service.mock.baseUrl}") String baseUrl,
+      @Value("${service.mock.operation.case.create.path}") String mockPath) {
     this.restTemplate = restTemplate;
-    this.cometURL = baseUrl + jobServicePath;
+    this.cometURL = baseUrl + mockPath;
   }
 
   public void convertAndSendCreate(FWMTCreateJobRequest jobRequest) throws CTPException {
-    final CometConverter cometConverter = CometConverters.get(jobRequest.getSurveyType());
+    final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
     sendCreateJobRequest(cometConverter.convert(jobRequest));
   }
 
@@ -52,7 +52,7 @@ public class CometRestClientImpl implements CometRestClient {
       headers.setContentType(MediaType.APPLICATION_JSON);
 
       final HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(bodyMap, headers);
-      restTemplate.exchange(cometURL, HttpMethod.POST, request, String.class);
+      restTemplate.exchange(cometURL, HttpMethod.POST, request, String.class, modelCase.getId());
     } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
       log.error("An error occurred while sending file to Job Service", HttpClientErrorException);
       throw new RuntimeException(HttpClientErrorException);

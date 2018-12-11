@@ -1,16 +1,12 @@
 package uk.gov.ons.fwmt.census.jobservice.tm.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.DatatypeConfigurationException;
-
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.DeleteMessageRequest;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.ObjectFactory;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.QueryMessagesRequest;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.QueryMessagesResponse;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendAddJobTasksRequestMessage;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessageResponse;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendMessageRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,21 +15,20 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ws.client.core.WebServiceTemplate;
-
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.DeleteMessageRequest;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.ObjectFactory;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.QueryMessagesRequest;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.QueryMessagesResponse;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendAddJobTasksRequestMessage;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessageResponse;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendMessageRequest;
-
 import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
-import uk.gov.ons.fwmt.census.jobservice.tm.client.TMClient;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+
+import javax.xml.bind.JAXBElement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class TMJobServiceImplTest {
   // currently, this ExpectedException is not used, and thus throws linting errors
@@ -189,7 +184,7 @@ public class TMJobServiceImplTest {
   }
 
   @Test
-  public void createJob() throws CTPException, DatatypeConfigurationException {
+  public void createJob() throws CTPException {
     FWMTCreateJobRequest fwmtCreateJobRequest = new FWMTCreateJobRequest();
     Address address = new Address();
     address.setPostCode("188961");
@@ -201,7 +196,7 @@ public class TMJobServiceImplTest {
     fwmtCreateJobRequest.setAddress(address);
     fwmtCreateJobRequest.setActionType("Create");
 
-    when(tmConverters.get(any())).thenReturn(new HouseholdConverter());
+    when(tmConverters.get(any())).thenReturn((TMConverter) new HouseholdConverter());
     when(webServiceTemplate.marshalSendAndReceive(any(), any(), any())).thenReturn(jaxbElement);
     when(jaxbElement.getValue()).thenReturn(new Object());
 

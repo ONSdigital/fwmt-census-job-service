@@ -3,13 +3,9 @@ package uk.gov.ons.fwmt.census.jobservice.converter;
 import com.consiliumtechnologies.schemas.mobile._2015._05.optimisemessages.CreateJobRequest;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import org.junit.Test;
-
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.OHSConverter;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OHSConverterTest {
   @Test
-  public void converter() throws CTPException {
+  public void converter() {
 
     FWMTCreateJobRequest fwmtCreateJobRequest = new FWMTCreateJobRequest();
     Address address = new Address();

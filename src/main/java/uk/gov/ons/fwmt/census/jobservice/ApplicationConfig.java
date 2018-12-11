@@ -10,21 +10,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Main entry point into the TM Gateway
- *
- * @author Chris Hardman
- */
-
 @Slf4j
 @SpringBootApplication
 @Configuration
 @EnableRetry
 public class ApplicationConfig {
 
-  @Value("${service.job.username}")
+  @Value("${service.mock.username}")
   private String userName;
-  @Value("${service.job.password}")
+  @Value("${service.mock.password}")
   private String password;
 
   public static void main(String[] args) {
