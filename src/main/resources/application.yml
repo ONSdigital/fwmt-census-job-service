@@ -23,10 +23,6 @@ mock:
 spring:
   application:
     name: fwmt-job-service
-  servlet:
-    multipart:
-      max-file-size: 12800MB
-      max-request-size: 12800MB
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
