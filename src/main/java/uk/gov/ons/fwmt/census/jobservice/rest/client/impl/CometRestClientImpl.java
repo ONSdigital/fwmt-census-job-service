@@ -4,12 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.census.jobservice.dto.ModelCase;
@@ -18,6 +14,8 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
 import java.util.Map;
+
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.printJSON;
 
 @Slf4j
 @Component
@@ -46,13 +44,9 @@ public class CometRestClientImpl implements CometRestClient {
 
   public void sendCreateJobRequest(ModelCase modelCase) {
     try {
-      MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-      bodyMap.add("request", modelCase);
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-
-      final HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(bodyMap, headers);
-      restTemplate.exchange(cometURL, HttpMethod.POST, request, String.class, modelCase.getId());
+      printJSON(modelCase);
+      HttpEntity<ModelCase> body = new HttpEntity<>(modelCase);
+      restTemplate.exchange(cometURL + modelCase.getId(), HttpMethod.POST, body, Void.class);
     } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
       log.error("An error occurred while sending file to Job Service", HttpClientErrorException);
       throw new RuntimeException(HttpClientErrorException);

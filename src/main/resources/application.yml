@@ -23,9 +23,10 @@ mock:
 spring:
   application:
     name: fwmt-job-service
-  http.multipart:
-    max-file-size: 12800MB
-    max-request-size: 12800MB
+  servlet:
+    multipart:
+      max-file-size: 12800MB
+      max-request-size: 12800MB
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
@@ -78,7 +79,7 @@ service:
     operation:
       case:
         create:
-          path: "cases/{id}"
+          path: "cases/"
 
 
 rabbitmq:
