@@ -40,6 +40,7 @@ public class JobServiceImpl implements JobService {
     tmJobService.cancelJob(cancelRequest);
   }
 
+
   @Override
   public void notifyRM(FwmtOHSJobStatusNotification response) throws CTPException {
     rmProducer.send(response);
@@ -52,4 +53,5 @@ public class JobServiceImpl implements JobService {
     ModelCase modelCase = cometConverter.convert(jobRequest);
     cometRestClient.sendCreateJobRequest(modelCase);
   }
+
 }

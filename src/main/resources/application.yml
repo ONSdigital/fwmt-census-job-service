@@ -37,6 +37,7 @@ spring:
       name: "user"
       password: "password"
 
+
 logging:
   level:
     root: WARN
