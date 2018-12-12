@@ -28,7 +28,7 @@ public class HouseholdConverter implements CometConverter {
     modelCase.setState(OPEN);
     modelCase.setCategory("category");
     modelCase.setEstabType("Household");
-    modelCase.setCoordCode(ingest.getAddress().getPostCode());
+    modelCase.setCoordCode(ingest.getAdditionalProperties().get("coordinatorCode"));
 
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());

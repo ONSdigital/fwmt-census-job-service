@@ -11,11 +11,6 @@ import org.springframework.retry.annotation.EnableRetry;
 @EnableRetry
 public class ApplicationConfig {
 
-  @Value("${service.mock.username}")
-  private String userName;
-  @Value("${service.mock.password}")
-  private String password;
-
   public static void main(String[] args) {
     SpringApplication.run(ApplicationConfig.class, args);
     log.debug("Started application");

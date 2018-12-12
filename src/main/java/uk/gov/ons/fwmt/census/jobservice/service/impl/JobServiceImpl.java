@@ -2,6 +2,8 @@ package uk.gov.ons.fwmt.census.jobservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.impl.CometRestClientImpl;
@@ -47,6 +49,7 @@ public class JobServiceImpl implements JobService {
   @Override
   public void convertAndSendCreate(FWMTCreateJobRequest jobRequest) throws CTPException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
-    cometRestClient.sendCreateJobRequest(cometConverter.convert(jobRequest));
+    ModelCase modelCase = cometConverter.convert(jobRequest);
+    cometRestClient.sendCreateJobRequest(modelCase);
   }
 }
