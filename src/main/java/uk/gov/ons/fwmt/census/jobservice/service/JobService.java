@@ -11,4 +11,6 @@ public interface JobService {
   void cancelJob(FWMTCancelJobRequest cancelRequest) throws CTPException;
 
   void notifyRM(FwmtOHSJobStatusNotification fwmtOHSJobStatusNotification) throws CTPException;
+
+  void convertAndSendCreate(FWMTCreateJobRequest jobRequest) throws CTPException;
 }

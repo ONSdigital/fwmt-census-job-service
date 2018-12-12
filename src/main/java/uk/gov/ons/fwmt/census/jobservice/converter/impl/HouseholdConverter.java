@@ -22,16 +22,16 @@ public class HouseholdConverter implements CometConverter {
   public ModelCase convert(FWMTCreateJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
-    modelCase.setId(ingest.getAdditionalProperties().get("caseid"));
+    modelCase.setId(ingest.getJobIdentity());
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_HH);
     modelCase.setState(OPEN);
     modelCase.setCategory("category");
     modelCase.setEstabType("Household");
-    modelCase.setCoordCode(ingest.getAdditionalProperties().get("coordinatorCode"));
+    modelCase.setCoordCode(ingest.getAddress().getPostCode());
 
     Contact contact = new Contact();
-    contact.setName(ingest.getContact().getForename() + " " + ingest.getContact().getSurname());
+    contact.setName(ingest.getAddress().getPostCode());
     modelCase.setContact(contact);
 
     Address address = new Address();
