@@ -37,6 +37,7 @@ public class CometRestClientImpl implements CometRestClient {
     this.cometURL = baseUrl + mockPath;
   }
 
+  // TODO should this be in this class?
   public void convertAndSendCreate(FWMTCreateJobRequest jobRequest) throws CTPException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
     sendCreateJobRequest(cometConverter.convert(jobRequest));

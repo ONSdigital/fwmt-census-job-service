@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 public final class JobServiceUtility {
 
-  public static String checkAddressLineNotBlank(List<String> addressLines, String addressLine) {
+  private static String checkAddressLineNotBlank(List<String> addressLines, String addressLine) {
     if (StringUtils.isNotBlank((addressLine))) {
       addressLines.add(addressLine);
     }
@@ -27,17 +27,18 @@ public final class JobServiceUtility {
     addressLines.add(checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine2()));
     addressLines.add(checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine3()));
     addressLines.add(checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine4()));
+    addressLines.add(checkAddressLineNotBlank(addressLines, ingest.getAddress().getTownName()));
 
     return addressLines;
   }
 
-  public static <T> void printJSON(T POJO) {
+  public static <T> void printJSON(T javaObject) {
     ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
     try {
-      String json = objectWriter.writeValueAsString(POJO);
-      log.debug(json);
+      String JSON = objectWriter.writeValueAsString(javaObject);
+      log.debug(JSON);
     } catch (JsonProcessingException e) {
-      log.error("Failed to process JSON");
+      log.error("Failed to process to JSON", e);
     }
   }
 }

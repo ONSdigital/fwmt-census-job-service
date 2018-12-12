@@ -16,37 +16,39 @@ import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddre
 @Component("HH")
 public class HouseholdConverter implements CometConverter {
 
+  private static final String CASE_TYPE_HH = "HH";
+
   @Override
   public ModelCase convert(FWMTCreateJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
-    modelCase.setId(ingest.getJobIdentity());
-    modelCase.setReference("string");
-    modelCase.setCaseType(ingest.getSurveyType());
+    modelCase.setId(ingest.getAdditionalProperties().get("caseid"));
+    modelCase.setReference(ingest.getJobIdentity());
+    modelCase.setCaseType(CASE_TYPE_HH);
     modelCase.setState(OPEN);
-    modelCase.setCategory("string");
-    modelCase.setEstabType("string");
-    modelCase.setCoordCode("string");
+    modelCase.setCategory("category");
+    modelCase.setEstabType("Household");
+    modelCase.setCoordCode(ingest.getAdditionalProperties().get("coordinatorCode"));
 
     Contact contact = new Contact();
-    contact.setName("name");
+    contact.setName(ingest.getContact().getForename() + " " + ingest.getContact().getSurname());
     modelCase.setContact(contact);
 
     Address address = new Address();
     address.setUprn(0l);
     address.setLines(addAddressLines(ingest));
-    address.setPostCode("string");
+    address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);
 
     LatLong latLong = new LatLong();
-    latLong.setLat(123456d);
-    latLong.set_long(123456d);
+    latLong.setLat(ingest.getAddress().getLatitude().doubleValue());
+    latLong.set_long(ingest.getAddress().getLongitude().doubleValue());
     modelCase.setLocation(latLong);
 
     modelCase.setHtc(0);
     modelCase.setPriority(0);
-    modelCase.setDescription("string");
-    modelCase.setSpecialInstructions("string");
+    modelCase.setDescription("description");
+    modelCase.setSpecialInstructions("special instructions");
     modelCase.setHoldUntil(instant.toString());
     return modelCase;
   }
