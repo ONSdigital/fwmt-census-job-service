@@ -6,9 +6,6 @@ import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.JobIdent
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendMessageRequestInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 @Slf4j
 public final class TMJobConverter {
@@ -31,12 +28,6 @@ public final class TMJobConverter {
     message.setDeleteJobRequest(deleteJobRequest);
 
     return message;
-  }
-
-  public static void addAddressLines(List<String> addressLines, String addressLine) {
-    if (StringUtils.isNotBlank(addressLine)) {
-      addressLines.add(addressLine);
-    }
   }
 
   protected static SendMessageRequestInfo makeSendMessageRequestInfo(String key) {
