@@ -1,6 +1,6 @@
 package uk.gov.ons.fwmt.census.jobservice.converter;
 
-import uk.gov.ons.fwmt.census.jobservice.dto.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 

@@ -1,16 +1,16 @@
 package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 
 import org.springframework.stereotype.Component;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Address;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
-import uk.gov.ons.fwmt.census.jobservice.dto.Address;
-import uk.gov.ons.fwmt.census.jobservice.dto.Contact;
-import uk.gov.ons.fwmt.census.jobservice.dto.LatLong;
-import uk.gov.ons.fwmt.census.jobservice.dto.ModelCase;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 
 import java.time.Instant;
 
-import static uk.gov.ons.fwmt.census.jobservice.dto.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
 import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddressLines;
 
 @Component("HH")
@@ -47,7 +47,7 @@ public class HouseholdConverter implements CometConverter {
 
     modelCase.setHtc(0);
     modelCase.setPriority(0);
-    modelCase.setDescription("description");
+    modelCase.setDescription("Census");
     modelCase.setSpecialInstructions("special instructions");
     modelCase.setHoldUntil(instant.toString());
     return modelCase;

@@ -4,9 +4,9 @@ import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.Location
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
 import org.junit.jupiter.api.Test;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
-import uk.gov.ons.fwmt.census.jobservice.dto.ModelCase;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
