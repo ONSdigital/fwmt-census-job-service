@@ -1,5 +1,7 @@
 package uk.gov.ons.fwmt.census.jobservice.comet.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.actuate.endpoint.web.Link;
@@ -37,6 +39,22 @@ public class ModelCase {
 
     StateEnum(String value) {
       this.value = value;
+    }
+
+    @JsonCreator
+    public static StateEnum fromValue(String text) {
+      for (StateEnum b : StateEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
     }
   }
 }

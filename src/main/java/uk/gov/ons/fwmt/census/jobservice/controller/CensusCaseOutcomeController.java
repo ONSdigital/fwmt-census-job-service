@@ -21,5 +21,4 @@ public class CensusCaseOutcomeController {
   public void censusCaseOutcomeResponse(@RequestBody CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws CTPException {
     rmProducer.send(censusCaseOutcomeDTO);
   }
-
 }
