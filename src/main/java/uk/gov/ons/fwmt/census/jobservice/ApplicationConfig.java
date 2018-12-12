@@ -1,21 +1,14 @@
 package uk.gov.ons.fwmt.census.jobservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/**
- * Main entry point into the TM Gateway
- *
- * @author Chris Hardman
- */
-
 @Slf4j
 @SpringBootApplication
-@Configuration
 @EnableRetry
 @EnableSwagger2
 public class ApplicationConfig {

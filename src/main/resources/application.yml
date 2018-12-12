@@ -23,9 +23,6 @@ mock:
 spring:
   application:
     name: fwmt-job-service
-  http.multipart:
-    max-file-size: 12800MB
-    max-request-size: 12800MB
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
@@ -35,9 +32,11 @@ spring:
     host: localhost
     port: 5672
     virtualhost: /
-  security.user:
-    name: "user"
-    password: "password"
+  security:
+    user:
+      name: "user"
+      password: "password"
+
 
 logging:
   level:
@@ -68,6 +67,17 @@ totalmobile:
   web:
     login-url: "/WebAdmin/Login"
     save-user-url: "/WebAdmin/Administration/Users/SaveUser"
+
+service:
+  mock:
+    username: "user"
+    password: "password"
+    baseUrl: "http://localhost:9099/"
+    operation:
+      case:
+        create:
+          path: "cases/"
+
 
 rabbitmq:
   initialinterval: 5000

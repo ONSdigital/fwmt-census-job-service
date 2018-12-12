@@ -126,7 +126,8 @@ dependencies {
 
     compile("com.fasterxml.jackson.core:jackson-databind")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-
+    compile group: 'com.github.joschi.jackson', name: 'jackson-datatype-threetenbp', version: '2.6.4'
+    
     // this dependency is required to fix spring-boot-starter-web-services (and saaj-impl), which depend on an old non-existent version
     compile("org.jvnet.mimepull:mimepull")
 
