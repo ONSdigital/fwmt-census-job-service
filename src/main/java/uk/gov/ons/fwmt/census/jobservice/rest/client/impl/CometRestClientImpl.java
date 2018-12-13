@@ -33,7 +33,7 @@ public class CometRestClientImpl implements CometRestClient {
     try {
       printJSON(modelCase);
       HttpEntity<ModelCase> body = new HttpEntity<>(modelCase);
-      restTemplate.exchange(cometURL + modelCase.getId(), HttpMethod.POST, body, Void.class);
+      restTemplate.exchange(cometURL + modelCase.getId(), HttpMethod.PUT, body, Void.class);
     } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
       log.error("An error occurred while sending file to Job Service", HttpClientErrorException);
       throw new RuntimeException(HttpClientErrorException);
