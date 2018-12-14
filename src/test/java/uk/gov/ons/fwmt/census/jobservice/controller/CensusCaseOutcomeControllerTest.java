@@ -29,7 +29,7 @@ public class CensusCaseOutcomeControllerTest {
       + "}";
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     this.mockMvc = MockMvcBuilders.standaloneSetup(censusCaseOutcomeController).build();
     MockitoAnnotations.initMocks(this);
   }

@@ -19,6 +19,11 @@ public class ModelCase {
   private String category = null;
   private String estabType = null;
   private String coordCode = null;
+  private List<Outcome> outcomes = null;
+  @Valid
+  private List<Warning> warnings = null;
+  @Valid
+  private List<Note> notes = null;
   private Contact contact = null;
   private Address address = null;
   private LatLong location = null;
