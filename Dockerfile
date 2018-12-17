@@ -1,7 +1,6 @@
 FROM openjdk:11-jdk-slim
-MAINTAINER Kieran Wardle <kieran.wardle@ons.gov.uk>
 ARG jar
 VOLUME /tmp
-COPY $jar jobsvc.jar
+COPY $jar censusjobsvc.jar
 ENV JAVA_OPTS=""
-ENTRYPOINT [ "sh", "-c", "java -jar /jobsvc.jar" ]
+ENTRYPOINT [ "sh", "-c", "java -jar /censusjobsvc.jar" ]
