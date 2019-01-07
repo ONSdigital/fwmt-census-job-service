@@ -23,5 +23,5 @@ applications:
     security_user_name: REPLACE_USER
     security_user_password: REPLACE_PASSWORD
     totalmobile_modworld: REPLACE_TM_MODWORLD
-	JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+	  JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
 	
