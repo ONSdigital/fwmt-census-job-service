@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TMJobConverterTest {
   DatatypeFactory datatypeFactory;
@@ -27,7 +28,6 @@ public class TMJobConverterTest {
 
   @Test
   public void createHHJobTest() {
-    String user = "bob.smith";
     FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
     Address address = new Address();
     ingest.setActionType("Create");
@@ -48,6 +48,8 @@ public class TMJobConverterTest {
 
     HouseholdConverter converter = new HouseholdConverter();
     ModelCase request = converter.convert(ingest);
+
+    assertNotNull(request);
   }
 
   @Test
