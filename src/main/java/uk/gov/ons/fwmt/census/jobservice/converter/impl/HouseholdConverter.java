@@ -28,7 +28,6 @@ public class HouseholdConverter implements CometConverter {
     modelCase.setState(OPEN);
     modelCase.setCategory("category");
     modelCase.setEstabType("Household");
-    //    modelCase.setCoordCode(ingest.getAdditionalProperties().get("coordinatorCode"));
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
@@ -50,6 +49,7 @@ public class HouseholdConverter implements CometConverter {
     modelCase.setDescription("Census");
     modelCase.setSpecialInstructions("special instructions");
     modelCase.setHoldUntil(instant.toString());
+
     return modelCase;
   }
 }

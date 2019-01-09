@@ -1,74 +1,57 @@
 package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
-import uk.gov.ons.fwmt.census.jobservice.utils.CreateJobBuilder;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Address;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.time.ZoneId;
+import java.time.Instant;
+
+import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddressLines;
 
 @Component("CCS")
-public class CCSConverter implements TMConverter {
-  @Value("${totalmobile.default_world}")
-  private String defaultWorld;
-
-  @Value("${totalmobile.modworld}")
-  private String modWorld;
-
-  @Value("${fwmt.workTypes.ccs.duration}")
-  private int duration;
-
-  private DatatypeFactory datatypeFactory;
-
-  public CCSConverter() throws CTPException {
-    try {
-      datatypeFactory = DatatypeFactory.newInstance();
-    } catch (DatatypeConfigurationException e) {
-      throw new CTPException(CTPException.Fault.SYSTEM_ERROR, e);
-    }
-  }
-
-  public CCSConverter(String defaultWorld, String modWorld, int duration) throws CTPException {
-    this();
-    this.defaultWorld = defaultWorld;
-    this.modWorld = modWorld;
-    this.duration = duration;
-  }
+public class CCSConverter implements CometConverter {
+  private static final String CASE_TYPE_CCS = "CCS";
 
   @Override
-  public SendCreateJobRequestMessage convert(FWMTCreateJobRequest ingest) {
-    CreateJobBuilder builder = new CreateJobBuilder(datatypeFactory)
-        .withDefaultQueue()
-        .withKey(ingest.getJobIdentity())
-        .withWorkType("CCS")
-        .withDescription("Census - " + ingest.getAddress().getPostCode())
-        .withDuration(duration)
-        .withVisitComplete(false)
-        .withEmergency(false)
-        .withDispatched(false)
-        .withAppointmentPending(false)
-        .addSkill("CCS")
-        .withIdentity(ingest.getJobIdentity())
-        .withDueDate(ingest.getDueDate().atTime(23, 59, 59).atZone(ZoneId.of("UTC")))
-        .withContactName(ingest.getAddress().getPostCode())
-        .withPostCode(ingest.getAddress().getPostCode())
-        .withAdditionalProperties(ingest.getAdditionalProperties())
-        .withAdditionalProperty("CCS_AddrPostcode", ingest.getAddress().getPostCode());
+  public ModelCase convert(FWMTCreateJobRequest ingest) {
+    ModelCase modelCase = new ModelCase();
+    Instant instant = Instant.now();
+    modelCase.setId(ingest.getAdditionalProperties().get("caseId"));
+    modelCase.setReference(ingest.getJobIdentity());
+    modelCase.setCaseType(CASE_TYPE_CCS);
+    modelCase.setState(OPEN);
+    modelCase.setCategory("category");
+    modelCase.setEstabType("Household");
+    modelCase.setCoordCode("EX23");
+    Contact contact = new Contact();
+    contact.setName(ingest.getAddress().getPostCode());
+    contact.setOrganisationName(ingest.getAddress().getOrganisationName());
+    contact.setPhone(ingest.getContact().getPhoneNumber());
+    contact.setEmail(ingest.getContact().getEmail());
+    modelCase.setContact(contact);
 
-    if (ingest.isPreallocatedJob()) {
-      // TODO lookup not defined yet
-      builder = builder.withWorld(defaultWorld).withAllocatedUser("test");
-    } else {
-      builder = builder.withWorld(modWorld);
-    }
+    Address address = new Address();
+    address.setUprn(0l);
+    address.setLines(addAddressLines(ingest));
+    address.setPostCode(ingest.getAddress().getPostCode());
+    modelCase.setAddress(address);
 
-    return builder.build();
+    LatLong latLong = new LatLong();
+    latLong.setLat(ingest.getAddress().getLatitude().doubleValue());
+    latLong.set_long(ingest.getAddress().getLongitude().doubleValue());
+    modelCase.setLocation(latLong);
+
+    modelCase.setHtc(0);
+    modelCase.setPriority(0);
+    modelCase.setDescription("Census");
+    modelCase.setSpecialInstructions("special instructions");
+    modelCase.setHoldUntil(instant.toString());
+
+    return modelCase;
   }
-
 }
