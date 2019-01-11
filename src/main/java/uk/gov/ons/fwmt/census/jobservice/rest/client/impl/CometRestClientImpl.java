@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
 
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.printJSON;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.printJSON;
 
 @Slf4j
 @Component

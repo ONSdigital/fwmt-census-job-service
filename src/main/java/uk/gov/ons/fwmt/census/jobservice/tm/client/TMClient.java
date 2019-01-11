@@ -66,7 +66,7 @@ import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
-import uk.gov.ons.fwmt.census.jobservice.utils.TMJobConverter;
+import uk.gov.ons.fwmt.census.jobservice.utils.TMJobConverterUtils;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
@@ -167,7 +167,7 @@ public class TMClient extends WebServiceGatewaySupport {
   }
 
   public void cancelJob(FWMTCancelJobRequest cancelRequest) {
-    SendDeleteJobRequestMessage deleteRequest = TMJobConverter
+    SendDeleteJobRequestMessage deleteRequest = TMJobConverterUtils
         .deleteJob(cancelRequest.getJobIdentity(), cancelRequest.getReason(), tmAdminUsername);
     send(deleteRequest);
   }

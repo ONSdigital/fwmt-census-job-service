@@ -11,7 +11,7 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import java.time.Instant;
 
 import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddressLines;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
 
 @Component("HH")
 public class HouseholdConverter implements CometConverter {
