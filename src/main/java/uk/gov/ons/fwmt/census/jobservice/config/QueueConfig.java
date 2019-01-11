@@ -17,7 +17,6 @@ import org.springframework.retry.RetryOperations;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.support.RetryTemplate;
-
 import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
 import uk.gov.ons.fwmt.census.jobservice.retrysupport.DefaultListenerSupport;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;

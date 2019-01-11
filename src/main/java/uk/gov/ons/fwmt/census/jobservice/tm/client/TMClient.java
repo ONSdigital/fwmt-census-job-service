@@ -65,7 +65,6 @@ import org.springframework.ws.WebServiceException;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
-
 import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
 import uk.gov.ons.fwmt.census.jobservice.utils.TMJobConverter;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;

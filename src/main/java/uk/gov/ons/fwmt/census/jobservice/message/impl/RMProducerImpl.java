@@ -7,7 +7,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.RMProducer;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
@@ -28,8 +27,7 @@ public class RMProducerImpl implements RMProducer {
       final String notification = objectMapper.writeValueAsString(censusCaseOutcomeDTO);
       log.info("Message sent to queue :{}", censusCaseOutcomeDTO.getCaseReference());
       template.convertAndSend(QueueNames.JOBSVC_TO_ADAPTER_QUEUE, notification);
-    }
-     catch (JsonProcessingException e) {
+    } catch (JsonProcessingException e) {
       throw new CTPException(CTPException.Fault.SYSTEM_ERROR, "Failed to process message into JSON.", e);
     }
   }
