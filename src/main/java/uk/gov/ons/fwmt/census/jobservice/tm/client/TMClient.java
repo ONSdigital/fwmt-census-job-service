@@ -135,7 +135,7 @@ public class TMClient extends WebServiceGatewaySupport {
 
   private final String messageQueueUrl;
   private final String namespace;
-  ObjectFactory objectFactory;
+  private final ObjectFactory objectFactory;
 
   @Autowired
   public TMClient(

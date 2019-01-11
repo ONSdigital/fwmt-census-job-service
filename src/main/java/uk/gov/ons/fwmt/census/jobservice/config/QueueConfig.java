@@ -42,7 +42,7 @@ public class QueueConfig {
   }
 
   @Bean
-  Queue adapterQueue() {
+  public Queue adapterQueue() {
     return QueueBuilder.durable(QueueNames.JOBSVC_TO_ADAPTER_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", JOB_SVC_ADAPTER_DLQ)
@@ -50,7 +50,7 @@ public class QueueConfig {
   }
 
   @Bean
-  Queue jobSvcQueue() {
+  public Queue jobSvcQueue() {
     return QueueBuilder.durable(QueueNames.ADAPTER_TO_JOBSVC_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", ADAPTER_JOB_SVC_DLQ)

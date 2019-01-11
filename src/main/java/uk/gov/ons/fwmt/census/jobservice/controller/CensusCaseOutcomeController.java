@@ -15,10 +15,12 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 @RequestMapping("/CensusCaseOutcome")
 public class CensusCaseOutcomeController {
 
-  @Autowired RMProducer rmProducer;
+  @Autowired
+  private RMProducer rmProducer;
 
   @PostMapping(consumes = "application/json", produces = "application/json")
   public void censusCaseOutcomeResponse(@RequestBody CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws CTPException {
     rmProducer.send(censusCaseOutcomeDTO);
   }
+
 }

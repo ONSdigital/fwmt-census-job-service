@@ -17,7 +17,8 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 public class RMProducerImpl implements RMProducer {
 
   @Autowired
-  ObjectMapper objectMapper;
+  private ObjectMapper objectMapper;
+
   @Autowired
   private RabbitTemplate template;
 
