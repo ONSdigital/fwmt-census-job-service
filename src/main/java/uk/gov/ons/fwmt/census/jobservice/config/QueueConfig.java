@@ -17,7 +17,6 @@ import org.springframework.retry.RetryOperations;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.support.RetryTemplate;
-
 import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
 import uk.gov.ons.fwmt.census.jobservice.retrysupport.DefaultListenerSupport;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
@@ -43,7 +42,7 @@ public class QueueConfig {
   }
 
   @Bean
-  Queue adapterQueue() {
+  public Queue adapterQueue() {
     return QueueBuilder.durable(QueueNames.JOBSVC_TO_ADAPTER_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", JOB_SVC_ADAPTER_DLQ)
@@ -51,7 +50,7 @@ public class QueueConfig {
   }
 
   @Bean
-  Queue jobSvcQueue() {
+  public Queue jobSvcQueue() {
     return QueueBuilder.durable(QueueNames.ADAPTER_TO_JOBSVC_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", ADAPTER_JOB_SVC_DLQ)

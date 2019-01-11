@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.job_service_v2.helper;
+package uk.gov.ons.fwmt.census.jobservice.helper;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

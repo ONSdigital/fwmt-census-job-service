@@ -11,7 +11,7 @@ import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import java.time.Instant;
 
 import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddressLines;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
 
 @Component("HH")
 public class HouseholdConverter implements CometConverter {
@@ -22,7 +22,7 @@ public class HouseholdConverter implements CometConverter {
   public ModelCase convert(FWMTCreateJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
-    modelCase.setId(ingest.getJobIdentity());
+    modelCase.setId(ingest.getAdditionalProperties().get("caseId"));
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_HH);
     modelCase.setState(OPEN);
@@ -35,7 +35,7 @@ public class HouseholdConverter implements CometConverter {
     modelCase.setContact(contact);
 
     Address address = new Address();
-    address.setUprn(0l);
+    address.setUprn(0L);
     address.setLines(addAddressLines(ingest));
     address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);

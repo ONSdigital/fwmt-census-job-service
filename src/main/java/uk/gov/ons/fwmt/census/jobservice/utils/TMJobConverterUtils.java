@@ -8,7 +8,7 @@ import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.Sen
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class TMJobConverter {
+public final class TMJobConverterUtils {
   public static final String JOB_QUEUE = "\\OPTIMISE\\INPUT";
 
   public static SendDeleteJobRequestMessage deleteJob(String jobIdentity, String deletionReason,

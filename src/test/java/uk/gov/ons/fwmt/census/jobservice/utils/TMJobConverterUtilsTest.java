@@ -19,10 +19,10 @@ import java.time.LocalDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class TMJobConverterTest {
+public class TMJobConverterUtilsTest {
   DatatypeFactory datatypeFactory;
 
-  public TMJobConverterTest() throws DatatypeConfigurationException {
+  public TMJobConverterUtilsTest() throws DatatypeConfigurationException {
     datatypeFactory = DatatypeFactory.newInstance();
   }
 
@@ -132,7 +132,7 @@ public class TMJobConverterTest {
 
   @Test
   public void deleteJobTest() {
-    SendDeleteJobRequestMessage request = TMJobConverter.deleteJob("1234", "wrong address", "admin");
+    SendDeleteJobRequestMessage request = TMJobConverterUtils.deleteJob("1234", "wrong address", "admin");
 
     assertEquals("wrong address", request.getDeleteJobRequest().getDeletionReason());
     assertEquals("1234", request.getDeleteJobRequest().getIdentity().getReference());

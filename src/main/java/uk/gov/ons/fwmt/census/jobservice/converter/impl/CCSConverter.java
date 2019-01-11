@@ -3,7 +3,6 @@ package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
 import uk.gov.ons.fwmt.census.jobservice.utils.CreateJobBuilder;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;

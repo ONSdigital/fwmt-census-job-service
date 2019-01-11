@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;
