@@ -41,9 +41,8 @@ public class CEConverter implements CometConverter {
     modelCase.setContact(contact);
 
     Address address = new Address();
-    Long uprn = null;
     try {
-      uprn = Long.parseLong(ingest.getAdditionalProperties().get("uprn"));
+      address.setUprn(Long.parseLong(ingest.getAdditionalProperties().get("uprn")));
     }catch (Exception e) {
       // if a problem resolving uprn, null is fine.
     }

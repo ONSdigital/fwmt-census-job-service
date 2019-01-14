@@ -20,11 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TMJobConverterUtilsTest {
-  DatatypeFactory datatypeFactory;
-
-  public TMJobConverterUtilsTest() throws DatatypeConfigurationException {
-    datatypeFactory = DatatypeFactory.newInstance();
-  }
 
   @Test
   public void createHHJobTest() {

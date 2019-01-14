@@ -36,14 +36,12 @@ public class CCSConverter implements CometConverter {
     modelCase.setContact(contact);
 
     Address address = new Address();
-    Long uprn = null;
     try {
-      uprn = Long.parseLong(ingest.getAdditionalProperties().get("uprn"));
+      address.setUprn(Long.parseLong(ingest.getAdditionalProperties().get("uprn")));
     }catch (Exception e) {
       // if a problem resolving uprn, null is fine.
     }
     
-    address.setUprn(uprn);
     address.setLines(addAddressLines(ingest));
     address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);
