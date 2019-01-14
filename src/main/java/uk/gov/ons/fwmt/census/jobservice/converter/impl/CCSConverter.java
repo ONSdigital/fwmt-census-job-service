@@ -25,18 +25,21 @@ public class CCSConverter implements CometConverter {
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_CCS);
     modelCase.setState(OPEN);
-    modelCase.setCategory("category");
-    modelCase.setEstabType("Household");
+    modelCase.setCategory(ingest.getAddress().getCategory());
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
-    contact.setOrganisationName(ingest.getAddress().getOrganisationName());
-    contact.setPhone(ingest.getContact().getPhoneNumber());
-    contact.setEmail(ingest.getContact().getEmail());
     modelCase.setContact(contact);
 
     Address address = new Address();
-    address.setUprn(0l);
+    Long uprn = null;
+    try {
+      uprn = Long.parseLong(ingest.getAdditionalProperties().get("uprn"));
+    }catch (Exception e) {
+      // if a problem resolving uprn, null is fine.
+    }
+    
+    address.setUprn(uprn);
     address.setLines(addAddressLines(ingest));
     address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);
@@ -48,8 +51,7 @@ public class CCSConverter implements CometConverter {
 
     modelCase.setHtc(0);
     modelCase.setPriority(0);
-    modelCase.setDescription("Census");
-    modelCase.setSpecialInstructions("special instructions");
+    modelCase.setDescription("CENSUS");
     modelCase.setHoldUntil(instant.toString());
 
     return modelCase;

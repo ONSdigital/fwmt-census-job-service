@@ -9,3 +9,9 @@ Service to create and reallocate jobs to users for RM
 ## Copyright
 Copyright (C) 2018 Crown Copyright (Office for National Statistics)
  
+![](tm-canonical-hh.png "tm - canonical - hh mapping")	
+
+![](tm-canonical-ce.png "tm - canonical - ce - mapping")	
+
+![](tm-canonical-ccs.png "tm - canonical - ccs - mapping")	
+ 

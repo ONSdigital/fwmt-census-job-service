@@ -27,7 +27,7 @@ public class CEConverter implements CometConverter {
     modelCase.setCaseType(CASE_TYPE_CE);
     modelCase.setState(OPEN);
     modelCase.setCategory(ingest.getAddress().getCategory());
-    modelCase.setEstabType("Communal Establishment");
+    modelCase.setEstabType(ingest.getAdditionalProperties().get("establishmentType"));
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
@@ -37,7 +37,12 @@ public class CEConverter implements CometConverter {
     modelCase.setContact(contact);
 
     Address address = new Address();
-    address.setUprn(0l);
+    Long uprn = null;
+    try {
+      uprn = Long.parseLong(ingest.getAdditionalProperties().get("uprn"));
+    }catch (Exception e) {
+      // if a problem resolving uprn, null is fine.
+    }
     address.setLines(addAddressLines(ingest));
     address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);
@@ -49,8 +54,7 @@ public class CEConverter implements CometConverter {
 
     modelCase.setHtc(0);
     modelCase.setPriority(0);
-    modelCase.setDescription("Census");
-    modelCase.setSpecialInstructions("special instructions");
+    modelCase.setDescription("CENSUS");
     modelCase.setHoldUntil(instant.toString());
 
     return modelCase;
