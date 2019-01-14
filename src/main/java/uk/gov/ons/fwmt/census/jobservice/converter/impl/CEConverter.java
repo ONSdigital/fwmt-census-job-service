@@ -26,7 +26,10 @@ public class CEConverter implements CometConverter {
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_CE);
     modelCase.setState(OPEN);
-    modelCase.setCategory(ingest.getAddress().getCategory());
+
+    // TODO not yet implemented in Canonical
+    //modelCase.setCategory(ingest.getAddress().getCategory());
+
     modelCase.setEstabType(ingest.getAdditionalProperties().get("establishmentType"));
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();

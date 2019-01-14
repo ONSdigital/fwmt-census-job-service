@@ -25,7 +25,10 @@ public class CCSConverter implements CometConverter {
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_CCS);
     modelCase.setState(OPEN);
-    modelCase.setCategory(ingest.getAddress().getCategory());
+
+    // TODO not yet implemented in Canonical
+    //modelCase.setCategory(ingest.getAddress().getCategory());
+    
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
