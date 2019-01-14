@@ -4,7 +4,7 @@ resources:
     check_every: 10s
     source:
       uri: https://github.com/ONSdigital/fwmt-census-job-service.git
-      branch: master
+      branch: FWMT-675_concourse_investigation
 
 jobs:
 - name: build
@@ -13,4 +13,4 @@ jobs:
   - get: fwmt-census-job-service
     trigger: true
   - task: Build project
-    file: concourse/build.yml
+    file: fwmt-census-job-service/concourse/tasks/build.yml

@@ -11,4 +11,4 @@ outputs:
   - name: build-output
 
 run:
-  path: "build.sh"
+  path: "fwmt-census-job-service/concourse/tasks/build.sh"
