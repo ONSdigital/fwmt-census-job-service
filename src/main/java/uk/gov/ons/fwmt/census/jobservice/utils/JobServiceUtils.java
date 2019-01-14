@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public final class JobServiceUtility {
+public final class JobServiceUtils {
 
   private static String checkAddressLineNotBlank(List<String> addressLines, String addressLine) {
     if (StringUtils.isNotBlank((addressLine))) {

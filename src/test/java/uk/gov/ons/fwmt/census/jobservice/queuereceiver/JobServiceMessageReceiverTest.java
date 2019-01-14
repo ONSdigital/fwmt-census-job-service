@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import uk.gov.ons.fwmt.census.jobservice.message.impl.JobServiceMessageReceiverImpl;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;

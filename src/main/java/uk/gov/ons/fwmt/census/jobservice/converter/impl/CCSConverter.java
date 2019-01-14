@@ -1,17 +1,18 @@
 package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 
+import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
+
+import java.time.Instant;
+
 import org.springframework.stereotype.Component;
+
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.Address;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-
-import java.time.Instant;
-
-import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.addAddressLines;
 
 @Component("CCS")
 public class CCSConverter implements CometConverter {

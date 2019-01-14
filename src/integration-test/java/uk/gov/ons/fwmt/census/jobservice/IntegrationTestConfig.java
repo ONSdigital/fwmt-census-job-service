@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.job_service_v2;
+package uk.gov.ons.fwmt.census.jobservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
-import uk.gov.ons.fwmt.job_service_v2.helper.TestReceiver;
+import uk.gov.ons.fwmt.census.jobservice.helper.TestReceiver;
 
 import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.JOBSVC_TO_ADAPTER_QUEUE;
 
@@ -60,6 +60,6 @@ public class IntegrationTestConfig {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    return  mapper;
+    return mapper;
   }
 }

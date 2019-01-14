@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
-
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtility.printJSON;
+import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
 
 @Slf4j
 @Component
@@ -29,14 +28,15 @@ public class CometRestClientImpl implements CometRestClient {
     this.cometURL = baseUrl + mockPath;
   }
 
+  /// Throws an HttpClientErrorException if an error occurs during sending
   public void sendCreateJobRequest(ModelCase modelCase) {
-    try {
-      printJSON(modelCase);
+//    try {
+      JobServiceUtils.printJSON(modelCase);
       HttpEntity<ModelCase> body = new HttpEntity<>(modelCase);
       restTemplate.exchange(cometURL + modelCase.getId(), HttpMethod.PUT, body, Void.class);
-    } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
-      log.error("An error occurred while sending file to Job Service", HttpClientErrorException);
-      throw new RuntimeException(HttpClientErrorException);
-    }
+//    } catch (HttpClientErrorException httpClientErrorException) {
+//      log.error("An error occurred while sending file to Job Service", httpClientErrorException);
+//      throw httpClientErrorException;
+//    }
   }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.actuate.endpoint.web.Link;
+//import org.springframework.boot.actuate.endpoint.web.Link;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,8 +32,8 @@ public class ModelCase {
   private String description = null;
   private String specialInstructions = null;
   private String holdUntil = null;
-  @Valid
-  private List<Link> _links = null;
+//  @Valid
+//  private List<Link> _links = null;
 
   public enum StateEnum {
     OPEN("open"),
