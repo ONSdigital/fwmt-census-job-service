@@ -1,0 +1,16 @@
+resources:
+  - name: fwmt-census-job-service
+    type: git
+    check_every: 10s
+    source:
+      uri: https://github.com/ONSdigital/fwmt-census-job-service.git
+      branch: master
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - get: fwmt-census-job-service
+    trigger: true
+  - task: Build project
+    file: concourse/build.yml
