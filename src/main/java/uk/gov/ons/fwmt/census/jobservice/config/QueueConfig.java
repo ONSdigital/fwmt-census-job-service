@@ -33,7 +33,7 @@ public class QueueConfig {
   private static final String ADAPTER_TO_JOBSVC_QUEUE = "gateway.actions";
   private static final String JOBSVC_TO_ADAPTER_DLQ = JOBSVC_TO_ADAPTER_QUEUE + ".DLQ";
   private static final String ADAPTER_TO_JOBSVC_DLQ = ADAPTER_TO_JOBSVC_QUEUE + ".DLQ";
-  private static final String RM_JOB_SVC_EXCHANGE = "rm-jobsvc-exchange";
+  private static final String RM_JOB_SVC_EXCHANGE = "gateway.feedback.exchange";
   private static final String JOB_SVC_RESPONSE_ROUTING_KEY = "jobsvc.job.response";
   private static final String JOB_SVC_REQUEST_ROUTING_KEY = "jobsvc.job.request";
 
