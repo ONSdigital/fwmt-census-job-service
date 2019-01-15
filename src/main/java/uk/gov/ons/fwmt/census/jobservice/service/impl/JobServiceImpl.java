@@ -6,7 +6,6 @@ import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.impl.CometRestClientImpl;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
-import uk.gov.ons.fwmt.census.jobservice.tm.client.TMClient;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
@@ -15,9 +14,6 @@ import java.util.Map;
 
 @Service
 public class JobServiceImpl implements JobService {
-  @Autowired
-  private TMClient tmJobService;
-
   @Autowired
   private CometRestClientImpl cometRestClient;
 
@@ -31,7 +27,6 @@ public class JobServiceImpl implements JobService {
 
   @Override
   public void cancelJob(FWMTCancelJobRequest cancelRequest) {
-    tmJobService.cancelJob(cancelRequest);
   }
 
   @Override
