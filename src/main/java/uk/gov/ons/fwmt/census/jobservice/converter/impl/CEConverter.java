@@ -1,75 +1,66 @@
 package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import uk.gov.ons.fwmt.census.jobservice.converter.TMConverter;
-import uk.gov.ons.fwmt.census.jobservice.utils.CreateJobBuilder;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.time.ZoneId;
+import java.time.Instant;
+
+import org.springframework.stereotype.Component;
+
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Address;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
+import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 
 @Component("CE")
-public class CEConverter implements TMConverter {
-  @Value("${totalmobile.default_world}")
-  private String defaultWorld;
+public class CEConverter implements CometConverter {
 
-  @Value("${totalmobile.modworld}")
-  private String modWorld;
-
-  @Value("${fwmt.workTypes.ce.duration}")
-  private int duration;
-
-  private DatatypeFactory datatypeFactory;
-
-  public CEConverter() throws CTPException {
-    try {
-      datatypeFactory = DatatypeFactory.newInstance();
-    } catch (DatatypeConfigurationException e) {
-      throw new CTPException(CTPException.Fault.SYSTEM_ERROR, e);
-    }
-  }
-
-  public CEConverter(String defaultWorld, String modWorld, int duration) throws CTPException {
-    this();
-    this.defaultWorld = defaultWorld;
-    this.modWorld = modWorld;
-    this.duration = duration;
-  }
+  private static final String CASE_TYPE_CE = "CE";
 
   @Override
-  public SendCreateJobRequestMessage convert(FWMTCreateJobRequest ingest) {
-    return new CreateJobBuilder(datatypeFactory)
-        .withDefaultQueue()
-        .withKey(ingest.getJobIdentity())
-        .withWorld(modWorld)
-        .withWorkType("CE")
-        .withDescription(ingest.getAddress().getOrganisationName())
-        .withDuration(duration)
-        .withVisitComplete(false)
-        .withEmergency(false)
-        .withDispatched(false)
-        .withAppointmentPending(false)
-        .addSkill("CE")
-        .withIdentity(ingest.getJobIdentity())
-        .withDueDate(ingest.getDueDate().atTime(23, 59, 59).atZone(ZoneId.of("UTC")))
-        .withContactName(ingest.getContact().getForename() + " " + ingest.getContact().getSurname())
-        .withContactEmail(ingest.getContact().getEmail())
-        .withContactPhone(ingest.getContact().getPhoneNumber())
-        .withAddressLines(
-            ingest.getAddress().getLine1(),
-            ingest.getAddress().getLine2(),
-            ingest.getAddress().getLine3(),
-            ingest.getAddress().getLine4(),
-            ingest.getAddress().getTownName()
-        )
-        .withPostCode(ingest.getAddress().getPostCode())
-        .withGeoCoords(ingest.getAddress().getLongitude(), ingest.getAddress().getLatitude())
-        .withAdditionalProperties(ingest.getAdditionalProperties())
-        .withAdditionalProperty("CaseRef", ingest.getJobIdentity())
-        .build();
+  public ModelCase convert(FWMTCreateJobRequest ingest) {
+    ModelCase modelCase = new ModelCase();
+    Instant instant = Instant.now();
+    modelCase.setId(ingest.getAdditionalProperties().get("caseId"));
+    modelCase.setReference(ingest.getJobIdentity());
+    modelCase.setCaseType(CASE_TYPE_CE);
+    modelCase.setState(OPEN);
+
+    // TODO not yet implemented in Canonical
+    //modelCase.setCategory(ingest.getAddress().getCategory());
+
+    modelCase.setEstabType(ingest.getAdditionalProperties().get("establishmentType"));
+    modelCase.setCoordCode("EX23");
+    Contact contact = new Contact();
+    contact.setName(ingest.getAddress().getPostCode());
+    contact.setOrganisationName(ingest.getAddress().getOrganisationName());
+    contact.setPhone(ingest.getContact().getPhoneNumber());
+    contact.setEmail(ingest.getContact().getEmail());
+    modelCase.setContact(contact);
+
+    Address address = new Address();
+    try {
+      address.setUprn(Long.parseLong(ingest.getAdditionalProperties().get("uprn")));
+    }catch (Exception e) {
+      // if a problem resolving uprn, null is fine.
+    }
+    address.setLines(addAddressLines(ingest));
+    address.setPostCode(ingest.getAddress().getPostCode());
+    modelCase.setAddress(address);
+
+    LatLong latLong = new LatLong();
+    latLong.setLat(ingest.getAddress().getLatitude().doubleValue());
+    latLong.set_long(ingest.getAddress().getLongitude().doubleValue());
+    modelCase.setLocation(latLong);
+
+    modelCase.setHtc(0);
+    modelCase.setPriority(0);
+    modelCase.setDescription("CENSUS");
+    modelCase.setHoldUntil(instant.toString());
+
+    return modelCase;
   }
+
 }

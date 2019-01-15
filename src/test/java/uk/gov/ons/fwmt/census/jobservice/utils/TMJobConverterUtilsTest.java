@@ -20,11 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TMJobConverterUtilsTest {
-  DatatypeFactory datatypeFactory;
-
-  public TMJobConverterUtilsTest() throws DatatypeConfigurationException {
-    datatypeFactory = DatatypeFactory.newInstance();
-  }
 
   @Test
   public void createHHJobTest() {
@@ -73,17 +68,11 @@ public class TMJobConverterUtilsTest {
     address.setLongitude(BigDecimal.valueOf(34.3739957));
     ingest.setAddress(address);
 
-    CCSConverter converter = new CCSConverter("Default", "Mod", 0);
-    SendCreateJobRequestMessage request = converter.convert(ingest);
+    CCSConverter converter = new CCSConverter();
+    ModelCase request = converter.convert(ingest);
 
-    assertEquals("1234", request.getCreateJobRequest().getJob().getIdentity().getReference());
-    assertEquals("188961", request.getCreateJobRequest().getJob().getContact().getName());
-    assertEquals(datatypeFactory.newXMLGregorianCalendar("2018-08-16T23:59:59.000Z"),
-        request.getCreateJobRequest().getJob().getDueDate());
-    assertEquals("Census - 188961", request.getCreateJobRequest().getJob().getDescription());
-
-    assertEquals("\\OPTIMISE\\INPUT", request.getSendMessageRequestInfo().getQueueName());
-    assertEquals("1234", request.getSendMessageRequestInfo().getKey());
+    assertEquals("1234", request.getReference());
+    assertEquals("188961", request.getContact().getName());
   }
 
   @Test

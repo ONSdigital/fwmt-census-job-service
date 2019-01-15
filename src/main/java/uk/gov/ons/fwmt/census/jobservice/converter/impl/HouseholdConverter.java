@@ -24,18 +24,27 @@ public class HouseholdConverter implements CometConverter {
     Instant instant = Instant.now();
     modelCase.setId(ingest.getAdditionalProperties().get("caseId"));
     modelCase.setReference(ingest.getJobIdentity());
-    modelCase.setCaseType(CASE_TYPE_HH);
+    modelCase.setCaseType(CASE_TYPE_HH); 
     modelCase.setState(OPEN);
-    modelCase.setCategory("category");
-    modelCase.setEstabType("Household");
-    //    modelCase.setCoordCode(ingest.getAdditionalProperties().get("coordinatorCode"));
+
+    // TODO not yet implemented in Canonical
+    //modelCase.setCategory(ingest.getAddress().getCategory());
+
+    modelCase.setEstabType(ingest.getAdditionalProperties().get("establishmentType"));
     modelCase.setCoordCode("EX23");
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
+    contact.setPhone(ingest.getContact().getPhoneNumber());
+    contact.setEmail(ingest.getContact().getEmail());
     modelCase.setContact(contact);
 
     Address address = new Address();
-    address.setUprn(0L);
+    try {
+      address.setUprn(Long.parseLong(ingest.getAdditionalProperties().get("uprn")));
+    }catch (Exception e) {
+      // if a problem resolving uprn, null is fine.
+    }
+    
     address.setLines(addAddressLines(ingest));
     address.setPostCode(ingest.getAddress().getPostCode());
     modelCase.setAddress(address);
@@ -47,9 +56,9 @@ public class HouseholdConverter implements CometConverter {
 
     modelCase.setHtc(0);
     modelCase.setPriority(0);
-    modelCase.setDescription("Census");
-    modelCase.setSpecialInstructions("special instructions");
+    modelCase.setDescription("CENSUS");
     modelCase.setHoldUntil(instant.toString());
+
     return modelCase;
   }
 }

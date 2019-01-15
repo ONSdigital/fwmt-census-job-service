@@ -255,19 +255,19 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = false
     }
-    afterEvaluate {
-        classDirectories.from = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    '**/legacy_ingest/*',
-                    '**/dto/*',
-                    '**/data/tm/*',
-                    '**/config/*',
-                    '**/CSVParseFinalResult.java',
-                    '**/ApplicationConfig.java',
-                    '**/WebConfig.java'
-            ])
-        })
-    }
+//    afterEvaluate {
+//        classDirectories.from = files(classDirectories.files.collect {
+//            fileTree(dir: it, exclude: [
+//                    '**/legacy_ingest/*',
+//                    '**/dto/*',
+//                    '**/data/tm/*',
+//                    '**/config/*',
+//                    '**/CSVParseFinalResult.java',
+//                    '**/ApplicationConfig.java',
+//                    '**/WebConfig.java'
+//            ])
+//        })
+//    }
 }
 test.finalizedBy(project.tasks.jacocoTestReport)
 
