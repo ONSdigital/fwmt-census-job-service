@@ -19,12 +19,8 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.support.RetryTemplate;
 import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
 import uk.gov.ons.fwmt.census.jobservice.retrysupport.DefaultListenerSupport;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.retry.CTPRetryPolicy;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.retry.CustomMessageRecover;
-
-import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.ADAPTER_JOB_SVC_DLQ;
-import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.JOB_SVC_ADAPTER_DLQ;
 
 @Configuration
 public class QueueConfig {
@@ -32,6 +28,14 @@ public class QueueConfig {
   private final int initialInterval;
   private final double multiplier;
   private final int maxInterval;
+
+  private static final String JOBSVC_TO_ADAPTER_QUEUE = "gateway.feedback";
+  private static final String ADAPTER_TO_JOBSVC_QUEUE = "gateway.actions";
+  private static final String JOBSVC_TO_ADAPTER_DLQ = JOBSVC_TO_ADAPTER_QUEUE + ".DLQ";
+  private static final String ADAPTER_TO_JOBSVC_DLQ = ADAPTER_TO_JOBSVC_QUEUE + ".DLQ";
+  private static final String RM_JOB_SVC_EXCHANGE = "gateway.feedback.exchange";
+  private static final String JOB_SVC_RESPONSE_ROUTING_KEY = "jobsvc.job.response";
+  private static final String JOB_SVC_REQUEST_ROUTING_KEY = "jobsvc.job.request";
 
   public QueueConfig(@Value("${rabbitmq.initialinterval}") Integer initialInterval,
       @Value("${rabbitmq.multiplier}") Double multiplier,
@@ -43,43 +47,43 @@ public class QueueConfig {
 
   @Bean
   public Queue adapterQueue() {
-    return QueueBuilder.durable(QueueNames.JOBSVC_TO_ADAPTER_QUEUE)
+    return QueueBuilder.durable(JOBSVC_TO_ADAPTER_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", JOB_SVC_ADAPTER_DLQ)
+        .withArgument("x-dead-letter-routing-key", JOBSVC_TO_ADAPTER_DLQ)
         .build();
   }
 
   @Bean
   public Queue jobSvcQueue() {
-    return QueueBuilder.durable(QueueNames.ADAPTER_TO_JOBSVC_QUEUE)
+    return QueueBuilder.durable(ADAPTER_TO_JOBSVC_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", ADAPTER_JOB_SVC_DLQ)
+        .withArgument("x-dead-letter-routing-key", ADAPTER_TO_JOBSVC_DLQ)
         .build();
   }
 
   @Bean
   public Queue adapterDeadLetterQueue() {
-    return QueueBuilder.durable(ADAPTER_JOB_SVC_DLQ).build();
+    return QueueBuilder.durable(ADAPTER_TO_JOBSVC_DLQ).build();
   }
 
   @Bean
   public Queue jobSvsDeadLetterQueue() {
-    return QueueBuilder.durable(JOB_SVC_ADAPTER_DLQ).build();
+    return QueueBuilder.durable(JOBSVC_TO_ADAPTER_DLQ).build();
   }
 
   @Bean
   public DirectExchange adapterExchange() {
-    return new DirectExchange(QueueNames.RM_JOB_SVC_EXCHANGE);
+    return new DirectExchange(RM_JOB_SVC_EXCHANGE);
   }
 
   @Bean
   public Binding adapterBinding(@Qualifier("adapterQueue") Queue queue, DirectExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with(QueueNames.JOB_SVC_RESPONSE_ROUTING_KEY);
+    return BindingBuilder.bind(queue).to(exchange).with(JOB_SVC_RESPONSE_ROUTING_KEY);
   }
 
   @Bean
   public Binding jobSvcBinding(@Qualifier("jobSvcQueue") Queue queue, DirectExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with(QueueNames.JOB_SVC_REQUEST_ROUTING_KEY);
+    return BindingBuilder.bind(queue).to(exchange).with(JOB_SVC_REQUEST_ROUTING_KEY);
   }
 
   @Bean
@@ -91,7 +95,7 @@ public class QueueConfig {
 
     container.setAdviceChain(adviceChain);
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(QueueNames.ADAPTER_TO_JOBSVC_QUEUE);
+    container.setQueueNames(ADAPTER_TO_JOBSVC_QUEUE);
     container.setMessageListener(listenerAdapter);
     return container;
   }
