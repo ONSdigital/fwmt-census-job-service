@@ -107,7 +107,7 @@ dependencies {
     compile(files((String) genJaxb.classesDir).builtBy(genJaxb))
 
     compile('org.springframework.boot:spring-boot-starter')
-//    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-amqp')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-web-services')
