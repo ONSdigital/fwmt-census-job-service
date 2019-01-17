@@ -6,13 +6,8 @@ info:
   branch: @scmBranch@
   built: @timestamp@
 
-management:
-  endpoints:
-    health:
-      enabled: true
-      show-details: always
-    info:
-      enabled: true
+# Place /info and /health in the root
+management.endpoints.web.base-path: ''
 
 server:
   port: 9999
