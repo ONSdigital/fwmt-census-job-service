@@ -116,11 +116,6 @@ dependencies {
     compile('org.springframework.retry:spring-retry')
     compile('org.springframework:spring-aop')
 
-    compile('org.springframework.cloud:spring-cloud-cloudfoundry-connector')
-    compile('org.springframework.cloud:spring-cloud-spring-service-connector') {
-        exclude(module: 'log4j')
-    }
-
     compile('com.fasterxml.jackson.core:jackson-databind')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
     compile('com.github.joschi.jackson:jackson-datatype-threetenbp:2.6.4')
