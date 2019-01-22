@@ -31,13 +31,10 @@ public class RabbitCheckHealthController {
     RabbitAdmin rabbitAdmin = new RabbitAdmin(factory);
 
     List<String> queues = Arrays.asList(
-        "jobsvc-adapter",
-        "jobSvc-adapter.DLQ",
-        "adapter-jobSvc",
-        "adapter-jobSvc.DLQ",
-        "adapter-rm",
-        "adapter-rm.DLQ",
-        "rm-adapter.DLQ"
+        "gateway.feedback",
+        "gateway.feedback.DLQ",
+        "gateway.actions",
+        "gateway.actions.DLQ"
     );
 
     return queues.stream()
