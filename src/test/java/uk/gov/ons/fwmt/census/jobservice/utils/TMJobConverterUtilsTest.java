@@ -3,11 +3,12 @@ package uk.gov.ons.fwmt.census.jobservice.utils;
 import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
 import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
+import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Contact;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
@@ -15,6 +16,9 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +29,7 @@ public class TMJobConverterUtilsTest {
   public void createHHJobTest() {
     FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
     Address address = new Address();
+    Contact contact = new Contact();
     ingest.setActionType("Create");
     ingest.setJobIdentity("1234");
     ingest.setSurveyType("HH");
@@ -39,7 +44,15 @@ public class TMJobConverterUtilsTest {
     address.setPostCode("188961");
     address.setLatitude(BigDecimal.valueOf(61.7921776));
     address.setLongitude(BigDecimal.valueOf(34.3739957));
+    contact.setPhoneNumber("1234567890");
+    contact.setEmail("test@test.com");
+    contact.setForename("test");
+    contact.setSurname("test");
     ingest.setAddress(address);
+    ingest.setContact(contact);
+    Map<String, String> additionalProperties = new HashMap();
+    additionalProperties.put("caseId", UUID.randomUUID().toString());
+    ingest.setAdditionalProperties(additionalProperties);
 
     HouseholdConverter converter = new HouseholdConverter();
     ModelCase request = converter.convert(ingest);
@@ -52,6 +65,7 @@ public class TMJobConverterUtilsTest {
     String user = "bob.smith";
     FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
     Address address = new Address();
+    Contact contact = new Contact();
     ingest.setActionType("Create");
     ingest.setJobIdentity("1234");
     ingest.setSurveyType("CCS");
@@ -66,7 +80,15 @@ public class TMJobConverterUtilsTest {
     address.setPostCode("188961");
     address.setLatitude(BigDecimal.valueOf(61.7921776));
     address.setLongitude(BigDecimal.valueOf(34.3739957));
+    contact.setPhoneNumber("1234567890");
+    contact.setEmail("test@test.com");
+    contact.setForename("test");
+    contact.setSurname("test");
     ingest.setAddress(address);
+    ingest.setContact(contact);
+    Map<String, String> additionalProperties = new HashMap();
+    additionalProperties.put("caseId", UUID.randomUUID().toString());
+    ingest.setAdditionalProperties(additionalProperties);
 
     CCSConverter converter = new CCSConverter();
     ModelCase request = converter.convert(ingest);
