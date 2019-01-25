@@ -1,8 +1,5 @@
 package uk.gov.ons.fwmt.census.jobservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -14,9 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import uk.gov.ons.fwmt.census.jobservice.config.QueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.helper.TestReceiver;
 
-import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.JOBSVC_TO_ADAPTER_QUEUE;
 
 @Configuration
 public class IntegrationTestConfig {
@@ -31,7 +33,7 @@ public class IntegrationTestConfig {
       @Qualifier("testListenerAdapter") MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(JOBSVC_TO_ADAPTER_QUEUE);
+    container.setQueueNames(QueueConfig.GATEWAY_FEEDBACK);
     container.setMessageListener(listenerAdapter);
     return container;
   }

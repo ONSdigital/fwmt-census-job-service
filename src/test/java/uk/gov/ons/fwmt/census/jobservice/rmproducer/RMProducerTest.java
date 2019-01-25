@@ -8,9 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import uk.gov.ons.fwmt.census.jobservice.config.QueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames;
 import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -48,7 +49,7 @@ public class RMProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(censusCaseOutcomeDTO));
-    verify(template).convertAndSend(QueueNames.JOBSVC_TO_ADAPTER_QUEUE, responseJson);
+    verify(template).convertAndSend(QueueConfig.GATEWAY_FEEDBACK, responseJson);
 
   }
 }

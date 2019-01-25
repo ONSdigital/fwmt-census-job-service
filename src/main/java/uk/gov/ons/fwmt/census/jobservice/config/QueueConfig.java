@@ -29,13 +29,13 @@ public class QueueConfig {
   private final double multiplier;
   private final int maxInterval;
 
-  private static final String JOBSVC_TO_ADAPTER_QUEUE = "gateway.feedback";
-  private static final String ADAPTER_TO_JOBSVC_QUEUE = "gateway.actions";
-  private static final String JOBSVC_TO_ADAPTER_DLQ = JOBSVC_TO_ADAPTER_QUEUE + ".DLQ";
-  private static final String ADAPTER_TO_JOBSVC_DLQ = ADAPTER_TO_JOBSVC_QUEUE + ".DLQ";
-  private static final String RM_JOB_SVC_EXCHANGE = "gateway.feedback.exchange";
-  private static final String JOB_SVC_RESPONSE_ROUTING_KEY = "jobsvc.job.response";
-  private static final String JOB_SVC_REQUEST_ROUTING_KEY = "jobsvc.job.request";
+  public static final String GATEWAY_FEEDBACK = "gateway.feedback";
+  public static final String GATEWAY_ACTIONS = "gateway.actions";
+  public static final String GATEWAY_FEEDBACK_DLQ = "gateway.feedback.DLQ";
+  public static final String GATEWAY_ACTIONS_DLQ = "gateway.actions.DLQ";
+  public static final String GATEWAY_FEEDBACK_EXCHANGE = "gateway.feedback.exchange";
+  public static final String JOBSVC_JOB_RESPONSE_ROUTING_KEY = "jobsvc.job.response";
+  public static final String JOBSVC_REQUEST_ROUTING_KEY = "jobsvc.job.request";
 
   public QueueConfig(@Value("${rabbitmq.initialinterval}") Integer initialInterval,
       @Value("${rabbitmq.multiplier}") Double multiplier,
@@ -46,44 +46,44 @@ public class QueueConfig {
   }
 
   @Bean
-  public Queue adapterQueue() {
-    return QueueBuilder.durable(JOBSVC_TO_ADAPTER_QUEUE)
+  public Queue gatewayFeedbackQueue() {
+    return QueueBuilder.durable(GATEWAY_FEEDBACK)
         .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", JOBSVC_TO_ADAPTER_DLQ)
+        .withArgument("x-dead-letter-routing-key", GATEWAY_FEEDBACK_DLQ)
         .build();
   }
 
   @Bean
-  public Queue jobSvcQueue() {
-    return QueueBuilder.durable(ADAPTER_TO_JOBSVC_QUEUE)
+  public Queue gatewayActionsQueue() {
+    return QueueBuilder.durable(GATEWAY_ACTIONS)
         .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", ADAPTER_TO_JOBSVC_DLQ)
+        .withArgument("x-dead-letter-routing-key", GATEWAY_ACTIONS_DLQ)
         .build();
   }
 
   @Bean
-  public Queue adapterDeadLetterQueue() {
-    return QueueBuilder.durable(ADAPTER_TO_JOBSVC_DLQ).build();
+  public Queue gatewayActionsDeadLetterQueue() {
+    return QueueBuilder.durable(GATEWAY_ACTIONS_DLQ).build();
   }
 
   @Bean
-  public Queue jobSvsDeadLetterQueue() {
-    return QueueBuilder.durable(JOBSVC_TO_ADAPTER_DLQ).build();
+  public Queue gatewayFeedbackDeadLetterQueue() {
+    return QueueBuilder.durable(GATEWAY_FEEDBACK_DLQ).build();
   }
 
   @Bean
-  public DirectExchange adapterExchange() {
-    return new DirectExchange(RM_JOB_SVC_EXCHANGE);
+  public DirectExchange gatewayFeedbackExchange() {
+    return new DirectExchange(GATEWAY_FEEDBACK_EXCHANGE);
   }
 
   @Bean
-  public Binding adapterBinding(@Qualifier("adapterQueue") Queue queue, DirectExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with(JOB_SVC_RESPONSE_ROUTING_KEY);
+  public Binding gatewayFeedbackBinding(@Qualifier("gatewayFeedbackQueue") Queue queue, DirectExchange exchange) {
+    return BindingBuilder.bind(queue).to(exchange).with(JOBSVC_JOB_RESPONSE_ROUTING_KEY);
   }
 
   @Bean
-  public Binding jobSvcBinding(@Qualifier("jobSvcQueue") Queue queue, DirectExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with(JOB_SVC_REQUEST_ROUTING_KEY);
+  public Binding gatewayActionsBinding(@Qualifier("gatewayActionsQueue") Queue queue, DirectExchange exchange) {
+    return BindingBuilder.bind(queue).to(exchange).with(JOBSVC_REQUEST_ROUTING_KEY);
   }
 
   @Bean
@@ -95,7 +95,7 @@ public class QueueConfig {
 
     container.setAdviceChain(adviceChain);
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(ADAPTER_TO_JOBSVC_QUEUE);
+    container.setQueueNames(GATEWAY_ACTIONS);
     container.setMessageListener(listenerAdapter);
     return container;
   }
