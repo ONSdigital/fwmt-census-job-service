@@ -49,7 +49,7 @@ public class RMProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(censusCaseOutcomeDTO));
-    verify(template).convertAndSend(QueueConfig.GATEWAY_FEEDBACK, responseJson);
+    verify(template).convertAndSend(QueueConfig.GATEWAY_FEEDBACK_EXCHANGE, QueueConfig.JOBSVC_JOB_RESPONSE_ROUTING_KEY, responseJson);
 
   }
 }
