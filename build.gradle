@@ -16,6 +16,7 @@ buildscript {
     }
 }
 
+
 plugins {
     id 'java'
     id 'application'
@@ -57,6 +58,16 @@ configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+}
+
+springBoot {
+    buildInfo {
+        properties {
+            additional = [
+              //  exampleFoo : 'bar'
+            ]
+        }
+    }
 }
 
 task genJaxb {
