@@ -61,13 +61,16 @@ configurations {
 }
 
 springBoot {
-    buildInfo {
-        properties {
-            additional = [
-              //  exampleFoo : 'bar'
-            ]
-        }
-    }
+    buildInfo()
+// Example of additional properties for /info endpoint
+//    buildInfo {
+//        properties {
+//            additional = [
+//              property : System.getenv("..."),
+//              property2 : 'value'
+//            ]
+//        }
+//    }
 }
 
 task genJaxb {
