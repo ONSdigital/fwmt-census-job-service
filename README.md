@@ -20,3 +20,7 @@ Copyright (C) 2018 Crown Copyright (Office for National Statistics)
 ## tm-canonical-ccs
 
 ![](tm-canonical-ccs.png "tm - canonical - ccs - mapping")
+
+## tm-outcome
+
+![](tm-outcome.png "tm - census - outcome - mapping")
