@@ -16,6 +16,7 @@ buildscript {
     }
 }
 
+
 plugins {
     id 'java'
     id 'application'
@@ -57,6 +58,19 @@ configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+}
+
+springBoot {
+    buildInfo()
+// Example of additional properties for /info endpoint
+//    buildInfo {
+//        properties {
+//            additional = [
+//              property : System.getenv("..."),
+//              property2 : 'value'
+//            ]
+//        }
+//    }
 }
 
 task genJaxb {
