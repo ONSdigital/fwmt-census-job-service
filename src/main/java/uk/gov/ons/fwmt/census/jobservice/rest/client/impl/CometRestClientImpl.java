@@ -22,10 +22,10 @@ public class CometRestClientImpl implements CometRestClient {
   @Autowired
   public CometRestClientImpl(
       RestTemplate restTemplate,
-      @Value("${service.mock.baseUrl}") String baseUrl,
-      @Value("${service.mock.operation.case.create.path}") String mockPath) {
+      @Value("${totalmobile.baseUrl}") String baseUrl,
+      @Value("${totalmobile.operation.case.create.path}") String tmPath) {
     this.restTemplate = restTemplate;
-    this.cometURL = baseUrl + mockPath;
+    this.cometURL = baseUrl + tmPath;
   }
 
   /// Throws an HttpClientErrorException if an error occurs during sending
