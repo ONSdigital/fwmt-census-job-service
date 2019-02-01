@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.config.QueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.helper.TestReceiver;
 
@@ -33,7 +34,7 @@ public class IntegrationTestConfig {
       @Qualifier("testListenerAdapter") MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(QueueConfig.GATEWAY_FEEDBACK);
+    container.setQueueNames(GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_QUEUE);
     container.setMessageListener(listenerAdapter);
     return container;
   }

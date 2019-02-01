@@ -1,6 +1,8 @@
 package uk.gov.ons.fwmt.census.jobservice.queuereceiver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,12 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.message.impl.JobServiceMessageReceiverImpl;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceMessageReceiverTest {
@@ -29,7 +31,7 @@ public class JobServiceMessageReceiverTest {
 
   @Test
   public void receiveMessageCreate()
-      throws CTPException {
+      throws GatewayException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
     json.put("actionType", "Create");
@@ -58,7 +60,7 @@ public class JobServiceMessageReceiverTest {
 
   @Test
   public void receiveMessageCancel()
-      throws CTPException {
+      throws GatewayException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");
     json.put("jobIdentity", "1234");

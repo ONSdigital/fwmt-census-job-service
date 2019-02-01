@@ -1,33 +1,36 @@
 package uk.gov.ons.fwmt.census.jobservice.utils;
 
-import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
-import org.junit.Test;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Contact;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+
+import org.junit.Test;
+
+import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
+import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
+
+import uk.gov.ons.fwmt.census.canonical.v1.Address;
+import uk.gov.ons.fwmt.census.canonical.v1.Contact;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
+import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
 
 public class TMJobConverterUtilsTest {
 
   @Test
   public void createHHJobTest() {
-    FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
+    CreateFieldWorkerJobRequest ingest = new CreateFieldWorkerJobRequest();
     Address address = new Address();
     Contact contact = new Contact();
     ingest.setActionType("Create");
@@ -61,9 +64,9 @@ public class TMJobConverterUtilsTest {
   }
 
   @Test
-  public void createCCSJobTest() throws CTPException {
+  public void createCCSJobTest() throws GatewayException {
     String user = "bob.smith";
-    FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
+    CreateFieldWorkerJobRequest ingest = new CreateFieldWorkerJobRequest();
     Address address = new Address();
     Contact contact = new Contact();
     ingest.setActionType("Create");

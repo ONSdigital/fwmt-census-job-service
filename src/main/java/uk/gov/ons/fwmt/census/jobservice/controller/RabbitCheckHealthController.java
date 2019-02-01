@@ -32,7 +32,6 @@ public class RabbitCheckHealthController {
 
     List<String> queues = Arrays.asList(
         "gateway.feedback",
-        "gateway.feedback.DLQ",
         "gateway.actions",
         "gateway.actions.DLQ"
     );

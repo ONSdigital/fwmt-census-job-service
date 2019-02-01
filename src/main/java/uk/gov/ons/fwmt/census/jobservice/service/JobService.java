@@ -1,14 +1,14 @@
 package uk.gov.ons.fwmt.census.jobservice.service;
 
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCancelJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
 
 public interface JobService {
-  void createJob(FWMTCreateJobRequest jobRequest) throws CTPException;
+  void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 
-  void cancelJob(FWMTCancelJobRequest cancelRequest) throws CTPException;
+  void cancelJob(CancelFieldWorkerJobRequest cancelRequest) throws GatewayException;
 
-  void convertAndSendCreate(FWMTCreateJobRequest jobRequest) throws CTPException;
+  void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 
 }

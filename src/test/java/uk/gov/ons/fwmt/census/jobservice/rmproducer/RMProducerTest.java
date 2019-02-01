@@ -1,7 +1,9 @@
 package uk.gov.ons.fwmt.census.jobservice.rmproducer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -9,14 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.config.QueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
-
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RMProducerTest {
@@ -31,7 +33,7 @@ public class RMProducerTest {
   ObjectMapper objectMapper;
 
   @Test
-  public void send() throws JsonProcessingException, CTPException {
+  public void send() throws JsonProcessingException, GatewayException {
     //Given
     CensusCaseOutcomeDTO censusCaseOutcomeDTO = new CensusCaseOutcomeDTO("1234567890", "qwertyuiop", "asdfghjkl",
         "test", "test");
@@ -49,7 +51,7 @@ public class RMProducerTest {
 
     //Then
     verify(objectMapper).writeValueAsString(eq(censusCaseOutcomeDTO));
-    verify(template).convertAndSend(QueueConfig.GATEWAY_FEEDBACK_EXCHANGE, QueueConfig.JOBSVC_JOB_RESPONSE_ROUTING_KEY, responseJson);
+    verify(template).convertAndSend(GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_EXCHANGE, GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_ROUTING_KEY, responseJson);
 
   }
 }
