@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.jobservice.config.GatewayActionsQueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
 
-@Slf4j
 @RequestMapping("/rabbitHealth")
 public class RabbitCheckHealthController {
 
