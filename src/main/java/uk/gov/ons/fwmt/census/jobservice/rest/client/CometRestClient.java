@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
 
-@Slf4j
 @Component
 public class CometRestClient {
 

@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 
-@Slf4j
 @RestController
 @RequestMapping("/CensusCaseOutcome")
 public class CensusCaseOutcomeController {

@@ -46,7 +46,7 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
-    Map<String, String> additionalProperties = new HashMap();
+    Map<String, String> additionalProperties = new HashMap<>();
     additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
@@ -82,7 +82,7 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
-    Map<String, String> additionalProperties = new HashMap();
+    Map<String, String> additionalProperties = new HashMap<>();
     additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
