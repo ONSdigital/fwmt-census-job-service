@@ -13,14 +13,14 @@ import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
 
 @Slf4j
 @Component
-public class CometRestClientImpl {
+public class CometRestClient {
 
   private transient RestTemplate restTemplate;
 
   private transient String cometURL;
 
   @Autowired
-  public CometRestClientImpl(
+  public CometRestClient(
       RestTemplate restTemplate,
       @Value("${totalmobile.baseUrl}") String baseUrl,
       @Value("${totalmobile.operation.case.create.path}") String tmPath) {
