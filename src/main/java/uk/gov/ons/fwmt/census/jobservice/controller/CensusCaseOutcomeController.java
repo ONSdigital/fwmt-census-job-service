@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.fwmt.census.jobservice.message.RMProducer;
+import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 
 @Slf4j
 @RestController
@@ -17,11 +17,11 @@ import uk.gov.ons.fwmt.census.jobservice.message.RMProducer;
 public class CensusCaseOutcomeController {
 
   @Autowired
-  private RMProducer rmProducer;
+  private GatewayFeedbackProducer gatewayFeedbackProducer;
 
   @PostMapping(consumes = "application/json", produces = "application/json")
   public void censusCaseOutcomeResponse(@RequestBody CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws GatewayException {
-    rmProducer.send(censusCaseOutcomeDTO);
+    gatewayFeedbackProducer.send(censusCaseOutcomeDTO);
   }
 
 }

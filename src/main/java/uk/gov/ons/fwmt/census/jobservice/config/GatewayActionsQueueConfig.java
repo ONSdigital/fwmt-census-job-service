@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 
-import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
+import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 
 @Configuration
 public class GatewayActionsQueueConfig {
@@ -44,7 +44,7 @@ public class GatewayActionsQueueConfig {
 
   //Listener Adapter
   @Bean
-  public MessageListenerAdapter gatewayActionsListenerAdapter(JobServiceMessageReceiver receiver) {
+  public MessageListenerAdapter gatewayActionsListenerAdapter(GatewayFeedbackProducer receiver) {
     return new MessageListenerAdapter(receiver, "receiveMessage");
   }
   

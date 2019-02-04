@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.message.impl;
+package uk.gov.ons.fwmt.census.jobservice.message;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.fwmt.census.jobservice.message.RMProducer;
 
 @Slf4j
 @Component
-public class RMProducerImpl implements RMProducer {
+public class GatewayFeedbackProducer {
 
   @Autowired
   private ObjectMapper objectMapper;

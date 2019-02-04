@@ -18,13 +18,13 @@ import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.config.QueueConfig;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.fwmt.census.jobservice.message.impl.RMProducerImpl;
+import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RMProducerTest {
 
   @InjectMocks
-  RMProducerImpl rmProducer;
+  GatewayFeedbackProducer rmProducer;
 
   @Mock
   RabbitTemplate template;

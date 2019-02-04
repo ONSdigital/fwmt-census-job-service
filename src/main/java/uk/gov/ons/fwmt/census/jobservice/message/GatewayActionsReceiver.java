@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.message.impl;
+package uk.gov.ons.fwmt.census.jobservice.message;
 
 import java.io.IOException;
 
@@ -10,16 +10,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.jobservice.message.JobServiceMessageReceiver;
-import uk.gov.ons.fwmt.census.jobservice.service.JobService;
-
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
 @Slf4j
 @Component
-public class JobServiceMessageReceiverImpl implements JobServiceMessageReceiver {
+public class GatewayActionsReceiver {
 
   @Autowired
   private JobService jobService;

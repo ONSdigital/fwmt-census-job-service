@@ -1,19 +1,19 @@
-package uk.gov.ons.fwmt.census.jobservice.rest.client.impl;
+package uk.gov.ons.fwmt.census.jobservice.rest.client;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
 import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
 
 @Slf4j
 @Component
-public class CometRestClientImpl implements CometRestClient {
+public class CometRestClientImpl {
 
   private transient RestTemplate restTemplate;
 
@@ -28,15 +28,9 @@ public class CometRestClientImpl implements CometRestClient {
     this.cometURL = baseUrl + tmPath;
   }
 
-  /// Throws an HttpClientErrorException if an error occurs during sending
   public void sendCreateJobRequest(ModelCase modelCase) {
-//    try {
       JobServiceUtils.printJSON(modelCase);
       HttpEntity<ModelCase> body = new HttpEntity<>(modelCase);
       restTemplate.exchange(cometURL + modelCase.getId(), HttpMethod.PUT, body, Void.class);
-//    } catch (HttpClientErrorException httpClientErrorException) {
-//      log.error("An error occurred while sending file to Job Service", httpClientErrorException);
-//      throw httpClientErrorException;
-//    }
   }
 }

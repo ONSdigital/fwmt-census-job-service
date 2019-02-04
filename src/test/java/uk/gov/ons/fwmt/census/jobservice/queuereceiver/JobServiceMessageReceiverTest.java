@@ -14,14 +14,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.jobservice.message.impl.JobServiceMessageReceiverImpl;
+import uk.gov.ons.fwmt.census.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceMessageReceiverTest {
 
   @InjectMocks
-  JobServiceMessageReceiverImpl messageReceiver;
+  GatewayActionsReceiver messageReceiver;
 
   @Mock
   private JobService jobService;
