@@ -16,9 +16,9 @@ public class GatewayFeedbackQueueConfig {
   @Autowired
   private AmqpAdmin amqpAdmin;
     
-  public static final String GATEWAY_FEEDBACK_QUEUE = "gateway.feedback";
-  public static final String GATEWAY_FEEDBACK_EXCHANGE = "gateway.feedback.exchange";
-  public static final String GATEWAY_FEEDBACK_ROUTING_KEY = "gateway.feedback.request";
+  public static final String GATEWAY_FEEDBACK_QUEUE = "Gateway.Feedback";
+  public static final String GATEWAY_FEEDBACK_EXCHANGE = "Gateway.Feedback.Exchange";
+  public static final String GATEWAY_FEEDBACK_ROUTING_KEY = "Gateway.Feedback.Request";
 
   // Queue
   @Bean

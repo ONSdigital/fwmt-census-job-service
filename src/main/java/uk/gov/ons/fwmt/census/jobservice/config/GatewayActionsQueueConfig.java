@@ -20,8 +20,8 @@ public class GatewayActionsQueueConfig {
   @Autowired
   private AmqpAdmin amqpAdmin;
   
-  public static final String GATEWAY_ACTIONS_QUEUE = "gateway.actions";
-  public static final String GATEWAY_ACTIONS_DLQ = "gateway.actions.DLQ";
+  public static final String GATEWAY_ACTIONS_QUEUE = "Gateway.Actions";
+  public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
 
   //Queues
   @Bean
