@@ -21,7 +21,7 @@ public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {//TODO Why is this not in RMAdapter
+  public void afterPropertiesSet() throws Exception {
     setRealmName("fwmt-census-jobservice");
     super.afterPropertiesSet();
   }

@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter { //TODO Why is this not in RMAdapter
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter { 
 
   private static final String[] AUTH_WHITELIST = {
       // -- swagger ui
