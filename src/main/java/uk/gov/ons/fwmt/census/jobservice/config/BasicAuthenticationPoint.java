@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
-public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint { //TODO Why is this not in RMAdapter
+public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint { 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
       throws IOException {
