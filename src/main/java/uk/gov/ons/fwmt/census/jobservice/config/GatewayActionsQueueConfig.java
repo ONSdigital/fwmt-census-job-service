@@ -30,7 +30,6 @@ public class GatewayActionsQueueConfig {
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", GATEWAY_ACTIONS_DLQ)
         .build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
     return queue;
   } 
 
@@ -38,7 +37,6 @@ public class GatewayActionsQueueConfig {
   @Bean
   public Queue gatewayActionsDeadLetterQueue() {
     Queue queue = QueueBuilder.durable(GATEWAY_ACTIONS_DLQ).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
     return queue;
   }
 

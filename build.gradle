@@ -49,8 +49,6 @@ repositories {
         maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
     }
     mavenCentral()
-//    maven { url 'https://oss.sonatype.org/content/repositories/libs-snapshot' }
-//    maven { url 'http://repo.maven.apache.org/maven2' }
 }
 
 configurations {

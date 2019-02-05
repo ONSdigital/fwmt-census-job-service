@@ -7,8 +7,8 @@ import org.springframework.retry.annotation.EnableRetry;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableRetry //TODO where is this in rmadapter
-@EnableSwagger2 //TODO ditto
+@EnableRetry 
+@EnableSwagger2 
 public class Application {
 
   public static void main(String[] args) {

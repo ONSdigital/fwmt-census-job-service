@@ -24,7 +24,6 @@ public class GatewayFeedbackQueueConfig {
   @Bean
   public Queue gatewayFeedbackQueue() {
     Queue queue = QueueBuilder.durable(GATEWAY_FEEDBACK_QUEUE).build();
-    queue.setAdminsThatShouldDeclare(amqpAdmin);
     return queue;
   }
   
@@ -32,7 +31,6 @@ public class GatewayFeedbackQueueConfig {
   @Bean
   public DirectExchange gatewayFeedbackExchange() {
     DirectExchange directExchange = new DirectExchange(GATEWAY_FEEDBACK_EXCHANGE);
-    directExchange.setAdminsThatShouldDeclare(amqpAdmin);
     return directExchange;
   }
 
