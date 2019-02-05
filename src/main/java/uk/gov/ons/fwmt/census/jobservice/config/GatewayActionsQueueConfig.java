@@ -17,9 +17,6 @@ import uk.gov.ons.fwmt.census.jobservice.message.GatewayActionsReceiver;
 
 @Configuration
 public class GatewayActionsQueueConfig {
-  @Autowired
-  private AmqpAdmin amqpAdmin;
-  
   public static final String GATEWAY_ACTIONS_QUEUE = "Gateway.Actions";
   public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
 
