@@ -12,14 +12,14 @@ import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 
 @Component("CCS")
 public class CCSConverter implements CometConverter {
   private static final String CASE_TYPE_CCS = "CCS";
 
   @Override
-  public ModelCase convert(FWMTCreateJobRequest ingest) {
+  public ModelCase convert(CreateFieldWorkerJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
     modelCase.setId(ingest.getAdditionalProperties().get("caseId"));

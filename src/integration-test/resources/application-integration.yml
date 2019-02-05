@@ -9,9 +9,6 @@ info:
 server:
   port: 9091
 
-mock:
-  port: 9099
-
 project:
   basedir: ${basedir}
 

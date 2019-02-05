@@ -1,14 +1,16 @@
 package uk.gov.ons.fwmt.census.jobservice.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 
 @Slf4j
 public final class JobServiceUtils {
@@ -20,7 +22,7 @@ public final class JobServiceUtils {
     return addressLine;
   }
 
-  public static List<String> addAddressLines(FWMTCreateJobRequest ingest) {
+  public static List<String> addAddressLines(CreateFieldWorkerJobRequest ingest) {
     List<String> addressLines = new ArrayList<>();
 
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine1());//

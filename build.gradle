@@ -37,24 +37,21 @@ description = 'fwmt-census-job-service'
 version = '3.0.6-SNAPSHOT'
 group = 'uk.gov.ons.fwmt'
 
-mainClassName = 'uk.gov.ons.fwmt.census.jobservice.ApplicationConfig'
+mainClassName = 'uk.gov.ons.fwmt.census.jobservice.Application'
 
 sourceCompatibility = 11
 targetCompatibility = 11
 
 repositories {
+    mavenLocal()
     if (!project.hasProperty('omitSDCArtifactory')) {
         maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
         maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
     }
-    mavenLocal()
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/libs-snapshot' }
-    maven { url 'http://repo.maven.apache.org/maven2' }
 }
 
 configurations {
-    jaxb
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
     integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
@@ -73,52 +70,9 @@ springBoot {
 //    }
 }
 
-task genJaxb {
-    ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
-    ext.classesDir = "${buildDir}/classes/jaxb"
-    ext.schema = "${projectDir}/src/main/resources/wsdl"
-
-    outputs.dir classesDir
-
-    doLast() {
-        project.ant {
-            taskdef name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask', classpath: configurations.jaxb.asPath
-            mkdir(dir: sourcesDir)
-            mkdir(dir: classesDir)
-
-            xjc(destdir: sourcesDir) {
-                arg(value: '-wsdl')
-                produces(dir: sourcesDir, includes: '**/*.java')
-                schema(dir: schema, includes: '**/*.wsdl')
-            }
-
-            javac(destdir: classesDir, source: sourceCompatibility, target: targetCompatibility,
-                    debug: true, debugLevel: 'lines,vars,source',
-                    classpath: configurations.jaxb.asPath) {
-                src(path: sourcesDir)
-                include(name: '**/*.java')
-                include(name: '*.java')
-            }
-
-            copy(todir: classesDir) {
-                fileset(dir: sourcesDir, erroronmissingdir: false) {
-                    exclude(name: '**/*.java')
-                }
-            }
-        }
-    }
-}
-
 dependencies {
-    compile('uk.gov.ons.fwmt:fwmt-gateway-common:0.0.15-RELEASE')
-
-    jaxb('javax.xml.bind:jaxb-api:2.3.0')
-    jaxb('com.sun.xml.bind:jaxb-core:2.3.0.1')
-    jaxb('com.sun.xml.bind:jaxb-impl:2.3.1')
-    jaxb('com.sun.xml.bind:jaxb-xjc:2.3.1')
-    jaxb('javax.activation:activation:1.1.1')
-    compile('javax.xml.bind:jaxb-api:2.3.0')
-    compile(files((String) genJaxb.classesDir).builtBy(genJaxb))
+    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.1-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.1-SNAPSHOT")
 
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-actuator')

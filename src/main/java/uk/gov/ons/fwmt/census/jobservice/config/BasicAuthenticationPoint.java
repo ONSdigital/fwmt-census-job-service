@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
-public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
+public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint { 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
       throws IOException {
@@ -22,7 +22,7 @@ public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    setRealmName("fwmt-job-service-v2");
+    setRealmName("fwmt-census-jobservice");
     super.afterPropertiesSet();
   }
 }

@@ -9,9 +9,9 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
-  @Value("${service.mock.username}")
+  @Value("${totalmobile.username}")
   private String userName;
-  @Value("${service.mock.password}")
+  @Value("${totalmobile.password}")
   private String password;
 
   @Bean

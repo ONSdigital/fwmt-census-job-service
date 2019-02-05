@@ -1,33 +1,29 @@
 package uk.gov.ons.fwmt.census.jobservice.utils;
 
-import com.consiliumtechnologies.schemas.mobile._2015._05.optimisetypes.LocationType;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendCreateJobRequestMessage;
-import com.consiliumtechnologies.schemas.services.mobile._2009._03.messaging.SendDeleteJobRequestMessage;
-import org.junit.Test;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Address;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.Contact;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.data.FWMTCreateJobRequest;
-import uk.gov.ons.fwmt.fwmtgatewaycommon.error.CTPException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+import uk.gov.ons.fwmt.census.canonical.v1.Address;
+import uk.gov.ons.fwmt.census.canonical.v1.Contact;
+import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
+import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
 
 public class TMJobConverterUtilsTest {
 
   @Test
   public void createHHJobTest() {
-    FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
+    CreateFieldWorkerJobRequest ingest = new CreateFieldWorkerJobRequest();
     Address address = new Address();
     Contact contact = new Contact();
     ingest.setActionType("Create");
@@ -50,7 +46,7 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
-    Map<String, String> additionalProperties = new HashMap();
+    Map<String, String> additionalProperties = new HashMap<>();
     additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
@@ -61,9 +57,9 @@ public class TMJobConverterUtilsTest {
   }
 
   @Test
-  public void createCCSJobTest() throws CTPException {
+  public void createCCSJobTest() throws GatewayException {
     String user = "bob.smith";
-    FWMTCreateJobRequest ingest = new FWMTCreateJobRequest();
+    CreateFieldWorkerJobRequest ingest = new CreateFieldWorkerJobRequest();
     Address address = new Address();
     Contact contact = new Contact();
     ingest.setActionType("Create");
@@ -86,7 +82,7 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
-    Map<String, String> additionalProperties = new HashMap();
+    Map<String, String> additionalProperties = new HashMap<>();
     additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
@@ -97,55 +93,4 @@ public class TMJobConverterUtilsTest {
     assertEquals("188961", request.getContact().getName());
   }
 
-  @Test
-  public void addAddressLinesTest() throws DatatypeConfigurationException {
-    SendCreateJobRequestMessage message = new CreateJobBuilder(DatatypeFactory.newInstance())
-        .addAddressLine("number")
-        .addAddressLine("street")
-        .addAddressLine("town")
-        .addAddressLine("city")
-        .build();
-
-    LocationType address = message.getCreateJobRequest().getJob().getLocation();
-
-    assertEquals(4, address.getAddressDetail().getLines().getAddressLine().size());
-  }
-
-  @Test
-  public void checkNumberOfAddressLinesTest() throws DatatypeConfigurationException {
-    SendCreateJobRequestMessage message1 = new CreateJobBuilder(DatatypeFactory.newInstance())
-        .addAddressLine("number")
-        .addAddressLine("street")
-        .addAddressLine("street")
-        .addAddressLine("street")
-        .addAddressLine("town")
-        .addAddressLine("city")
-        .build();
-
-    LocationType address1 = message1.getCreateJobRequest().getJob().getLocation();
-
-    assertEquals(6, address1.getAddressDetail().getLines().getAddressLine().size());
-
-    SendCreateJobRequestMessage message2 = new CreateJobBuilder(DatatypeFactory.newInstance())
-        .addAddressLine("number")
-        .addAddressLine("street")
-        .addAddressLine("street")
-        .addAddressLine("street")
-        .addAddressLine("town")
-        .addAddressLine("city")
-        .shrinkAddressLines()
-        .build();
-
-    LocationType address2 = message2.getCreateJobRequest().getJob().getLocation();
-
-    assertEquals(5, address2.getAddressDetail().getLines().getAddressLine().size());
-  }
-
-  @Test
-  public void deleteJobTest() {
-    SendDeleteJobRequestMessage request = TMJobConverterUtils.deleteJob("1234", "wrong address", "admin");
-
-    assertEquals("wrong address", request.getDeleteJobRequest().getDeletionReason());
-    assertEquals("1234", request.getDeleteJobRequest().getIdentity().getReference());
-  }
 }
