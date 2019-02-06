@@ -1,19 +1,17 @@
 package uk.gov.ons.fwmt.census.jobservice.message;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
+
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -21,6 +19,9 @@ public class GatewayActionsReceiver {
 
   @Autowired
   private JobService jobService;
+
+  @Autowired
+  private GatewayEventProducer gatewayEventProducer;
 
   @Autowired
   private ObjectMapper mapper;
@@ -33,10 +34,12 @@ public class GatewayActionsReceiver {
   private void processMessage(String message) throws GatewayException {
     if (message.contains("Create")) {
       CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
+      gatewayEventProducer.sendEvent(fwmtCreateJobRequest.getJobIdentity(), "- Canonical - Create Job Received");
       jobService.createJob(fwmtCreateJobRequest);
       log.info("Sending Create job to TM");
     } else if (message.contains("Cancel")) {
       CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class, message);
+      gatewayEventProducer.sendEvent(fwmtCancelJobRequest.getJobIdentity(), "- Canonical - Cancel Job Received");
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
     }
