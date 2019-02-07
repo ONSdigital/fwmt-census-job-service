@@ -58,16 +58,13 @@ configurations {
 }
 
 springBoot {
-    buildInfo()
-// Example of additional properties for /info endpoint
-//    buildInfo {
-//        properties {
-//            additional = [
-//              property : System.getenv("..."),
-//              property2 : 'value'
-//            ]
-//        }
-//    }
+    buildInfo {
+        properties {
+            additional = [
+              'Git-Commit': grgit.head().getAbbreviatedId(8)
+            ]
+        }
+    }
 }
 
 dependencies {
