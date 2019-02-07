@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/ONSdigital/fwmt-job-service-v2.svg?branch=master)](https://travis-ci.org/ONSdigital/fwmt-job-service-v2) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-job-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-job-service&amp;utm_campaign=Badge_Grade)
 
-# fwmt-job-service-v2
+# fwmt-census-job-service
 This service is a gateway between FWMT job service and Total Mobile's COMET interface .
 
 It takes an Field Worker Job Request Canonical (Create, Update, Canel) message off the Gateway.Actions RabbitMQ Queue and transforms it into a JSON request which is sent to an instance of Tomtal Mobile' COMET endpoint.
