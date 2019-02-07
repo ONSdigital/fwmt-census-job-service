@@ -1,26 +1,19 @@
-
-# Place /info and /health in the root
-management.endpoints.web.base-path: ''
-
 server:
   port: 9999
 
 spring:
   application:
-    name: fwmt-job-service
+    name: fwmt-census-job-service
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-  rabbitmq:
-    username: guest
-    password: guest
-    host: localhost
-    port: 5672
-    virtualhost: /
   security:
     user:
       name: "user"
       password: "password"
+
+# Place /info and /health in the root
+management.endpoints.web.base-path: ''
 
 
 logging:
@@ -32,12 +25,20 @@ logging:
     org.springframework.web: ERROR
     org.hibernate: ERROR
     org.apache.commons.dbcp2: ERROR
-
   file: target/SpringErrors/spring.log
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
     file:    "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] [%X{FILENAME}] %logger{1}::%M - %msg%n"
 
+rabbitmq:
+  username: "guest"
+  password: "guest"
+  hostname: "localhost"
+  port: 5672
+  virtualHost: "/"
+  initialinterval: 5000
+  multiplier: 3.0
+  maxInterval: 45000
 
 totalmobile:
   username: "user"
@@ -47,12 +48,6 @@ totalmobile:
     case:
       create:
         path: "cases/"
-
-
-rabbitmq:
-  initialinterval: 5000
-  multiplier: 3.0
-  maxInterval: 45000
 
 fwmt:
   workTypes:

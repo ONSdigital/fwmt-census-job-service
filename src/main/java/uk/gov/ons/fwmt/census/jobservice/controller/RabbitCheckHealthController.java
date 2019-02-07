@@ -1,21 +1,21 @@
 package uk.gov.ons.fwmt.census.jobservice.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-@Slf4j
-@RestController
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import uk.gov.ons.fwmt.census.jobservice.config.GatewayActionsQueueConfig;
+import uk.gov.ons.fwmt.census.jobservice.config.GatewayFeedbackQueueConfig;
+
+@RequestMapping("/rabbitHealth")
 public class RabbitCheckHealthController {
 
   @Autowired
@@ -26,15 +26,14 @@ public class RabbitCheckHealthController {
     return (props != null) ? props.getProperty("QUEUE_NAME") : null;
   }
 
-  @RequestMapping(value = "/rabbitHealth", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
   public List<String> rabbitHealth() {
     RabbitAdmin rabbitAdmin = new RabbitAdmin(factory);
 
     List<String> queues = Arrays.asList(
-        "gateway.feedback",
-        "gateway.feedback.DLQ",
-        "gateway.actions",
-        "gateway.actions.DLQ"
+        GatewayFeedbackQueueConfig.GATEWAY_FEEDBACK_QUEUE, 
+        GatewayActionsQueueConfig.GATEWAY_ACTIONS_QUEUE,
+        GatewayActionsQueueConfig.GATEWAY_ACTIONS_DLQ
     );
 
     return queues.stream()
