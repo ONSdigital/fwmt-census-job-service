@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 public class ModelCase {
-  private String id = null;
+  private UUID id = null;
   private String reference = null;
   private String caseType = null;
   private StateEnum state = null;

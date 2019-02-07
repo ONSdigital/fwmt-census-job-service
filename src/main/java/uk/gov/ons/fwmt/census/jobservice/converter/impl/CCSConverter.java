@@ -22,7 +22,7 @@ public class CCSConverter implements CometConverter {
   public ModelCase convert(CreateFieldWorkerJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
-    modelCase.setId(ingest.getAdditionalProperties().get("caseId"));
+    modelCase.setId(ingest.getCaseId());
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_CCS);
     modelCase.setState(OPEN);
