@@ -71,7 +71,7 @@ springBoot {
 }
 
 dependencies {
-    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.1-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
     compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.1-SNAPSHOT")
 
     compile('org.springframework.boot:spring-boot-starter')
