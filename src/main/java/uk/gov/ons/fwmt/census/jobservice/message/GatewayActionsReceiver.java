@@ -42,6 +42,8 @@ public class GatewayActionsReceiver {
       gatewayEventProducer.sendEvent(fwmtCancelJobRequest.getJobIdentity(), "- Canonical - Cancel Job Received");
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
+    } else {
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message: /n" + message);
     }
   }
 

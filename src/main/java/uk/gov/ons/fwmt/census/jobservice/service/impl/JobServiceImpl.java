@@ -7,7 +7,9 @@ import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
+import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayEventProducer;
+import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
@@ -23,6 +25,9 @@ public class JobServiceImpl implements JobService {
 
   @Autowired
   private GatewayEventProducer gatewayEventProducer;
+
+  @Autowired
+  private GatewayFeedbackProducer gatewayFeedbackProducer;
 
   @Override
   public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
@@ -40,5 +45,11 @@ public class JobServiceImpl implements JobService {
     ModelCase modelCase = cometConverter.convert(jobRequest);
     cometRestClient.sendCreateJobRequest(modelCase);
     gatewayEventProducer.sendEvent(modelCase.getId(), "- Comet - Create Job Request");
+  }
+
+  @Override
+  public void sendFeedback(CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws GatewayException {
+    gatewayFeedbackProducer.send(censusCaseOutcomeDTO);
+    gatewayEventProducer.sendEvent(censusCaseOutcomeDTO.getCaseId(), "- Comet - Case Outcome");
   }
 }
