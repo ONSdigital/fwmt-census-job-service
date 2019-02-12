@@ -5,15 +5,18 @@ import org.springframework.stereotype.Service;
 import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.census.jobservice.data.dto.CensusCaseOutcomeDTO;
-import uk.gov.ons.fwmt.census.jobservice.message.GatewayEventProducer;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
 import java.util.Map;
+
+import static uk.gov.ons.fwmt.census.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.fwmt.census.jobservice.config.GatewayEventsConfig.COMET_OUTCOME_RECEIVED;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -24,7 +27,7 @@ public class JobServiceImpl implements JobService {
   private Map<String, CometConverter> cometConverters;
 
   @Autowired
-  private GatewayEventProducer gatewayEventProducer;
+  private GatewayEventManager gatewayEventManager;
 
   @Autowired
   private GatewayFeedbackProducer gatewayFeedbackProducer;
@@ -44,12 +47,12 @@ public class JobServiceImpl implements JobService {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
     ModelCase modelCase = cometConverter.convert(jobRequest);
     cometRestClient.sendCreateJobRequest(modelCase);
-    gatewayEventProducer.sendEvent(modelCase.getId(), "- Comet - Create Job Request");
+    gatewayEventManager.triggerEvent(modelCase.getId(), COMET_CREATE_SENT);
   }
 
   @Override
   public void sendFeedback(CensusCaseOutcomeDTO censusCaseOutcomeDTO) throws GatewayException {
     gatewayFeedbackProducer.send(censusCaseOutcomeDTO);
-    gatewayEventProducer.sendEvent(censusCaseOutcomeDTO.getCaseId(), "- Comet - Case Outcome");
+    gatewayEventManager.triggerEvent(censusCaseOutcomeDTO.getCaseId(), COMET_OUTCOME_RECEIVED);
   }
 }
