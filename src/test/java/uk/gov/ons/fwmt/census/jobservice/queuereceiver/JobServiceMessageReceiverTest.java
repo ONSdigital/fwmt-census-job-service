@@ -33,7 +33,6 @@ public class JobServiceMessageReceiverTest {
   @Mock
   private GatewayEventManager gatewayEventManager;
 
-
   @Test
   public void receiveMessageCreate()
       throws GatewayException {
