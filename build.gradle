@@ -58,20 +58,17 @@ configurations {
 }
 
 springBoot {
-    buildInfo()
-// Example of additional properties for /info endpoint
-//    buildInfo {
-//        properties {
-//            additional = [
-//              property : System.getenv("..."),
-//              property2 : 'value'
-//            ]
-//        }
-//    }
+    buildInfo {
+        properties {
+            additional = [
+              'Git-Commit': grgit.head().getAbbreviatedId(8)
+            ]
+        }
+    }
 }
 
 dependencies {
-    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.1-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
     compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
     compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
 

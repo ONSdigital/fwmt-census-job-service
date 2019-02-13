@@ -1,13 +1,24 @@
-[![Build Status](https://travis-ci.org/ONSdigital/fwmt-census-job-service.svg?branch=master)](https://travis-ci.org/ONSdigital/fwmt-census-job-service) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-census-job-service/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-census-job-service) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-job-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-job-service&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/ONSdigital/fwmt-job-service-v2.svg?branch=master)](https://travis-ci.org/ONSdigital/fwmt-job-service-v2) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-job-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-job-service&amp;utm_campaign=Badge_Grade)
 
 # fwmt-census-job-service
-Service to create and reallocate jobs to users for RM
+This service is a gateway between FWMT job service and Total Mobile's COMET interface .
 
-## Running
+It takes an Field Worker Job Request Canonical (Create, Update, Canel) message off the Gateway.Actions RabbitMQ Queue and transforms it into a JSON request which is sent to an instance of Tomtal Mobile' COMET endpoint.
+
+
+![](/jobservice-highlevel.png "jobservicd highlevel diagram")	
+
+
+
+## Quick Start
+
+Requires RabbitMQ to start:
+
+	docker run --name rabbit -p 5671-5672:5671:5672 -p 15671-15672:15671-15672 -d rabbitmq:3.6-management
+
+To run:
+
     ./gradlew bootRun
-
-## Copyright
-Copyright (C) 2018 Crown Copyright (Office for National Statistics)
 
 ## tm-canonical-hh
  
@@ -24,3 +35,7 @@ Copyright (C) 2018 Crown Copyright (Office for National Statistics)
 ## tm-outcome
 
 ![](tm-outcome.png "tm - census - outcome - mapping")
+
+## Copyright
+Copyright (C) 2018 Crown Copyright (Office for National Statistics)
+
