@@ -1,18 +1,18 @@
 package uk.gov.ons.fwmt.census.jobservice.converter.impl;
 
-import static uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase.StateEnum.OPEN;
 import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
 
 import java.time.Instant;
 
 import org.springframework.stereotype.Component;
 
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.Address;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.Contact;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.LatLong;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.common.data.modelcase.Address;
+import uk.gov.ons.fwmt.census.common.data.modelcase.Contact;
+import uk.gov.ons.fwmt.census.common.data.modelcase.LatLong;
+import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
+import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
 
 @Component("CCS")
 public class CCSConverter implements CometConverter {
@@ -22,7 +22,7 @@ public class CCSConverter implements CometConverter {
   public ModelCase convert(CreateFieldWorkerJobRequest ingest) {
     ModelCase modelCase = new ModelCase();
     Instant instant = Instant.now();
-    modelCase.setId(ingest.getCaseId());
+    modelCase.setId(ingest.getCaseId().toString());
     modelCase.setReference(ingest.getJobIdentity());
     modelCase.setCaseType(CASE_TYPE_CCS);
     modelCase.setState(OPEN);

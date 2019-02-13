@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
+import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
 
 @Component
