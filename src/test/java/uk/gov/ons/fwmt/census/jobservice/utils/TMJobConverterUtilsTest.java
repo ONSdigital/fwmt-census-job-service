@@ -46,8 +46,8 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
+    ingest.setCaseId(UUID.randomUUID());
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
     HouseholdConverter converter = new HouseholdConverter();
@@ -82,8 +82,8 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
+    ingest.setCaseId(UUID.randomUUID());
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
     CCSConverter converter = new CCSConverter();
