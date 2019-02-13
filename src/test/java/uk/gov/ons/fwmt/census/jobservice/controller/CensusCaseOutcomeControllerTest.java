@@ -14,12 +14,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CensusCaseOutcomeControllerTest {
-  @Mock private GatewayFeedbackProducer gatewayFeedbackProducer;
-  @InjectMocks private CensusCaseOutcomeController censusCaseOutcomeController;
+
+  @InjectMocks 
+  private CensusCaseOutcomeController censusCaseOutcomeController;
+  
+  @Mock
+  private GatewayEventManager gatewayEventManager;
+
+  @Mock 
+  private GatewayFeedbackProducer gatewayFeedbackProducer;
+  
   private MockMvc mockMvc;
   private static final String CASE_OUTCOME_JSON = "{\n"
       + "  \"caseId\": \"1234567890\",\n"

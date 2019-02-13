@@ -10,10 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
@@ -28,6 +30,10 @@ public class JobServiceMessageReceiverTest {
 
   @Mock
   private ObjectMapper mapper;
+  
+  @Mock
+  private GatewayEventManager gatewayEventManager;
+
 
   @Test
   public void receiveMessageCreate()
