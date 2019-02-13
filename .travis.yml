@@ -13,6 +13,12 @@ script:
 env:
   global:
   - SPRING_PROFILES_ACTIVE=default,integration-tests
+  - secure: Z19q91fMiBlTKh+XsztGibAs1WcKwx7mcOjtJ/5SzY4EvDeClp9Vj/DribUUgDmBU1CUpjBEqOUIXo1NIu5C158mfLpDt3GlFuMpwLxfvRyY7/rntDB4GGbNtBjoZsGImzz42Bhlly89aJPt4OQV8+pO+4fF034mACOZdPMBnZ2DxR/zj4RuWiGSw2jEjsBIGl0j5zNOWHA+unJJ1eAk4NQgxDHFwJDkUHKIV59ASM526HJVKmzMccof3xM3bx9QpLhpiKe7lPn2c14DVtTfRvAmWt70xvvDNksKgLTUNxz5M0LcTJqeTJRS9UDY2xI/TFXtLl+X3mHCBMRgE3hdXsG8G3uoPBGOCUM+uZMjN3JxjL40B3egYEE/ONlrP9Rc7Tcbb76ZXubz5bN2BCBut+F0hGmogKVSpfjRxQfQ8gYFS5/phNXG8r4chyM+ZwFMrewnOphD9QFiyr9UqOZ5stzvv9gX4bLTGX6ffUGr9bU/O4lByRdfQDCNJwt8LRp8Gt4Rq9OxiG0/m62BCB+wgCgpSTLpX+8/uafGgbU9pJA4ujqFCD0Bhtes2Iz1yOb6Ko4FYf+1oCKnAA902fWqD+oV5pIh0FNsWR20ZggtvnzJ5TVjIfAXQGUejmBe50xuQe8jiCtgWisXsBbchVc9ubNY8pVMLRk3ZD/DUcJ7WWE=
+  - secure: L7PC01DRACJYbE/3S7QHBoro2gQ1qleqT8pyX9SrYhe4sGxEAgvnHQteO/4T2Hg+zbOXHFobYY1AakdAwkYCN4K4vgs6aW37FO4G8f+HjVXZimtdhSdvrduYjhzMXADnYj466oJa5jhieRHOwbIWcAn1xIH3+yKIid9yTRNHWA0PGwpU8IdFuzMyHpB9tACaOtKnG3b22siU4PpaWurnrVMgvyrFTX+5yTVeyLs45VBp59x6Q82cTdnsd44k5YW//Xu4YeEfCLtbgSrAqyuenQ2CfHj5i5NNsZZFYH/1mRrCENYoyB9hV1lKG+6wsdTcTijqhH31ysWy/pHApim4mMmW27Zphq+jxBAgWvdpPm74FH4enbZAUi1/VDkTN/Etq3kmODvPkHdHw1QLTaK8ZG97BpwxLogOCOZVhv5LQ/SVK9/Dp10f0w2gfwggJWlzMd+xbtGZetvuFXxorOojdYORO9MUX8ZXEUPiHDacoFYRAFoJwI1NgcaxiBUg58VodtHmbgiq12IZS4ydrHjZMJrnTSznPDtkP1pTWSrUNRis2tn2fOlg42GCZa7SEQTFrJxXlsKrBIsKqfpQHCVHroAw4aQOI5jJC+hBOwhYL0GUp4q/wbnrmr+7fNKY1nnhgEAtGDzEGVDGzF7hVYFbCiz0fINh/UoY5JGI9jMxwdw=
+  - secure: P+lVSxxsWkYatSQSDqtCdXnfRWYLfiV6wcinvhKKy/TF/+JkPKAhDX4rAlrnjXLN0/gYlq1s5m4iu8cs/+JjrTKYi5H6QrucgvJ/hl6BY+srVXEhJvT+e/2IarVSNCZJxEvid6gy0xziugM4dbo/LAS+AMJmwc44PQMPDLs4frFh/YgLG3PF2xB4pS+xA7j5mCu8k63jH6lU7CqgOVekN1X0obMd8pRuIlo6S+/FUKn6fqTIg6UiiKkia+EADtuDX4XMLEVxFihHNbanCulanZeuykIEomHcA3+V+6xxK2mIs6b71D4g0fR+HdcW+EKudRvWdZM9jCO8xBmrUUFhj4r5dUBy+kdbINW99i9/Coe3RT/wX0dc9/I6SnLBUAOXM5X9RvPML6sJjs7YbmDo1/kVdQPgTWqW/NEoETrvzdgh8pTeBnBec/80SjuNkmz1HDwB4EFtN6bfwKMOH4h+ViBqf8dTB3n814Oyqqv0eRhFC0HOeIGSqSaCryf9jeA2QPTHGxIIXak3ghsmI9/Wyz4OohXBa63N7k/GaUK6i3uEbh+1TYZkTmGLiYX0NAjkJWvocihklizEi5SIbzj0oyMaTz9wEZbxLsSKr4mlwttgeA6RpmELFfZ4oSsmjFb22k7zUdxc68hJdILRuDZLpctXTk7a5oCrCNxCqBALWmk=
+  - secure: iSXUzwyq7ndFyumuw2Z56kepW32h+1rkQB08k2xEgsR1DueTZGRSUvHFU2AVr8n4Biyz1oHoK4VrB6yXsv9wAt3GN/lNJSOrdE/YUOYuYwA8SsyfAxOYu0PECPpX9yybBvouLxekNnhNUlT9zNmUQiuNM3mC0BJo4z829qCx48HogXR+qIZwZqJe4VI/IVr2sxwkHEpSwEAOtACVEIgHUTXQXNsJL4vqAPl5r2N7OXDD8bsckIHskbjn8QpaIrokUz1k893wpO5PFHArZiwbfw1d0lA6Au/FKSXKqASY/DDkm/vQrPah7r3SpK52bjh+BXSPZvmWZpnwnRRxZG3xnF2PH5eYe2nQP17I5cL25BMQcG89XBlQ33esRI/81B1f/sSyeN7wxyLp54troKwctVK4FAlb+Xu5yPH/zJT2u7VyMA2j5uDTU5vNqjIIEdaQxY5BV2UiS6C3srBbbEfQLDBB+DWvfVgfzZPyRRg0Z3X2k/gRAZ7HqLyUI0kEWXtuewEw0jzHb/KQYQnEPFN92PCR1JPULZd2Q9p1cbs/eRL/m3UUa4xbIzu6n21P9n0W5svhK+YVb8k3IP2+oV8QjUSwhI++DwUUAWpa0F1HmnEa1DaImk5B3baXwl1j+8qf7+wHUDz5L0/FBMLSUHBMu+Hs5U88wait77sgWyFe+DU=
+  - secure: QAQPI7XmW3DOLeCZlhF6CrHWQCZUFpp+KUo9g+ZTAr9ZqV+ueLxgKFUlXsaUq45Zaa9WZ+Vt6QQtmdFZ4R74JxdQzaBOLVv8Qgk4PKSN/sp2lZTIoTNNuHaAFvjbJImlYjDTiS6fs6ZXlNpqQb1fOpQOXGcKeFjvK+WkNMJe6oG16Yz4ey5SdrsOO42hvl5IuEzlGnHqS4Rr7Dvimm0VB3Lg4OlZSIzprjdyTr/Z2FqV24iynFVtJKhzPU5sQqQ3t05G0i0I21DMHlTOv89/vDASd2cTPA1+cV7lEs12MUxhRHUTREyIJXllRD7N2Vdr/MpWGRSGRASEyQnLP0HdoYLF7xKKk2a75Zzg2fl7vKbCsMX4AJvmD2x+6Dh/QiJozBi7UmHCEYF/YOeS2EubsTAGWcSfdtOkb7KoSyQ5TawsFC367BzuofI+Ep21+Oyh8ofeZqj4+KGsmChcJ2JhixD5yD0oyjuXUwRWKfZIZ7Qno/dZMupjrfM0cB1XDnJVZu6hcx+15nrkLtrMMV98K+cJxdBWxpbHIGXcR1dC+lSHouS9jhKVse+UFyxwoLoSJ+3YAAQ2T+7PvJrMx1pzOpcIDL06zc6rweIGBJn/uH5+kdMZ6e/wC1lll/AXcRw45T80/CQ8+uzH4TYkXbTcxGLd8tKgysg5JEdSWM6LGU4=
+
 branches:
   only:
   - master
@@ -31,10 +37,13 @@ after_success:
 - |
   set -e
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "JENKINS SNAPSHOT UPDATE" ]]; then
-    echo "$DOCKER_PASSWORD" | base64 --decode | docker login "$DOCKER_REGISTRY" --username "$DOCKER_USERNAME" --password-stdin
-    docker build -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc:census-job-service-$TRAVIS_BUILD_NUMBER --build-arg jar=build/libs/fwmt-census-job-service-*.jar .
-    docker push "$DOCKER_LOCATION"/census-rm-fwmtjobsvc
+    echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+    docker build -t sdcplatform/fwmt-census-job-service -t sdcplatform/fwmt-census-job-service:census-job-service-$TRAVIS_BUILD_NUMBER --build-arg jar=build/libs/fwmt-census-job-service-*.jar .
+    docker push sdcplatform/fwmt-census-job-service
   fi
+#    echo "$DOCKER_PASSWORD" | base64 --decode | docker login "$DOCKER_REGISTRY" --username "$DOCKER_USERNAME" --password-stdin
+#    docker build -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc:census-job-service-$TRAVIS_BUILD_NUMBER --build-arg jar=build/libs/fwmt-census-job-service-*.jar .
+#    docker push "$DOCKER_LOCATION"/census-rm-fwmtjobsvc
 - |
   set -e
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "JENKINS SNAPSHOT UPDATE" ]]; then
