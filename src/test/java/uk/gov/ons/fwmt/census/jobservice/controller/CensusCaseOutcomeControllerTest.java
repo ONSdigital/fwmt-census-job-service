@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
+import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CensusCaseOutcomeControllerTest {
@@ -24,10 +25,7 @@ public class CensusCaseOutcomeControllerTest {
   private CensusCaseOutcomeController censusCaseOutcomeController;
   
   @Mock
-  private GatewayEventManager gatewayEventManager;
-
-  @Mock 
-  private GatewayFeedbackProducer gatewayFeedbackProducer;
+  private JobService jobService;
   
   private MockMvc mockMvc;
   private static final String CASE_OUTCOME_JSON = "{\n"
