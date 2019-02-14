@@ -12,9 +12,12 @@ spring:
       name: "user"
       password: "password"
 
-# Place /info and /health in the root
-management.endpoints.web.base-path: ''
-
+management:
+  # Place /info and /health in the root
+  endpoints.web.base-path: ''
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   level:
