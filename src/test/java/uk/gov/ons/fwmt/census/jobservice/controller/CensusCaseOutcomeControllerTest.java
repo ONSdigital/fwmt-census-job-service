@@ -10,16 +10,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.census.jobservice.message.GatewayFeedbackProducer;
+import uk.gov.ons.fwmt.census.jobservice.service.JobService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CensusCaseOutcomeControllerTest {
-  @Mock private GatewayFeedbackProducer gatewayFeedbackProducer;
-  @InjectMocks private CensusCaseOutcomeController censusCaseOutcomeController;
+
+  @InjectMocks 
+  private CensusCaseOutcomeController censusCaseOutcomeController;
+  
+  @Mock
+  private JobService jobService;
+  
+  @Mock
+  private GatewayEventManager gatewayEventManager;
+  
   private MockMvc mockMvc;
   private static final String CASE_OUTCOME_JSON = "{\n"
       + "  \"caseId\": \"1234567890\",\n"

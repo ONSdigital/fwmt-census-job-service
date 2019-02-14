@@ -14,8 +14,8 @@ import org.junit.Test;
 import uk.gov.ons.fwmt.census.canonical.v1.Address;
 import uk.gov.ons.fwmt.census.canonical.v1.Contact;
 import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
 import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.jobservice.comet.dto.ModelCase;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
 import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
 
@@ -46,8 +46,8 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
+    ingest.setCaseId(UUID.randomUUID());
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
     HouseholdConverter converter = new HouseholdConverter();
@@ -82,8 +82,8 @@ public class TMJobConverterUtilsTest {
     contact.setSurname("test");
     ingest.setAddress(address);
     ingest.setContact(contact);
+    ingest.setCaseId(UUID.randomUUID());
     Map<String, String> additionalProperties = new HashMap<>();
-    additionalProperties.put("caseId", UUID.randomUUID().toString());
     ingest.setAdditionalProperties(additionalProperties);
 
     CCSConverter converter = new CCSConverter();
