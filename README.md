@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ONSdigital/fwmt-job-service-v2.svg?branch=master)](https://travis-ci.org/ONSdigital/fwmt-job-service-v2) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-job-service-v2) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-job-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-job-service&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/ONSdigital/fwmt-census-job-service.svg?branch=master)](https://travis-ci.org/ONSdigital/fwmt-census-job-service) [![codecov](https://codecov.io/gh/ONSdigital/fwmt-census-job-service/branch/master/graph/badge.svg)](https://codecov.io/gh/ONSdigital/fwmt-census-job-service) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1bad894364ed49f29a41193cf9e1e8ff)](https://www.codacy.com/app/ONSDigital_FWMT/fwmt-census-job-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ONSdigital/fwmt-census-job-service&amp;utm_campaign=Badge_Grade)
 
 # fwmt-census-job-service
 This service is a gateway between FWMT job service and Total Mobile's COMET interface .
@@ -7,7 +7,6 @@ It takes an Field Worker Job Request Canonical (Create, Update, Canel) message o
 
 
 ![](/jobservice-highlevel.png "jobservicd highlevel diagram")	
-
 
 
 ## Quick Start
@@ -32,10 +31,5 @@ To run:
 
 ![](tm-canonical-ccs.png "tm - canonical - ccs - mapping")
 
-## tm-outcome
-
-![](tm-outcome.png "tm - census - outcome - mapping")
-
 ## Copyright
 Copyright (C) 2018 Crown Copyright (Office for National Statistics)
-
