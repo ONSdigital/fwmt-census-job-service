@@ -33,7 +33,7 @@ plugins {
     id 'org.ajoberstar.grgit' version '3.0.0'
 }
 
-description = 'fwmt-census-job-service'
+description = 'census-fwmt-job-service'
 version = '3.0.6-SNAPSHOT'
 group = 'uk.gov.ons.fwmt'
 
@@ -68,9 +68,9 @@ springBoot {
 }
 
 dependencies {
-    compile("uk.gov.ons.fwmt:fwmt-census-canonical:1.0.2-SNAPSHOT")
-    compile("uk.gov.ons.fwmt:fwmt-census-common:1.0.2-SNAPSHOT")
-    compile("uk.gov.ons.fwmt:fwmt-census-events:1.0.0-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:census-fwmt-canonical:1.0.2-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:census-fwmt-common:1.0.2-SNAPSHOT")
+    compile("uk.gov.ons.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
 
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -130,7 +130,7 @@ dependencies {
 
 bootJar {
     group = 'uk.gov.ons.fwmt'
-    baseName = 'fwmt-census-job-service'
+    baseName = 'census-fwmt-job-service'
     manifest {
     }
     version = version
@@ -160,7 +160,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'fwmt-census-job-service'
+            artifactId = 'census-fwmt-job-service'
             version = version
 
             from components.java
