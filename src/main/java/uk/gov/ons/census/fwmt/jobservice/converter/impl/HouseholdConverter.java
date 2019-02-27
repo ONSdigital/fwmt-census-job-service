@@ -1,18 +1,18 @@
-package uk.gov.ons.fwmt.census.jobservice.converter.impl;
+package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
-import static uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase.StateEnum.OPEN;
-import static uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils.addAddressLines;
+import static uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase.StateEnum.OPEN;
+import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
 
 import java.time.Instant;
 
 import org.springframework.stereotype.Component;
 
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.common.data.modelcase.Address;
-import uk.gov.ons.fwmt.census.common.data.modelcase.Contact;
-import uk.gov.ons.fwmt.census.common.data.modelcase.LatLong;
-import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
+import uk.gov.ons.census.fwmt.common.data.modelcase.LatLong;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
 @Component("HH")
 public class HouseholdConverter implements CometConverter {

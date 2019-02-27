@@ -1,19 +1,19 @@
-package uk.gov.ons.fwmt.census.jobservice.service.impl;
+package uk.gov.ons.census.fwmt.jobservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
-import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.events.component.GatewayEventManager;
-import uk.gov.ons.fwmt.census.jobservice.converter.CometConverter;
-import uk.gov.ons.fwmt.census.jobservice.rest.client.CometRestClient;
-import uk.gov.ons.fwmt.census.jobservice.service.JobService;
+import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
+import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.util.Map;
 
-import static uk.gov.ons.fwmt.census.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
 
 @Service
 public class JobServiceImpl implements JobService {

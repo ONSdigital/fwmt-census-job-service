@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.utils;
+package uk.gov.ons.census.fwmt.jobservice.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.slf4j.Slf4j;
 
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 
 @Slf4j
 public final class JobServiceUtils {

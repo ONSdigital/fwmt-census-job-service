@@ -37,7 +37,7 @@ description = 'census-fwmt-job-service'
 version = '3.0.6-SNAPSHOT'
 group = 'uk.gov.ons.fwmt'
 
-mainClassName = 'uk.gov.ons.fwmt.census.jobservice.Application'
+mainClassName = 'uk.gov.ons.census.fwmt.jobservice.Application'
 
 sourceCompatibility = 11
 targetCompatibility = 11

@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.config;
+package uk.gov.ons.census.fwmt.jobservice.config;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.amqp.core.Queue;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 
-import uk.gov.ons.fwmt.census.jobservice.message.GatewayActionsReceiver;
+import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 
 @Configuration
 public class GatewayActionsQueueConfig {

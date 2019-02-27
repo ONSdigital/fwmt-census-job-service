@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice;
+package uk.gov.ons.census.fwmt.jobservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +9,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableRetry
 @EnableSwagger2
-@ComponentScan({"uk.gov.ons.fwmt.census.jobservice", "uk.gov.ons.fwmt.census.events"})
+@ComponentScan({"uk.gov.ons.census.fwmt.jobservice", "uk.gov.ons.census.fwmt.events"})
 public class Application {
 
   public static void main(String[] args) {
