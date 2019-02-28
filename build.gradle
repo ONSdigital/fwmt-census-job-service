@@ -35,7 +35,7 @@ plugins {
 
 description = 'census-fwmt-job-service'
 version = '3.0.6-SNAPSHOT'
-group = 'uk.gov.ons.fwmt'
+group = 'uk.gov.ons.census.fwmt'
 
 mainClassName = 'uk.gov.ons.census.fwmt.jobservice.Application'
 
@@ -129,7 +129,7 @@ dependencies {
 }
 
 bootJar {
-    group = 'uk.gov.ons.fwmt'
+    group = 'uk.gov.ons.census.fwmt'
     baseName = 'census-fwmt-job-service'
     manifest {
     }
