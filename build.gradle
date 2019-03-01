@@ -14,7 +14,7 @@ buildscript {
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2'
         classpath 'org.ajoberstar:gradle-git:1.4.2'
     }
-}	
+}
 
 
 plugins {
@@ -68,9 +68,9 @@ springBoot {
 }
 
 dependencies {
-    compile("uk.gov.ons.fwmt:census-fwmt-canonical:1.0.2-SNAPSHOT")
-    compile("uk.gov.ons.fwmt:census-fwmt-common:1.0.2-SNAPSHOT")
-    compile("uk.gov.ons.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
+    compile("uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.2-SNAPSHOT")
+    compile("uk.gov.ons.census.fwmt:census-fwmt-common:1.0.2-SNAPSHOT")
+    compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
 
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-actuator')
