@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.rest.client;
+package uk.gov.ons.census.fwmt.jobservice.rest.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,8 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
-import uk.gov.ons.fwmt.census.jobservice.utils.JobServiceUtils;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
 
 @Component
 public class CometRestClient {

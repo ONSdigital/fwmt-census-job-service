@@ -1,8 +1,8 @@
-package uk.gov.ons.fwmt.census.jobservice.service;
+package uk.gov.ons.census.fwmt.jobservice.service;
 
-import uk.gov.ons.fwmt.census.canonical.v1.CancelFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 public interface JobService {
   void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;

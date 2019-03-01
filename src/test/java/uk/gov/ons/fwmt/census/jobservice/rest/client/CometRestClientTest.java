@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.rest.client;
+package uk.gov.ons.census.fwmt.jobservice.rest.client;
 
 import static org.mockito.Mockito.verify;
 
@@ -10,9 +10,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import uk.gov.ons.fwmt.census.common.data.modelcase.Address;
-import uk.gov.ons.fwmt.census.common.data.modelcase.Contact;
-import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CometRestClientTest {

@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.census.jobservice.utils;
+package uk.gov.ons.census.fwmt.jobservice.utils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,13 +11,13 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import uk.gov.ons.fwmt.census.canonical.v1.Address;
-import uk.gov.ons.fwmt.census.canonical.v1.Contact;
-import uk.gov.ons.fwmt.census.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.fwmt.census.common.data.modelcase.ModelCase;
-import uk.gov.ons.fwmt.census.common.error.GatewayException;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.CCSConverter;
-import uk.gov.ons.fwmt.census.jobservice.converter.impl.HouseholdConverter;
+import uk.gov.ons.census.fwmt.canonical.v1.Address;
+import uk.gov.ons.census.fwmt.canonical.v1.Contact;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 
 public class TMJobConverterUtilsTest {
 
