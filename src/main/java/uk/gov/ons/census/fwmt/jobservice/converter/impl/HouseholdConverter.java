@@ -34,6 +34,7 @@ public class HouseholdConverter implements CometConverter {
     //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
     caseRequest.setUaa(false);
     caseRequest.setSai(ingest.isSai());
+    caseRequest.setUaa(ingest.isUua());
 
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
