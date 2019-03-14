@@ -1,7 +1,12 @@
 package uk.gov.ons.census.fwmt.jobservice.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import uk.gov.ons.census.fwmt.canonical.v1.Address;
+import uk.gov.ons.census.fwmt.canonical.v1.Contact;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,15 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Test;
-
-import uk.gov.ons.census.fwmt.canonical.v1.Address;
-import uk.gov.ons.census.fwmt.canonical.v1.Contact;
-import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSConverter;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TMJobConverterUtilsTest {
 

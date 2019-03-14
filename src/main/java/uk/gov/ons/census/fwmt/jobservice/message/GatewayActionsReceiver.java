@@ -38,7 +38,7 @@ public class GatewayActionsReceiver {
   private void processMessage(String message) throws GatewayException {
     if (message.contains("Create")) {
       CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
-      gatewayEventManager.triggerEvent(fwmtCreateJobRequest.getJobIdentity(), CANONICAL_CREATE_JOB_RECEIVED);
+      gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
       jobService.createJob(fwmtCreateJobRequest);
       log.info("Sending Create job to TM");
     } else if (message.contains("Cancel")) {

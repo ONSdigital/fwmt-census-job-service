@@ -1,65 +1,76 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
-import static uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase.StateEnum.OPEN;
-import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
-
-import java.time.Instant;
-
 import org.springframework.stereotype.Component;
-
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePause;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.LatLong;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
+
+import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.HH;
+import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
 
 @Component("HH")
 public class HouseholdConverter implements CometConverter {
 
-  private static final String CASE_TYPE_HH = "HH";
-
   @Override
-  public ModelCase convert(CreateFieldWorkerJobRequest ingest) {
-    ModelCase modelCase = new ModelCase();
-    Instant instant = Instant.now();
-    modelCase.setId(ingest.getCaseId().toString());
-    modelCase.setReference(ingest.getJobIdentity());
-    modelCase.setCaseType(CASE_TYPE_HH); 
-    modelCase.setState(OPEN);
+  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
+    CaseRequest caseRequest = new CaseRequest();
 
-    // TODO not yet implemented in Canonical
-    //modelCase.setCategory(ingest.getAddress().getCategory());
+    caseRequest.setReference(ingest.getCaseReference());
+    caseRequest.setType(HH);
+    caseRequest.setSurveyType(ingest.getSurveyType());
+    caseRequest.setCategory(ingest.getCategory());
+    caseRequest.setEstabType(ingest.getEstablishmentType());
+    caseRequest.setCoordCode("EX23");
+    caseRequest.setDescription("CENSUS");
+    caseRequest.setSpecialInstructions("Special Instructions");
+    // TODO hard coded above
+    //    caseRequest.setCoordCode(ingest.getCoordinatorCode());
+    //    caseRequest.setDescription(ingest.getDescription()) ;
+    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
+    caseRequest.setUaa(false);
 
-    modelCase.setEstabType(ingest.getAdditionalProperties().get("establishmentType"));
-    modelCase.setCoordCode("EX23");
+    if (String.valueOf(caseRequest.getType()).equals(String.valueOf(HH)) && caseRequest.getEstabType()
+        .equals("Sheltered Accommodation")) {
+      caseRequest.setSai(true);
+    } else {
+      caseRequest.setSai(false);
+    }
+
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
-    contact.setPhone(ingest.getContact().getPhoneNumber());
-    contact.setEmail(ingest.getContact().getEmail());
-    modelCase.setContact(contact);
+    caseRequest.setContact(contact);
 
     Address address = new Address();
     try {
-      address.setUprn(Long.parseLong(ingest.getAdditionalProperties().get("uprn")));
-    }catch (Exception e) {
-      // if a problem resolving uprn, null is fine.
+      address.setUprn(ingest.getAddress().getUPRN());
+    } catch (Exception e) {
+      // TODO is this still the case?
+      // if a problem resolving UPRN, null is fine
     }
-    
+
+    Geography geography = new Geography();
+    geography.setOa(ingest.getAddress().getOa());
+    address.setGeography(geography);
+
     address.setLines(addAddressLines(ingest));
-    address.setPostCode(ingest.getAddress().getPostCode());
-    modelCase.setAddress(address);
+    address.setPostcode(ingest.getAddress().getPostCode());
+    caseRequest.setAddress(address);
 
-    LatLong latLong = new LatLong();
-    latLong.setLat(ingest.getAddress().getLatitude().doubleValue());
-    latLong.set_long(ingest.getAddress().getLongitude().doubleValue());
-    modelCase.setLocation(latLong);
+    Location location = new Location();
+    location.set_long(ingest.getAddress().getLatitude().floatValue());
+    location.setLat(ingest.getAddress().getLongitude().floatValue());
+    caseRequest.setLocation(location);
 
-    modelCase.setHtc(0);
-    modelCase.setPriority(0);
-    modelCase.setDescription("CENSUS");
-    modelCase.setHoldUntil(instant.toString());
+    // TODO missing fields in CasePause
+    CasePause casePause = new CasePause();
+    casePause.setUntil(ingest.getPause().getHoldUntil());
+    casePause.setReason(ingest.getPause().getReason());
 
-    return modelCase;
+    return caseRequest;
   }
 }
