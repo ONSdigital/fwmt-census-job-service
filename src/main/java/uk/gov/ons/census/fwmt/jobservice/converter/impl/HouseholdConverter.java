@@ -29,25 +29,20 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setDescription("CENSUS");
     caseRequest.setSpecialInstructions("Special Instructions");
     // TODO hard coded above
-    //    caseRequest.setCoordCode(ingest.getCoordinatorCode());
+    //    caseRequest.setCoordCode(ingest.getCoordinatorId());
     //    caseRequest.setDescription(ingest.getDescription()) ;
     //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
     caseRequest.setUaa(false);
-
-    if (String.valueOf(caseRequest.getType()).equals(String.valueOf(HH)) && caseRequest.getEstabType()
-        .equals("Sheltered Accommodation")) {
-      caseRequest.setSai(true);
-    } else {
-      caseRequest.setSai(false);
-    }
+    caseRequest.setSai(ingest.isSai());
 
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
     caseRequest.setContact(contact);
 
     Address address = new Address();
+    // arin not yet part of Comet
     try {
-      address.setUprn(ingest.getAddress().getUPRN());
+      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
     } catch (Exception e) {
       // TODO is this still the case?
       // if a problem resolving UPRN, null is fine
