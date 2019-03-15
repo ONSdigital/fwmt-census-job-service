@@ -38,7 +38,7 @@ public class JobServiceImpl implements JobService {
 
   @Override
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
+    final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
     cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT);
