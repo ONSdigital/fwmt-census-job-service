@@ -47,7 +47,7 @@ public class GatewayActionsReceiver {
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
     } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message: /n" + message);
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message.");
     }
   }
 
