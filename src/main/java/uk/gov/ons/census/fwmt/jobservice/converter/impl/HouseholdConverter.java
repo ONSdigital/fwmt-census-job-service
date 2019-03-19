@@ -25,14 +25,12 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setCategory(ingest.getCategory());
     caseRequest.setEstabType(ingest.getEstablishmentType());
-    caseRequest.setCoordCode("EX23");
+    caseRequest.setCoordCode(ingest.getCoordinatorId());
+    //not sure if there are still needed? Not in data map but were used before? 
     caseRequest.setDescription("CENSUS");
     caseRequest.setSpecialInstructions("Special Instructions");
-    // TODO hard coded above
-    //    caseRequest.setCoordCode(ingest.getCoordinatorId());
     //    caseRequest.setDescription(ingest.getDescription()) ;
     //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
-    caseRequest.setUaa(false);
     caseRequest.setSai(ingest.isSai());
     caseRequest.setUaa(ingest.isUua());
 

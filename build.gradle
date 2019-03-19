@@ -74,11 +74,11 @@ dependencies {
     compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.0-SNAPSHOT")
 
     compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-amqp')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-web-services')
-    compile('org.springframework.boot:spring-boot-starter-security')
 
     compile('org.springframework.retry:spring-retry')
     compile('org.springframework:spring-aop')
