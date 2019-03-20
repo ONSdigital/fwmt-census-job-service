@@ -1,7 +1,5 @@
 package uk.gov.ons.census.fwmt.jobservice.rest.client;
 
-import static org.mockito.Mockito.verify;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -9,10 +7,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
-
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CometRestClientTest {
@@ -24,14 +23,13 @@ public class CometRestClientTest {
   public void sendCreateJobRequestTest() {
 
     CometRestClient cometRestClient = new CometRestClient(restTemplate, "bla/", "test/");
-    ModelCase modelCase = new ModelCase();
-    modelCase.setId("2ff1b10e-f841-43d4-a129-7269ac239b61");
-    modelCase.setAddress(new Address());
-    modelCase.setContact(new Contact());
-    modelCase.setReference("qwertyu");
-    HttpEntity<ModelCase> body = new HttpEntity<>(modelCase);
+    CaseRequest caseRequest = new CaseRequest();
+    caseRequest.setAddress(new Address());
+    caseRequest.setContact(new Contact());
+    caseRequest.setReference("qwertyu");
+    HttpEntity<CaseRequest> body = new HttpEntity<>(caseRequest);
 
-    cometRestClient.sendCreateJobRequest(modelCase);
+    cometRestClient.sendCreateJobRequest(caseRequest, "2ff1b10e-f841-43d4-a129-7269ac239b61");
 
     verify(restTemplate).exchange("bla/test/2ff1b10e-f841-43d4-a129-7269ac239b61", HttpMethod.PUT, body, Void.class);
   }
