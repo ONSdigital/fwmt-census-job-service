@@ -41,6 +41,7 @@ after_success:
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
     ./gradlew artifactPublish
   fi
+- |
   set -e
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
     git config --global user.email "$EMAIL"
