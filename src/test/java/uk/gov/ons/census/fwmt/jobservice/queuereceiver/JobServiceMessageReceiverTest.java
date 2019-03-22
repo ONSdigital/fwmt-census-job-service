@@ -42,7 +42,7 @@ public class JobServiceMessageReceiverTest {
   private GatewayEventManager gatewayEventManager;
 
   @Test
-  public void receiveMessageCreate()
+  public void verifyReceivingACreateMessageCallsForACreateJobActionInJobservice()
       throws GatewayException, JsonParseException, JsonMappingException, IOException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
@@ -63,7 +63,6 @@ public class JobServiceMessageReceiverTest {
     json.put("address", address);
     
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest(); 
-    request.setJobIdentity("1234");
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
     
@@ -75,7 +74,7 @@ public class JobServiceMessageReceiverTest {
   }
 
   @Test
-  public void receiveMessageCancel()
+  public void verifyReceivingACancelMessageCallsForACancelJobActionInJobservice()
       throws GatewayException, JsonParseException, JsonMappingException, IOException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");

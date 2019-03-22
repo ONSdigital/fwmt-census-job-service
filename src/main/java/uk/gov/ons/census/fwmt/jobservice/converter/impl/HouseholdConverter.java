@@ -19,7 +19,6 @@ public class HouseholdConverter implements CometConverter {
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
-
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(HH);
     caseRequest.setSurveyType(ingest.getSurveyType());
@@ -31,7 +30,7 @@ public class HouseholdConverter implements CometConverter {
     // TODO hard coded above
     //    caseRequest.setCoordCode(ingest.getCoordinatorId());
     //    caseRequest.setDescription(ingest.getDescription()) ;
-    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
+    //    caseReque st.setSpecialInstructions(ingest.getSpecialInstructions());
     caseRequest.setUaa(false);
     caseRequest.setSai(ingest.isSai());
     caseRequest.setUaa(ingest.isUua());
