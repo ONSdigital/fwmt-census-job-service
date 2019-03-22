@@ -1,12 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.queuereceiver;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-
-import java.io.IOException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,17 +8,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
+
+import java.io.IOException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceMessageReceiverTest {
@@ -42,8 +38,8 @@ public class JobServiceMessageReceiverTest {
   private GatewayEventManager gatewayEventManager;
 
   @Test
-  public void verifyReceivingACreateMessageCallsForACreateJobActionInJobservice()
-      throws GatewayException, JsonParseException, JsonMappingException, IOException {
+  public void receiveMessageCreate()
+      throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
     json.put("actionType", "Create");
@@ -61,8 +57,8 @@ public class JobServiceMessageReceiverTest {
     address.put("latitude", "61.7921776");
     address.put("longitude", "34.3739957");
     json.put("address", address);
-    
-    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest(); 
+
+    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
     
@@ -74,8 +70,8 @@ public class JobServiceMessageReceiverTest {
   }
 
   @Test
-  public void verifyReceivingACancelMessageCallsForACancelJobActionInJobservice()
-      throws GatewayException, JsonParseException, JsonMappingException, IOException {
+  public void receiveMessageCancel()
+      throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");
     json.put("jobIdentity", "1234");
