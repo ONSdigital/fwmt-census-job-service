@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
@@ -38,10 +38,9 @@ public class JobServiceImpl implements JobService {
 
   @Override
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get(jobRequest.getSurveyType());
-    ModelCase modelCase = cometConverter.convert(jobRequest);
-    cometRestClient.sendCreateJobRequest(modelCase);
-    gatewayEventManager.triggerEvent(modelCase.getId(), COMET_CREATE_SENT);
+    final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
+    CaseRequest caseRequest = cometConverter.convert(jobRequest);
+    cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT);
   }
-
 }

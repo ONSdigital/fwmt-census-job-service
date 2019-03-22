@@ -38,7 +38,7 @@ public class GatewayActionsReceiver {
   private void processMessage(String message) throws GatewayException {
     if (message.contains("Create")) {
       CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
-      gatewayEventManager.triggerEvent(fwmtCreateJobRequest.getJobIdentity(), CANONICAL_CREATE_JOB_RECEIVED);
+      gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
       jobService.createJob(fwmtCreateJobRequest);
       log.info("Sending Create job to TM");
     } else if (message.contains("Cancel")) {
@@ -47,7 +47,7 @@ public class GatewayActionsReceiver {
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
     } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message: /n" + message);
+      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message.");
     }
   }
 
