@@ -42,8 +42,8 @@ public class JobServiceImpl implements JobService {
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
     cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now().toString());
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
   }
 }
