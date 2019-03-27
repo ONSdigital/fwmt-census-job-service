@@ -3,7 +3,7 @@ package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePause;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
@@ -19,7 +19,6 @@ public class HouseholdConverter implements CometConverter {
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
-
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(HH);
     caseRequest.setSurveyType(ingest.getSurveyType());
@@ -30,7 +29,8 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setDescription("CENSUS");
     caseRequest.setSpecialInstructions("Special Instructions");
     //    caseRequest.setDescription(ingest.getDescription()) ;
-    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
+    //    caseReque st.setSpecialInstructions(ingest.getSpecialInstructions());
+    caseRequest.setUaa(false);
     caseRequest.setSai(ingest.isSai());
     caseRequest.setUaa(ingest.isUua());
 
@@ -61,9 +61,10 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setLocation(location);
 
     // TODO missing fields in CasePause
-    CasePause casePause = new CasePause();
+    CasePauseRequest casePause = new CasePauseRequest();
     casePause.setUntil(ingest.getPause().getHoldUntil());
     casePause.setReason(ingest.getPause().getReason());
+    caseRequest.setPause(casePause);
 
     return caseRequest;
   }
