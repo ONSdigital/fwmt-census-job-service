@@ -11,8 +11,10 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
+import java.time.LocalTime;
 import java.util.Map;
 
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
 
 @Service
@@ -40,7 +42,8 @@ public class JobServiceImpl implements JobService {
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
     cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT);
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
   }
 }
