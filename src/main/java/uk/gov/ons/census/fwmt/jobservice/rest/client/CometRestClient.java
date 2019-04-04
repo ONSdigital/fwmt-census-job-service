@@ -55,7 +55,7 @@ public class CometRestClient {
   }
 
   private boolean isExpired() {
-    return auth.getExpiresOnDate().after(new Date());
+    return !auth.getExpiresOnDate().after(new Date());
   }
 
   private void auth() throws GatewayException {
