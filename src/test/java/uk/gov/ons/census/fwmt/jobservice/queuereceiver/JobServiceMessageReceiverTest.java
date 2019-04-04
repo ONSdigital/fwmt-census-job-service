@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
+import uk.gov.ons.census.fwmt.jobservice.rest.client.OAuthFailedException;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
@@ -38,8 +39,7 @@ public class JobServiceMessageReceiverTest {
   private GatewayEventManager gatewayEventManager;
 
   @Test
-  public void receiveMessageCreate()
-      throws GatewayException, IOException {
+  public void receiveMessageCreate() throws GatewayException, IOException, OAuthFailedException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
     json.put("actionType", "Create");
@@ -70,8 +70,7 @@ public class JobServiceMessageReceiverTest {
   }
 
   @Test
-  public void receiveMessageCancel()
-      throws GatewayException, IOException {
+  public void receiveMessageCancel() throws GatewayException, IOException, OAuthFailedException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");
     json.put("jobIdentity", "1234");

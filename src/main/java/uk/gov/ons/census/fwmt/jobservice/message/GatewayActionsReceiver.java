@@ -10,6 +10,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.jobservice.rest.client.OAuthFailedException;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
@@ -31,12 +32,12 @@ public class GatewayActionsReceiver {
   @Autowired
   private ObjectMapper mapper;
 
-  public void receiveMessage(String message) throws GatewayException {
+  public void receiveMessage(String message) throws GatewayException, OAuthFailedException {
     log.info("received a message from RM-Adapter");
     processMessage(message);
   }
 
-  private void processMessage(String message) throws GatewayException {
+  private void processMessage(String message) throws GatewayException, OAuthFailedException {
     if (message.contains("Create")) {
       CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
       gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED,
