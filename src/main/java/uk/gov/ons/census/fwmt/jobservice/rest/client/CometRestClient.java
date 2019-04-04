@@ -11,9 +11,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
 
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,7 +54,11 @@ public class CometRestClient {
     return this.auth != null;
   }
 
-  private void auth() throws OAuthFailedException {
+  private boolean isExpired() {
+    return auth.getExpiresOnDate().after(new Date());
+  }
+
+  private void auth() throws GatewayException {
     ExecutorService service = Executors.newFixedThreadPool(1);
     try {
       AuthenticationContext context = new AuthenticationContext(AUTHORITY, false, service);
@@ -61,14 +67,14 @@ public class CometRestClient {
       Future<AuthenticationResult> future = context.acquireToken(RESOURCE, cc, null);
       this.auth = future.get();
     } catch (MalformedURLException | InterruptedException | ExecutionException e) {
-      throw new OAuthFailedException(e);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e);
     } finally {
       service.shutdown();
     }
   }
 
-  public void sendCreateJobRequest(CaseRequest caseRequest, String caseId) throws OAuthFailedException {
-    if (!isAuthed() && !clientID.isEmpty() && !clientSecret.isEmpty())
+  public void sendCreateJobRequest(CaseRequest caseRequest, String caseId) throws GatewayException {
+    if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
     JobServiceUtils.printJSON(caseRequest);
     HttpHeaders httpHeaders = new HttpHeaders();

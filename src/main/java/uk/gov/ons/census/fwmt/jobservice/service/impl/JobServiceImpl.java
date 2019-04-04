@@ -9,7 +9,6 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
-import uk.gov.ons.census.fwmt.jobservice.rest.client.OAuthFailedException;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.time.LocalTime;
@@ -30,7 +29,7 @@ public class JobServiceImpl implements JobService {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException, OAuthFailedException {
+  public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     convertAndSendCreate(jobRequest);
   }
 
@@ -40,8 +39,7 @@ public class JobServiceImpl implements JobService {
   }
 
   @Override
-  public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException,
-      OAuthFailedException {
+  public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());

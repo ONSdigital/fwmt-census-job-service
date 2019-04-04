@@ -3,12 +3,11 @@ package uk.gov.ons.census.fwmt.jobservice.service;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.rest.client.OAuthFailedException;
 
 public interface JobService {
-  void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException, OAuthFailedException;
+  void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 
   void cancelJob(CancelFieldWorkerJobRequest cancelRequest) throws GatewayException;
 
-  void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException, OAuthFailedException;
+  void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 }
