@@ -47,6 +47,9 @@ totalmobile:
   username: "user"
   password: "password"
   baseUrl: "http://localhost:8000/"
+  comet:
+    clientID: ""
+    clientSecret: ""
   operation:
     case:
       create:

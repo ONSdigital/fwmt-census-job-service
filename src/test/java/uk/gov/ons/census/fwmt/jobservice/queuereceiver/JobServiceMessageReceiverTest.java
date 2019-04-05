@@ -38,8 +38,7 @@ public class JobServiceMessageReceiverTest {
   private GatewayEventManager gatewayEventManager;
 
   @Test
-  public void receiveMessageCreate()
-      throws GatewayException, IOException {
+  public void receiveMessageCreate() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
     json.put("actionType", "Create");
@@ -70,8 +69,7 @@ public class JobServiceMessageReceiverTest {
   }
 
   @Test
-  public void receiveMessageCancel()
-      throws GatewayException, IOException {
+  public void receiveMessageCancel() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");
     json.put("jobIdentity", "1234");
