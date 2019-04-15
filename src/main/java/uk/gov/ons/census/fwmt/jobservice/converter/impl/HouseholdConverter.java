@@ -3,7 +3,6 @@ package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
@@ -21,25 +20,28 @@ public class HouseholdConverter implements CometConverter {
     CaseRequest caseRequest = new CaseRequest();
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(HH);
-    caseRequest.setSurveyType(ingest.getSurveyType());
-    caseRequest.setCategory(ingest.getCategory());
+    caseRequest.setSurveyType(ingest.getCaseType());
+    // Category is not yet in the feed
+    caseRequest.setCategory("Household");
+//    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
-    //not sure if there are still needed? Not in data map but were used before? 
-    caseRequest.setDescription("CENSUS");
-    caseRequest.setSpecialInstructions("Special Instructions");
-    //    caseRequest.setDescription(ingest.getDescription()) ;
-    //    caseReque st.setSpecialInstructions(ingest.getSpecialInstructions());
-    caseRequest.setUaa(false);
-    caseRequest.setSai(ingest.isSai());
-    caseRequest.setUaa(ingest.isUua());
 
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
+    contact.setOrganisationName(ingest.getContact().getOrganisationName());
+    contact.setPhone(ingest.getContact().getPhoneNumber());
+    contact.setEmail(ingest.getContact().getEmailAddress());
     caseRequest.setContact(contact);
 
     Address address = new Address();
     // arin not yet part of Comet
+//    try {
+//      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
+//    } catch (Exception e) {
+//      // if a problem resolving ARID, null is fine
+//    }
+
     try {
       address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
     } catch (Exception e) {
@@ -47,24 +49,31 @@ public class HouseholdConverter implements CometConverter {
       // if a problem resolving UPRN, null is fine
     }
 
+    address.setLines(addAddressLines(ingest));
+    address.setTown(ingest.getAddress().getTownName());
+    address.setPostcode(ingest.getAddress().getPostCode());
+
     Geography geography = new Geography();
     geography.setOa(ingest.getAddress().getOa());
     address.setGeography(geography);
 
-    address.setLines(addAddressLines(ingest));
-    address.setPostcode(ingest.getAddress().getPostCode());
     caseRequest.setAddress(address);
 
     Location location = new Location();
-    location.set_long(ingest.getAddress().getLatitude().floatValue());
-    location.setLat(ingest.getAddress().getLongitude().floatValue());
+    location.setLat(ingest.getAddress().getLatitude().floatValue());
+    location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
 
-    // TODO missing fields in CasePause
-    CasePauseRequest casePause = new CasePauseRequest();
-    casePause.setUntil(ingest.getPause().getHoldUntil());
-    casePause.setReason(ingest.getPause().getReason());
-    caseRequest.setPause(casePause);
+    /*
+        These are still needed as part of a create house hold,
+        unsure where they are derived from.
+    */
+    caseRequest.setDescription("CENSUS");
+    caseRequest.setSpecialInstructions("Special Instructions");
+    //    caseRequest.setDescription(ingest.getDescription()) ;
+    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
+    caseRequest.setUaa(ingest.isUua());
+    caseRequest.setSai(ingest.isSai());
 
     return caseRequest;
   }
