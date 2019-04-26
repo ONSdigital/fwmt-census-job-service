@@ -54,6 +54,8 @@ totalmobile:
     case:
       create:
         path: "cases/"
+      checkUp:
+        path: "swagger/v1/swagger.json"
 
 fwmt:
   workTypes:

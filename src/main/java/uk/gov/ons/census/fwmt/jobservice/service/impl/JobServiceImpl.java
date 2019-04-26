@@ -1,6 +1,11 @@
 package uk.gov.ons.census.fwmt.jobservice.service.impl;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
+import io.vavr.CheckedFunction0;
+import io.vavr.control.Try;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
@@ -19,31 +24,72 @@ import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET
 
 @Service
 public class JobServiceImpl implements JobService {
-  @Autowired
-  private CometRestClient cometRestClient;
+    @Autowired
+    private CometRestClient cometRestClient;
 
-  @Autowired
-  private Map<String, CometConverter> cometConverters;
+    @Autowired
+    private Map<String, CometConverter> cometConverters;
 
-  @Autowired
-  private GatewayEventManager gatewayEventManager;
+    @Autowired
+    private GatewayEventManager gatewayEventManager;
 
-  @Override
-  public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-    convertAndSendCreate(jobRequest);
-  }
+    private CircuitBreaker circuitBreaker;
+    private Retry retry;
 
-  @Override
-  public void cancelJob(CancelFieldWorkerJobRequest cancelRequest) {
-    // TODO implement once details are understood
-  }
+    public JobServiceImpl() {
+        circuitBreaker = CircuitBreaker.ofDefaults("comet");
+        retry = Retry.ofDefaults("comet");
+    }
 
-  @Override
-  public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
-    CaseRequest caseRequest = cometConverter.convert(jobRequest);
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
-    cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
-  }
+    @Override
+    public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
+        convertAndSendCreateInner(jobRequest);
+    }
+
+    @Override
+    public void cancelJob(CancelFieldWorkerJobRequest cancelRequest) {
+        // TODO implement once details are understood
+    }
+
+    @Override
+    public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
+        convertAndSendCreateInner(jobRequest);
+    }
+
+    private void convertAndSendCreateInner(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
+        CheckedFunction0<Void> func = () -> {
+            try {
+                final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
+                CaseRequest caseRequest = cometConverter.convert(jobRequest);
+                gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
+                cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
+                gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
+            } catch (GatewayException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        };
+
+        CheckedFunction0<Void> decorated = CircuitBreaker.decorateCheckedSupplier(circuitBreaker, func);
+
+        decorated = Retry.decorateCheckedSupplier(retry, decorated);
+
+        Try<Void> result = Try.of(decorated);
+
+        if (result.isFailure()) {
+            if (result.getCause().getCause() instanceof GatewayException) {
+                throw (GatewayException) result.getCause().getCause();
+            } else if (result.getCause() instanceof RuntimeException) {
+                throw (RuntimeException) result.getCause();
+            }
+        }
+    }
+
+    @Scheduled(fixedRate = 5000)
+    private void checkTMConnectivity() {
+        if (!cometRestClient.isUp() && circuitBreaker.getState() != CircuitBreaker.State.OPEN) {
+            System.out.println("Opening Circuit Breaker");
+            circuitBreaker.transitionToOpenState();
+        }
+    }
 }

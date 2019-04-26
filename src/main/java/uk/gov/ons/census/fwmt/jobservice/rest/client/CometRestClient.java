@@ -5,10 +5,9 @@ import com.microsoft.aad.adal4j.AuthenticationResult;
 import com.microsoft.aad.adal4j.ClientCredential;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -31,7 +30,8 @@ public class CometRestClient {
   private final static String AUTHORITY = "https://login.microsoftonline.com/05057611-67c0-4390-85ef-2c623ff4104f/oauth2/v2.0/token";
 
   private transient RestTemplate restTemplate;
-  private transient String cometURL;
+  private transient String cometUpURL;
+  private transient String cometCreateURL;
   private transient String clientID;
   private transient String clientSecret;
   private transient AuthenticationResult auth;
@@ -41,10 +41,12 @@ public class CometRestClient {
       RestTemplate restTemplate,
       @Value("${totalmobile.baseUrl}") String baseUrl,
       @Value("${totalmobile.operation.case.create.path}") String tmPath,
+      @Value("${totalmobile.operation.case.checkUp.path}") String upPath,
       @Value("${totalmobile.comet.clientID}") String clientID,
       @Value("${totalmobile.comet.clientSecret}") String clientSecret) {
     this.restTemplate = restTemplate;
-    this.cometURL = baseUrl + tmPath;
+    this.cometUpURL = baseUrl + upPath;
+    this.cometCreateURL = baseUrl + tmPath;
     this.clientID = clientID;
     this.clientSecret = clientSecret;
     this.auth = null;
@@ -73,6 +75,15 @@ public class CometRestClient {
     }
   }
 
+  public boolean isUp() {
+    try {
+      ResponseEntity<Void> entity = restTemplate.getForEntity(cometUpURL, Void.class);
+      return entity.getStatusCode() == HttpStatus.OK;
+    } catch (RestClientException e) {
+      return false;
+    }
+  }
+
   public void sendCreateJobRequest(CaseRequest caseRequest, String caseId) throws GatewayException {
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
@@ -81,6 +92,6 @@ public class CometRestClient {
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
     HttpEntity<CaseRequest> body = new HttpEntity<>(caseRequest, httpHeaders);
-    restTemplate.exchange(cometURL + caseId, HttpMethod.PUT, body, Void.class);
+    restTemplate.exchange(cometCreateURL + caseId, HttpMethod.PUT, body, Void.class);
   }
 }
