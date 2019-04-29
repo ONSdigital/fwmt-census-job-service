@@ -43,7 +43,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void createJob(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-        convertAndSendCreateInner(jobRequest);
+        convertAndSendCreate(jobRequest);
     }
 
     @Override
@@ -53,10 +53,6 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
-        convertAndSendCreateInner(jobRequest);
-    }
-
-    private void convertAndSendCreateInner(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
         CheckedFunction0<Void> func = () -> {
             try {
                 final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
@@ -70,26 +66,35 @@ public class JobServiceImpl implements JobService {
             return null;
         };
 
-        CheckedFunction0<Void> decorated = CircuitBreaker.decorateCheckedSupplier(circuitBreaker, func);
+        doWithCircuitBreaker(func);
+    }
 
+    private <T> T doWithCircuitBreaker(CheckedFunction0<T> func) throws GatewayException {
+        CheckedFunction0<T> decorated = CircuitBreaker.decorateCheckedSupplier(circuitBreaker, func);
         decorated = Retry.decorateCheckedSupplier(retry, decorated);
 
-        Try<Void> result = Try.of(decorated);
+        Try<T> result = Try.of(decorated);
 
         if (result.isFailure()) {
             if (result.getCause().getCause() instanceof GatewayException) {
                 throw (GatewayException) result.getCause().getCause();
             } else if (result.getCause() instanceof RuntimeException) {
                 throw (RuntimeException) result.getCause();
+            } else {
+                throw new RuntimeException("Unexpected exception in JobServiceImpl", result.getCause());
             }
         }
+
+        return result.get();
     }
 
     @Scheduled(fixedRate = 5000)
     private void checkTMConnectivity() {
         if (!cometRestClient.isUp() && circuitBreaker.getState() != CircuitBreaker.State.OPEN) {
             System.out.println("Opening Circuit Breaker");
-            circuitBreaker.transitionToOpenState();
+            circuitBreaker.transitionToForcedOpenState();
+        } else if (cometRestClient.isUp() && circuitBreaker.getState() == CircuitBreaker.State.FORCED_OPEN) {
+          circuitBreaker.transitionToHalfOpenState();
         }
     }
 }
