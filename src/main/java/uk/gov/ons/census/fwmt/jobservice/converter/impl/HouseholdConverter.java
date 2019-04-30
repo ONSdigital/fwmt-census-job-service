@@ -75,6 +75,8 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setUaa(ingest.isUua());
     caseRequest.setSai(ingest.isSai());
 
+    caseRequest.setFieldOfficerId(ingest.getMandatoryResource());
+
     return caseRequest;
   }
 }
