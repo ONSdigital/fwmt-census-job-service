@@ -33,7 +33,7 @@ after_success:
   set -e
   if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
     echo "$DOCKER_PASSWORD" | base64 --decode | docker login "$DOCKER_REGISTRY" --username "$DOCKER_USERNAME" --password-stdin
-    docker build -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc:census-job-service-$TRAVIS_BUILD_NUMBER --build-arg jar=build/libs/census-fwmt-job-service-*.jar .
+    docker build -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc:census-job-service-$TRAVIS_BUILD_NUMBER -t "$DOCKER_LOCATION"/census-rm-fwmtjobsvc:snapshot --build-arg jar=build/libs/census-fwmt-job-service-*.jar .
     docker push "$DOCKER_LOCATION"/census-rm-fwmtjobsvc
   fi
 - |
