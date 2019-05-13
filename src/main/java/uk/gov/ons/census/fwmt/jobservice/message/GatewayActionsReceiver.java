@@ -46,7 +46,7 @@ public class GatewayActionsReceiver {
     } else if (message.contains("Cancel")) {
       CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class, message);
       gatewayEventManager
-          .triggerEvent(fwmtCancelJobRequest.getJobIdentity(), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
+          .triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
     } else {

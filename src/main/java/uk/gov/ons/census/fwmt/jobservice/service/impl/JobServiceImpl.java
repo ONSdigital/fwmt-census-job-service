@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -34,8 +35,8 @@ public class JobServiceImpl implements JobService {
   }
 
   @Override
-  public void cancelJob(CancelFieldWorkerJobRequest cancelRequest) {
-    // TODO implement once details are understood
+  public void cancelJob(CancelFieldWorkerJobRequest cancelRequest) throws GatewayException {
+    convertAndSendCreateCancel(cancelRequest);
   }
 
   @Override
@@ -46,4 +47,13 @@ public class JobServiceImpl implements JobService {
     cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
   }
+
+  public void convertAndSendCreateCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
+    final CometConverter cometConverter = cometConverters.get(cancelJobRequest.getCaseId());
+    CasePauseRequest casePauseRequest = cometConverter.convertPause(cancelJobRequest);
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
+    cometRestClient.sendCreateJobRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
+  }
+
 }
