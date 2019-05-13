@@ -11,5 +11,5 @@ public interface JobService {
 
   void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 
-  void convertAndSendCancelledJob(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException;
+  void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException;
 }
