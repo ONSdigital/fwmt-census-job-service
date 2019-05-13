@@ -36,7 +36,7 @@ public class JobServiceImpl implements JobService {
 
   @Override
   public void cancelJob(CancelFieldWorkerJobRequest cancelRequest) throws GatewayException {
-    convertAndSendCreateCancel(cancelRequest);
+    convertAndSendCancelledJob(cancelRequest);
   }
 
   @Override
@@ -44,15 +44,15 @@ public class JobServiceImpl implements JobService {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
-    cometRestClient.sendCreateJobRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
+    cometRestClient.sendAllRequestTypes(caseRequest, String.valueOf(jobRequest.getCaseId()));
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
   }
 
-  public void convertAndSendCreateCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get(cancelJobRequest.getCaseId());
+  public void convertAndSendCancelledJob(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
+    final CometConverter cometConverter = cometConverters.get("Household");
     CasePauseRequest casePauseRequest = cometConverter.convertPause(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
-    cometRestClient.sendCreateJobRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
+    cometRestClient.sendAllRequestTypes(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
   }
 

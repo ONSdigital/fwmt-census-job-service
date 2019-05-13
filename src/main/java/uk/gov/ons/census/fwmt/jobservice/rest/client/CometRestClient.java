@@ -73,7 +73,7 @@ public class CometRestClient {
     }
   }
 
-  public <A> void sendCreateJobRequest (A caseRequest, String caseId) throws GatewayException {
+  public <A> void sendAllRequestTypes(A caseRequest, String caseId) throws GatewayException {
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
     JobServiceUtils.printJSON(caseRequest);
