@@ -73,14 +73,14 @@ public class CometRestClient {
     }
   }
 
-  public void sendCreateJobRequest(CaseRequest caseRequest, String caseId) throws GatewayException {
+  public <A> void sendRequest(A caseRequest, String caseId) throws GatewayException {
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
     JobServiceUtils.printJSON(caseRequest);
     HttpHeaders httpHeaders = new HttpHeaders();
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
-    HttpEntity<CaseRequest> body = new HttpEntity<>(caseRequest, httpHeaders);
+    HttpEntity<?> body = new HttpEntity<>(caseRequest, httpHeaders);
     restTemplate.exchange(cometURL + caseId, HttpMethod.PUT, body, Void.class);
   }
 }

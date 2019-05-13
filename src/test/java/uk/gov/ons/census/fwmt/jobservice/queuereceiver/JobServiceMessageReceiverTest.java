@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.jobservice.queuereceiver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,10 +13,12 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -60,7 +63,7 @@ public class JobServiceMessageReceiverTest {
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
-    
+
     String message = json.toString();
     messageReceiver.receiveMessage(message);
 
@@ -72,11 +75,11 @@ public class JobServiceMessageReceiverTest {
   public void receiveMessageCancel() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     json.put("actionType", "Cancel");
-    json.put("jobIdentity", "1234");
+    json.put("caseId", "8ed3fc08-e95f-44db-a6d7-cde4e76a6182");
     json.put("reason", "incorrect address");
 
     CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest(); 
-    request.setJobIdentity("1234");
+    request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
     Mockito.when(mapper.readValue(anyString(), eq(CancelFieldWorkerJobRequest.class))).thenReturn(request);
 
     
@@ -87,6 +90,37 @@ public class JobServiceMessageReceiverTest {
 
     Mockito.verify(jobService, never()).createJob(any());
     Mockito.verify(jobService).cancelJob(any());
+  }
+
+  @Test
+  public void receiveNisraMessageCreate() throws GatewayException, IOException {
+    JSONObject json = new JSONObject();
+    JSONObject address = new JSONObject();
+    json.put("actionType", "Create");
+    json.put("jobIdentity", "1234");
+    json.put("surveyType", "HH");
+    json.put("preallocatedJob", "true");
+    json.put("mandatoryResourceAuthNo", "1234");
+    json.put("dueDate", "20180216");
+    address.put("line1", "886");
+    address.put("line2", "Prairie Rose");
+    address.put("line3", "Trail");
+    address.put("line4", "RU");
+    address.put("townName", "Borodinskiy");
+    address.put("postCode", "188961");
+    address.put("latitude", "61.7921776");
+    address.put("longitude", "34.3739957");
+    json.put("address", address);
+    json.put("mandatoryResource", "testFieldOfficerId");
+
+    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
+    Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
+
+    String message = json.toString();
+    messageReceiver.receiveMessage(message);
+
+    Mockito.verify(jobService).createJob(any());
+    Mockito.verify(jobService, never()).cancelJob(any());
   }
 
 }
