@@ -15,8 +15,7 @@ import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 import java.time.LocalTime;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.*;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -51,9 +50,9 @@ public class JobServiceImpl implements JobService {
   public void convertAndSendCancelledJob(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get("Household");
     CasePauseRequest casePauseRequest = cometConverter.convertPause(cancelJobRequest);
-    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT, LocalTime.now());
     cometRestClient.sendAllRequestTypes(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK, LocalTime.now());
   }
 
 }
