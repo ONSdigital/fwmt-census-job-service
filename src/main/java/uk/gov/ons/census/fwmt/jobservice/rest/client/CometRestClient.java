@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
@@ -74,13 +75,18 @@ public class CometRestClient {
   }
 
   public <A> void sendRequest(A caseRequest, String caseId) throws GatewayException {
+    String basePathway = cometURL + caseId;
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
     JobServiceUtils.printJSON(caseRequest);
     HttpHeaders httpHeaders = new HttpHeaders();
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
+    if (caseRequest.getClass().equals(CasePauseRequest.class)) {
+      basePathway = basePathway + "/pause";
+    }
+
     HttpEntity<?> body = new HttpEntity<>(caseRequest, httpHeaders);
-    restTemplate.exchange(cometURL + caseId, HttpMethod.PUT, body, Void.class);
+    restTemplate.exchange(basePathway, HttpMethod.PUT, body, Void.class);
   }
 }
