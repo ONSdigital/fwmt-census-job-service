@@ -74,13 +74,18 @@ public class CometRestClient {
   }
 
   public <A> void sendRequest(A caseRequest, String caseId) throws GatewayException {
+    String pathwayAddition = cometURL + caseId;
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
     JobServiceUtils.printJSON(caseRequest);
     HttpHeaders httpHeaders = new HttpHeaders();
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
+    if (caseRequest.getClass().toString().contains("CasePauseRequest")) {
+      pathwayAddition = pathwayAddition + "/pause";
+    }
+
     HttpEntity<?> body = new HttpEntity<>(caseRequest, httpHeaders);
-    restTemplate.exchange(cometURL + caseId, HttpMethod.PUT, body, Void.class);
+    restTemplate.exchange(pathwayAddition, HttpMethod.PUT, body, Void.class);
   }
 }

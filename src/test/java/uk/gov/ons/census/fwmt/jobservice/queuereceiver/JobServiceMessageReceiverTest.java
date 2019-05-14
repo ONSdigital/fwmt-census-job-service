@@ -122,5 +122,4 @@ public class JobServiceMessageReceiverTest {
     Mockito.verify(jobService).createJob(any());
     Mockito.verify(jobService, never()).cancelJob(any());
   }
-
 }
