@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
@@ -81,7 +82,7 @@ public class CometRestClient {
     HttpHeaders httpHeaders = new HttpHeaders();
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
-    if (caseRequest.getClass().toString().contains("CasePauseRequest")) {
+    if (caseRequest.getClass().equals(CasePauseRequest.class)) {
       basePathway = basePathway + "/pause";
     }
 
