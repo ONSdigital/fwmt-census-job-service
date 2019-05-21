@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.jobservice.service.impl;
+package uk.gov.ons.census.fwmt.jobservice.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,8 +57,6 @@ public class JobServiceImplTest {
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_SENT), any());
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_ACK), any());
-    Mockito.verify(gatewayEventManager, never()).triggerEvent(anyString(), eq(COMET_CANCEL_SENT), any());
-    Mockito.verify(gatewayEventManager, never()).triggerEvent(anyString(), eq(COMET_CANCEL_ACK), any());
 
   }
 
@@ -78,8 +76,6 @@ public class JobServiceImplTest {
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_SENT), any());
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_ACK), any());
-    Mockito.verify(gatewayEventManager, never()).triggerEvent(anyString(), eq(COMET_CREATE_SENT), any());
-    Mockito.verify(gatewayEventManager, never()).triggerEvent(anyString(), eq(COMET_CREATE_ACK), any());
 
   }
 }
