@@ -5,13 +5,13 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class FieldWorkerJobRequestBuilder {
 
   public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvert() {
-    AddressBuilder addressBuilder = new AddressBuilder();
     Contact contact = new Contact();
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
 
@@ -22,8 +22,7 @@ public class FieldWorkerJobRequestBuilder {
     createFieldWorkerJobRequest.setEstablishmentType("estabType");
     createFieldWorkerJobRequest.setCoordinatorId("coordId");
 
-    Address address = addressBuilder.createNewAddress();
-    createFieldWorkerJobRequest.setAddress(address);
+    createFieldWorkerJobRequest.setAddress(createNewAddress());
 
     contact.setOrganisationName("Test");
     contact.setEmailAddress("Test@test.co.uk");
@@ -44,5 +43,18 @@ public class FieldWorkerJobRequestBuilder {
     cancelFieldWorkerJobRequest.setUntil(OffsetDateTime.parse("2030-01-01T00:00+00:00"));
 
     return cancelFieldWorkerJobRequest;
+  }
+
+  private Address createNewAddress() {
+    Address address = new Address();
+
+    address.setLine1("1 Station Road");
+    address.setTownName("Town");
+    address.setPostCode("AB1 2CD");
+    address.setLatitude(BigDecimal.valueOf(1234.56));
+    address.setLongitude(BigDecimal.valueOf(2345.67));
+    address.setOa("oaTest");
+
+    return address;
   }
 }

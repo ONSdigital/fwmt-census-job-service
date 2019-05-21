@@ -22,10 +22,7 @@ public class HouseHoldConverterTest {
   @Test
   public void createConvertRequest() {
     // Given
-    FieldWorkerJobRequestBuilder fieldWorkerJobRequestBuilder = new FieldWorkerJobRequestBuilder();
-    fieldWorkerJobRequestBuilder.createFieldWorkerJobRequestForConvert();
-
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = fieldWorkerJobRequestBuilder.createFieldWorkerJobRequestForConvert();
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder().createFieldWorkerJobRequestForConvert();
 
     // When
     CaseRequest caseRequest = householdConverter.convert(createFieldWorkerJobRequest);
@@ -40,10 +37,7 @@ public class HouseHoldConverterTest {
   @Test
   public void createConvertPause() {
     // Given
-    FieldWorkerJobRequestBuilder fieldWorkerJobRequestBuilder = new FieldWorkerJobRequestBuilder();
-    fieldWorkerJobRequestBuilder.cancelFieldWorkerJobRequest();
-
-    CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = fieldWorkerJobRequestBuilder.cancelFieldWorkerJobRequest();
+    CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder().cancelFieldWorkerJobRequest();
 
     // When
     CasePauseRequest casePauseRequest = householdConverter.convertPause(cancelFieldWorkerJobRequest);
