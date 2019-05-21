@@ -12,7 +12,6 @@ import java.util.UUID;
 public class FieldWorkerJobRequestBuilder {
 
   public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvert() {
-    Contact contact = new Contact();
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
 
     createFieldWorkerJobRequest.setActionType("Create");
@@ -23,6 +22,8 @@ public class FieldWorkerJobRequestBuilder {
     createFieldWorkerJobRequest.setCoordinatorId("coordId");
 
     createFieldWorkerJobRequest.setAddress(createNewAddress());
+
+    Contact contact = new Contact();
 
     contact.setOrganisationName("Test");
     contact.setEmailAddress("Test@test.co.uk");
