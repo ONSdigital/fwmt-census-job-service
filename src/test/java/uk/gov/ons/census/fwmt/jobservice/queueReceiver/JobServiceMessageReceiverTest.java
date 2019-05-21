@@ -1,9 +1,8 @@
-package uk.gov.ons.census.fwmt.jobservice.queuereceiver;
+package uk.gov.ons.census.fwmt.jobservice.queueReceiver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,7 +12,6 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
