@@ -33,7 +33,7 @@ public class JobServiceMessageReceiverTest {
 
   @Mock
   private ObjectMapper mapper;
-  
+
   @Mock
   private GatewayEventManager gatewayEventManager;
 
@@ -60,7 +60,6 @@ public class JobServiceMessageReceiverTest {
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
-
     String message = json.toString();
     messageReceiver.receiveMessage(message);
 
@@ -75,13 +74,11 @@ public class JobServiceMessageReceiverTest {
     json.put("caseId", "8ed3fc08-e95f-44db-a6d7-cde4e76a6182");
     json.put("reason", "incorrect address");
 
-    CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest(); 
+    CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
     Mockito.when(mapper.readValue(anyString(), eq(CancelFieldWorkerJobRequest.class))).thenReturn(request);
 
-    
-    String message;
-    message = json.toString();
+    String message = json.toString();
 
     messageReceiver.receiveMessage(message);
 
