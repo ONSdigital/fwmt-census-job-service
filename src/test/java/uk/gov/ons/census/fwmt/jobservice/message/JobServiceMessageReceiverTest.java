@@ -1,9 +1,8 @@
-package uk.gov.ons.census.fwmt.jobservice.queuereceiver;
+package uk.gov.ons.census.fwmt.jobservice.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,8 +12,6 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
-import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
@@ -36,7 +33,7 @@ public class JobServiceMessageReceiverTest {
 
   @Mock
   private ObjectMapper mapper;
-  
+
   @Mock
   private GatewayEventManager gatewayEventManager;
 
@@ -63,7 +60,6 @@ public class JobServiceMessageReceiverTest {
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
-
     String message = json.toString();
     messageReceiver.receiveMessage(message);
 
@@ -78,13 +74,11 @@ public class JobServiceMessageReceiverTest {
     json.put("caseId", "8ed3fc08-e95f-44db-a6d7-cde4e76a6182");
     json.put("reason", "incorrect address");
 
-    CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest(); 
+    CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
     Mockito.when(mapper.readValue(anyString(), eq(CancelFieldWorkerJobRequest.class))).thenReturn(request);
 
-    
-    String message;
-    message = json.toString();
+    String message = json.toString();
 
     messageReceiver.receiveMessage(message);
 
