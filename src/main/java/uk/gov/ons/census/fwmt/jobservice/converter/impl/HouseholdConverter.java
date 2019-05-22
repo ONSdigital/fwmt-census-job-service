@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
@@ -83,7 +84,17 @@ public class HouseholdConverter implements CometConverter {
   }
 
   @Override
-  public CasePauseRequest convertPause(CancelFieldWorkerJobRequest ingest) {
+  public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest ingest) {
+    CasePauseRequest pauseRequest = new CasePauseRequest();
+    pauseRequest.setId(String.valueOf(ingest.getCaseId()));
+    pauseRequest.setUntil(ingest.getUntil());
+    pauseRequest.setReason(ingest.getReason());
+
+    return pauseRequest;
+  }
+
+  @Override
+  public CasePauseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest) {
     CasePauseRequest pauseRequest = new CasePauseRequest();
     pauseRequest.setId(String.valueOf(ingest.getCaseId()));
     pauseRequest.setUntil(ingest.getUntil());

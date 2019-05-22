@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.jobservice.service;
 
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
 public interface JobService {
@@ -9,7 +10,11 @@ public interface JobService {
 
   void cancelJob(CancelFieldWorkerJobRequest cancelRequest) throws GatewayException;
 
+  void updateJob(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException;
+
   void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException;
 
   void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException;
+
+  void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateJobRequest) throws GatewayException;
 }
