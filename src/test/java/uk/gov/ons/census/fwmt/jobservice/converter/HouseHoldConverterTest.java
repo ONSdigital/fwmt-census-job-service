@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
@@ -20,7 +21,7 @@ public class HouseHoldConverterTest {
   HouseholdConverter householdConverter;
 
   @Test
-  public void createConvertRequest() {
+  public void createConvertRequestTest() {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
         .createFieldWorkerJobRequestForConvert();
@@ -36,16 +37,30 @@ public class HouseHoldConverterTest {
   }
 
   @Test
-  public void createConvertPause() {
+  public void createConvertCancelTest() {
     // Given
     CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
         .cancelFieldWorkerJobRequest();
 
     // When
-    CasePauseRequest casePauseRequest = householdConverter.convertPause(cancelFieldWorkerJobRequest);
+    CasePauseRequest casePauseRequest = householdConverter.convertCancel(cancelFieldWorkerJobRequest);
 
     // Then
     assertEquals(cancelFieldWorkerJobRequest.getCaseId().toString(), casePauseRequest.getId());
     assertEquals(cancelFieldWorkerJobRequest.getUntil(), casePauseRequest.getUntil());
+  }
+
+  @Test
+  public void createConvertUpdateTest() {
+    // Given
+    UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
+        .updateFieldWorkerJobRequest();
+
+    // When
+    CasePauseRequest casePauseRequest = householdConverter.convertUpdate(updateFieldWorkerJobRequest);
+
+    // Then
+    assertEquals(updateFieldWorkerJobRequest.getCaseId().toString(), casePauseRequest.getId());
+    assertEquals(updateFieldWorkerJobRequest.getUntil(), casePauseRequest.getUntil());
   }
 }

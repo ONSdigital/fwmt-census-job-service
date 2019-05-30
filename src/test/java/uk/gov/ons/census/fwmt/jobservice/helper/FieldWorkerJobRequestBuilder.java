@@ -4,6 +4,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -44,6 +45,17 @@ public class FieldWorkerJobRequestBuilder {
     cancelFieldWorkerJobRequest.setUntil(OffsetDateTime.parse("2030-01-01T00:00+00:00"));
 
     return cancelFieldWorkerJobRequest;
+  }
+
+  public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest() {
+    UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
+
+    updateFieldWorkerJobRequest.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
+    updateFieldWorkerJobRequest.setReason("TestReason");
+    updateFieldWorkerJobRequest.setActionType("actionType");
+    updateFieldWorkerJobRequest.setUntil(OffsetDateTime.parse("2019-05-27T00:00+00:00"));
+
+    return updateFieldWorkerJobRequest;
   }
 
   private Address createNewAddress() {
