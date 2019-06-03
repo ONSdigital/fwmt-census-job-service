@@ -116,4 +116,13 @@ public class JobServiceMessageReceiverTest {
     Mockito.verify(jobService).createJob(any());
     Mockito.verify(jobService, never()).cancelJob(any());
   }
+
+  @Test(expected = GatewayException.class)
+  public void receiveBadProcessMessage() throws GatewayException {
+    JSONObject json = new JSONObject();
+    json.put("actionType", "");
+    String message = json.toString();
+
+    messageReceiver.receiveMessage(message);
+  }
 }
