@@ -42,7 +42,7 @@ public class HouseHoldConverterTest {
         .cancelFieldWorkerJobRequest();
 
     // When
-    CasePauseRequest casePauseRequest = householdConverter.convertPause(cancelFieldWorkerJobRequest);
+    CasePauseRequest casePauseRequest = householdConverter.convertCancel(cancelFieldWorkerJobRequest);
 
     // Then
     assertEquals(cancelFieldWorkerJobRequest.getCaseId().toString(), casePauseRequest.getId());

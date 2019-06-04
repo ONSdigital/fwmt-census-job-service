@@ -73,7 +73,7 @@ public class JobServiceImplTest {
 
     // When
     when(cometConverters.get("Household")).thenReturn(cometConverter);
-    when(cometConverter.convertPause(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
+    when(cometConverter.convertCancel(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
 
     jobServiceImpl.cancelJob(jobRequest);
 

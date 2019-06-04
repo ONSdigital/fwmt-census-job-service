@@ -1,14 +1,19 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
+import ma.glasnost.orika.MapperFacade;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePause;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.HH;
@@ -17,6 +22,9 @@ import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddress
 @Component("Household")
 public class HouseholdConverter implements CometConverter {
 
+
+  @Autowired
+  private MapperFacade mapperFacade;
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
@@ -83,12 +91,34 @@ public class HouseholdConverter implements CometConverter {
   }
 
   @Override
-  public CasePauseRequest convertPause(CancelFieldWorkerJobRequest ingest) {
+  public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest ingest) {
     CasePauseRequest pauseRequest = new CasePauseRequest();
     pauseRequest.setId(String.valueOf(ingest.getCaseId()));
     pauseRequest.setUntil(ingest.getUntil());
     pauseRequest.setReason(ingest.getReason());
 
     return pauseRequest;
+  }
+
+  @Override
+  public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest,
+      ModelCase modelCase) {
+    CaseRequest updateRequest = caseUpdateMapper(modelCase);
+
+    if (ingest.getAddressType().equals("HH")) {
+      updateRequest.setUaa(ingest.getUndeliveredAsAddressed());
+
+      if(ingest.getBlankQreReturned().booleanValue() == false) {
+      } else {
+        updateRequest.getPause().setUntil(ingest.getUntil());
+        updateRequest.getPause().setReason("Case reinstated - blank QRE");
+      }
+    }
+
+    return updateRequest;
+  }
+
+  private CaseRequest caseUpdateMapper(ModelCase modelCase) {
+     return mapperFacade.map(modelCase, CaseRequest.class);
   }
 }
