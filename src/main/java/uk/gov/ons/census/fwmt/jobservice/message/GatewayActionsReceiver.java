@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
@@ -18,7 +17,6 @@ import java.time.LocalTime;
 
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CANCEL_RECEIVED;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CREATE_JOB_RECEIVED;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_UPDATE_RECEIVED;
 
 @Slf4j
 @Component
@@ -51,13 +49,7 @@ public class GatewayActionsReceiver {
           .triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
-    } else if (message.contains("update")) {
-      UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
-      jobService.updateJob(fwmtUpdateJobRequest);
-      log.info("Sending Update job to TM");
-    }else {
+    } else {
       throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message.");
     }
   }
