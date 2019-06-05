@@ -51,7 +51,7 @@ public class GatewayActionsReceiver {
           .triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
-    } else if (message.contains("Update")) {
+    } else if (message.contains("update")) {
       UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message);
       gatewayEventManager
           .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
