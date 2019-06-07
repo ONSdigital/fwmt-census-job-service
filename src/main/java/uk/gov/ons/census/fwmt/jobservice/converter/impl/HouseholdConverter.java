@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
@@ -24,6 +25,7 @@ public class HouseholdConverter implements CometConverter {
 
   @Autowired
   private MapperFacade mapperFacade;
+
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
@@ -102,35 +104,40 @@ public class HouseholdConverter implements CometConverter {
   @Override
   public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest,
       ModelCase modelCase) {
-    CaseRequest updateRequest = caseUpdateMapper(modelCase);
+    CaseRequest updateRequest = mapperFacade.map(modelCase, CaseRequest.class);
+    CasePauseRequest casePauseRequest = new CasePauseRequest();
+
+    int dateComparison = 0;
 
     if (ingest.getAddressType().equals("HH")) {
-      updateRequest.setUaa(ingest.getUndeliveredAsAddressed());
+      updateRequest.setUaa(ingest.isUndeliveredAsAddressed());
 
-      if(ingest.getBlankQreReturned().booleanValue() == false) {
-        int dateComparison = ingest.getUntil().compareTo(updateRequest.getPause().getUntil());
-
-        if(dateComparison == 1) {
-          updateRequest.getPause().setUntil(ingest.getUntil());
-          updateRequest.getPause().setReason("HQ Case Pause");
+      if(!ingest.isBlankQreReturned()) {
+        if(StringUtils.isEmpty(updateRequest.getPause())) {
+          updateRequest.setPause(casePauseRequest);
+          dateComparison = 1;
+        } else {
+          dateComparison = ingest.getUntil().compareTo(updateRequest.getPause().getUntil());
         }
 
-      } else {
-        updateRequest.getPause().setUntil(ingest.getUntil());
-        updateRequest.getPause().setReason("Case reinstated - blank QRE");
+        if(dateComparison > 0) {
+          updateRequest.getPause().setId(String.valueOf(ingest.getId()));
+          updateRequest.getPause().setUntil(ingest.getUntil());
+          updateRequest.getPause().setReason("HQ Case Pause");
+        } else {
+          updateRequest.getPause().setUntil(ingest.getUntil());
+          updateRequest.getPause().setReason("Case reinstated - blank QRE");
+        }
       }
     }
 
     if (ingest.getAddressType().equals("CE")) {
       updateRequest.getCe().setActualResponses(ingest.getCeActualResponses());
-      updateRequest.getCe().setCe1Complete(ingest.getCe1Complete());
+      updateRequest.getCe().setCe1Complete(ingest.isCe1Complete());
       updateRequest.getCe().setExpectedResponses(ingest.getCeExpectedResponses());
     }
 
     return updateRequest;
   }
 
-  private CaseRequest caseUpdateMapper(ModelCase modelCase) {
-     return mapperFacade.map(modelCase, CaseRequest.class);
-  }
 }

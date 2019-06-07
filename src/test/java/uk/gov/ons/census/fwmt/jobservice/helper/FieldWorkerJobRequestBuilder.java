@@ -60,7 +60,7 @@ public class FieldWorkerJobRequestBuilder {
     return address;
   }
 
-  public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest() {
+  public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestWithPause() {
     UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
 
     updateFieldWorkerJobRequest.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
@@ -68,7 +68,21 @@ public class FieldWorkerJobRequestBuilder {
     updateFieldWorkerJobRequest.setActionType("update");
     updateFieldWorkerJobRequest.setUndeliveredAsAddressed(false);
     updateFieldWorkerJobRequest.setUntil(OffsetDateTime.parse("2019-07-27T00:00+00:00"));
+    updateFieldWorkerJobRequest.setBlankQreReturned(false);
 
     return updateFieldWorkerJobRequest;
+  }
+
+    public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestReinstate() {
+      UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
+
+      updateFieldWorkerJobRequest.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+      updateFieldWorkerJobRequest.setAddressType("HH");
+      updateFieldWorkerJobRequest.setActionType("update");
+      updateFieldWorkerJobRequest.setUndeliveredAsAddressed(false);
+      updateFieldWorkerJobRequest.setUntil(OffsetDateTime.parse("2019-05-26T00:00+00:00"));
+      updateFieldWorkerJobRequest.setBlankQreReturned(false);
+
+      return updateFieldWorkerJobRequest;
   }
 }

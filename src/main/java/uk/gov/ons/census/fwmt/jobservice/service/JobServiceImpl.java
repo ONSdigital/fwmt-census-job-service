@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.jobservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
@@ -71,6 +72,10 @@ public class JobServiceImpl implements JobService {
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getId()), COMET_UPDATE_SENT, LocalTime.now());
+    if(!StringUtils.isEmpty(caseRequest.getPause())) {
+      CasePauseRequest casePauseRequest = caseRequest.getPause();
+      cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getId()));
+    }
     cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getId()));
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getId()), COMET_UPDATE_ACK, LocalTime.now());
   }

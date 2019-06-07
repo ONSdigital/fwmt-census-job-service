@@ -17,11 +17,12 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import static org.mockito.ArgumentMatchers.any;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HouseHoldConverterTest {
@@ -72,26 +73,26 @@ public class HouseHoldConverterTest {
   }
 
   @Test
-  public void createConvertUpdate() throws GatewayException {
+  public void createConvertUpdatePause() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
         .createFieldWorkerJobRequestForConvert();
 
+    CasePauseRequest casePauseRequest = new CasePauseRequest();
+    casePauseRequest.setUntil(OffsetDateTime.parse("2019-05-06T00:00:00+00:00"));
+    casePauseRequest.setId("a48bf28e-e7f4-4467-a9fb-e000b6a55676");
+
     CaseRequest caseRequest = householdConverter.convert(createFieldWorkerJobRequest);
+    caseRequest.setPause(casePauseRequest);
 
     UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .updateFieldWorkerJobRequest();
+        .updateFieldWorkerJobRequestWithPause();
 
     ModelCase modelCase = new ModelCase();
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    modelCase.setType(ModelCase.TypeEnum.HH);
-    modelCase.setAddress(caseRequest.getAddress());
-    modelCase.setCategory(caseRequest.getCategory());
-    modelCase.setCoordCode(caseRequest.getCoordCode());
-    modelCase.setContact(caseRequest.getContact());
-    modelCase.setDescription(caseRequest.getDescription());
-    modelCase.setEstabType(caseRequest.getEstabType());
-    modelCase.setLocation(caseRequest.getLocation());
+
+
+    Mockito.when(mapperFacade.map(modelCase, CaseRequest.class)).thenReturn(caseRequest);
 
     // When
     CaseRequest caseUpdateRequest = householdConverter.convertUpdate(updateFieldWorkerJobRequest, modelCase);
@@ -99,5 +100,38 @@ public class HouseHoldConverterTest {
     // Then
     assertEquals(updateFieldWorkerJobRequest.getId().toString(), caseUpdateRequest.getPause().getId());
     assertEquals(updateFieldWorkerJobRequest.getUntil(), caseUpdateRequest.getPause().getUntil());
+    assertEquals("HQ Case Pause", casePauseRequest.getReason());
   }
+
+  @Test
+  public void createConvertUpdateReinstate() throws GatewayException {
+    // Given
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
+        .createFieldWorkerJobRequestForConvert();
+
+    CasePauseRequest casePauseRequest = new CasePauseRequest();
+    casePauseRequest.setUntil(OffsetDateTime.parse("2019-05-28T00:00:00+00:00"));
+    casePauseRequest.setId("a48bf28e-e7f4-4467-a9fb-e000b6a55676");
+
+    CaseRequest caseRequest = householdConverter.convert(createFieldWorkerJobRequest);
+    caseRequest.setPause(casePauseRequest);
+
+    UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
+        .updateFieldWorkerJobRequestReinstate();
+
+    ModelCase modelCase = new ModelCase();
+    modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+
+
+    Mockito.when(mapperFacade.map(modelCase, CaseRequest.class)).thenReturn(caseRequest);
+
+    // When
+    CaseRequest caseUpdateRequest = householdConverter.convertUpdate(updateFieldWorkerJobRequest, modelCase);
+
+    // Then
+    assertEquals(updateFieldWorkerJobRequest.getId().toString(), caseUpdateRequest.getPause().getId());
+    assertEquals(updateFieldWorkerJobRequest.getUntil(), caseUpdateRequest.getPause().getUntil());
+    assertEquals("Case reinstated - blank QRE", casePauseRequest.getReason());
+  }
+
 }

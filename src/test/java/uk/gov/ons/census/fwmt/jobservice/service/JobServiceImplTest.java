@@ -18,7 +18,9 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
 
+import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -48,6 +50,12 @@ public class JobServiceImplTest {
 
   @Mock
   private CometConverter cometConverter;
+
+  @Mock
+  private ModelCase modelCase;
+
+  @Mock
+  private CaseRequest caseRequest;
 
   @Test
   public void createConvertAndSendCreateTest() throws GatewayException {
@@ -90,18 +98,28 @@ public class JobServiceImplTest {
   @Test
   public void updateConvertAndSendUpdateTest() throws GatewayException {
     // Given
-    UpdateFieldWorkerJobRequest jobRequest = new FieldWorkerJobRequestBuilder().updateFieldWorkerJobRequest();
+    UpdateFieldWorkerJobRequest jobRequest = new FieldWorkerJobRequestBuilder().updateFieldWorkerJobRequestWithPause();
 
     CaseRequest caseRequest = new CaseRequest();
+    CasePauseRequest casePauseRequest = new CasePauseRequest();
+    caseRequest.setType(CaseRequest.TypeEnum.HH);
+    casePauseRequest.setUntil(OffsetDateTime.parse("2019-07-27T00:00+00:00"));
+    casePauseRequest.setId("a48bf28e-e7f4-4467-a9fb-e000b6a55676");
+    caseRequest.setPause(casePauseRequest);
+
+    ModelCase modelCase = new ModelCase();
+    modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
 
     // When
     when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(restClient.getCase(anyString())).thenReturn(modelCase);
     when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class))).thenReturn(caseRequest);
 
     jobServiceImpl.convertAndSendUpdate(jobRequest);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_SENT), any());
+    Mockito.verify(restClient).sendRequest(casePauseRequest, String.valueOf(jobRequest.getId()));
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_ACK), any());
 
   }
