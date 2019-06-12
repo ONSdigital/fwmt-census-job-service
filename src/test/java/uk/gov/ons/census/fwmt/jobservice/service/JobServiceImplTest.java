@@ -119,7 +119,7 @@ public class JobServiceImplTest {
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_SENT), any());
-    Mockito.verify(restClient).sendRequest(casePauseRequest, String.valueOf(jobRequest.getId()));
+    Mockito.verify(restClient).sendRequest(casePauseRequest, String.valueOf(jobRequest.getCaseId()));
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_ACK), any());
 
   }

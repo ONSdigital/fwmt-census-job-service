@@ -98,8 +98,8 @@ public class HouseHoldConverterTest {
     CaseRequest caseUpdateRequest = householdConverter.convertUpdate(updateFieldWorkerJobRequest, modelCase);
 
     // Then
-    assertEquals(updateFieldWorkerJobRequest.getId().toString(), caseUpdateRequest.getPause().getId());
-    assertEquals(updateFieldWorkerJobRequest.getUntil(), caseUpdateRequest.getPause().getUntil());
+    assertEquals(updateFieldWorkerJobRequest.getCaseId().toString(), caseUpdateRequest.getPause().getId());
+    assertEquals(updateFieldWorkerJobRequest.getHoldUntil(), caseUpdateRequest.getPause().getUntil());
     assertEquals("HQ Case Pause", casePauseRequest.getReason());
   }
 
@@ -129,8 +129,8 @@ public class HouseHoldConverterTest {
     CaseRequest caseUpdateRequest = householdConverter.convertUpdate(updateFieldWorkerJobRequest, modelCase);
 
     // Then
-    assertEquals(updateFieldWorkerJobRequest.getId().toString(), caseUpdateRequest.getPause().getId());
-    assertEquals(updateFieldWorkerJobRequest.getUntil(), caseUpdateRequest.getPause().getUntil());
+    assertEquals(updateFieldWorkerJobRequest.getCaseId().toString(), caseUpdateRequest.getPause().getId());
+    assertEquals(updateFieldWorkerJobRequest.getHoldUntil(), caseUpdateRequest.getPause().getUntil());
     assertEquals("Case reinstated - blank QRE", casePauseRequest.getReason());
   }
 

@@ -54,7 +54,7 @@ public class GatewayActionsReceiver {
     } else if (message.contains("update")) {
       UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message);
       gatewayEventManager
-          .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
+          .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
       jobService.updateJob(fwmtUpdateJobRequest);
       log.info("Sending Update job to TM");
     } else {

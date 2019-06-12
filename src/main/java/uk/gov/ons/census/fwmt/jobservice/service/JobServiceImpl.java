@@ -69,15 +69,15 @@ public class JobServiceImpl implements JobService {
 
   public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get("Household");
-    ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getId()));
+    ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
-    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getId()), COMET_UPDATE_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
     if(!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
-      cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getId()));
+      cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
     }
-    cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getId()));
-    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getId()), COMET_UPDATE_ACK, LocalTime.now());
+    cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getCaseId()));
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK, LocalTime.now());
   }
 
 }

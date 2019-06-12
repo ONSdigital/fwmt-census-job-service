@@ -125,7 +125,7 @@ public class JobServiceMessageReceiverTest {
     json.put("caseId", "f98e469e-1727-4ef8-bc87-354a7ebdf1de");
 
     UpdateFieldWorkerJobRequest request = new UpdateFieldWorkerJobRequest();
-    request.setId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
+    request.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
     Mockito.when(mapper.readValue(anyString(), eq(UpdateFieldWorkerJobRequest.class))).thenReturn(request);
 
     String message = json.toString();

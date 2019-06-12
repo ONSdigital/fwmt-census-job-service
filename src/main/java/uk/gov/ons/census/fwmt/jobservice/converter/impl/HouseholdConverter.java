@@ -36,6 +36,7 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setCategory("Household");
 //    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setEstabType(ingest.getEstablishmentType());
+    caseRequest.setFieldOfficerId(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
 
     Contact contact = new Contact();
@@ -86,8 +87,6 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setUaa(ingest.isUua());
     caseRequest.setSai(ingest.isSai());
 
-    caseRequest.setFieldOfficerId(ingest.getMandatoryResource());
-
     return caseRequest;
   }
 
@@ -110,24 +109,20 @@ public class HouseholdConverter implements CometConverter {
     int dateComparison = 0;
 
     if (ingest.getAddressType().equals("HH")) {
-      updateRequest.setUaa(ingest.isUndeliveredAsAddressed());
 
-      if(!ingest.isBlankQreReturned()) {
-        if(StringUtils.isEmpty(updateRequest.getPause())) {
-          updateRequest.setPause(casePauseRequest);
-          dateComparison = 1;
-        } else {
-          dateComparison = ingest.getUntil().compareTo(updateRequest.getPause().getUntil());
-        }
+      if(StringUtils.isEmpty(updateRequest.getPause())) {
+        updateRequest.setPause(casePauseRequest);
+        dateComparison = 1;
+      } else {
+        dateComparison = ingest.getHoldUntil().compareTo(updateRequest.getPause().getUntil());
+      }
 
-        if(dateComparison > 0) {
-          updateRequest.getPause().setId(String.valueOf(ingest.getId()));
-          updateRequest.getPause().setUntil(ingest.getUntil());
-          updateRequest.getPause().setReason("HQ Case Pause");
-        } else {
-          updateRequest.getPause().setUntil(ingest.getUntil());
-          updateRequest.getPause().setReason("Case reinstated - blank QRE");
-        }
+      if(!ingest.isBlankFormReturned() && dateComparison > 0) {
+        updateRequest.getPause().setUntil(ingest.getHoldUntil());
+        updateRequest.getPause().setReason("HQ Case Pause");
+      } else if (ingest.isBlankFormReturned() && !updateRequest.isBlankFormReturned()) {
+        updateRequest.getPause().setUntil(ingest.getHoldUntil());
+        updateRequest.getPause().setReason("Case reinstated - blank QRE");
       }
     }
 
