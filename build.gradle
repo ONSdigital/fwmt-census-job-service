@@ -70,7 +70,7 @@ springBoot {
 dependencies {
 
     compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.14-RELEASE')
-    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.16-RELEASE')
+    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.17-RELEASE')
     compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE')
 
     compile('org.springframework.boot:spring-boot-starter')
@@ -108,7 +108,6 @@ dependencies {
     compile('org.json:json:20180813')
 
     compile('ma.glasnost.orika:orika-core:1.5.4')
-    compile('ma.glasnost.orika:orika-eclipse-tools:1.5.4')
 
     compile('com.microsoft.azure:adal4j:1.6.0')
 
