@@ -4,6 +4,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -57,5 +58,31 @@ public class FieldWorkerJobRequestBuilder {
     address.setOa("oaTest");
 
     return address;
+  }
+
+  public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestWithPause() {
+    UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
+
+    updateFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    updateFieldWorkerJobRequest.setAddressType("HH");
+    updateFieldWorkerJobRequest.setActionType("update");
+    updateFieldWorkerJobRequest.setUaa(false);
+    updateFieldWorkerJobRequest.setHoldUntil(OffsetDateTime.parse("2019-07-27T00:00+00:00"));
+    updateFieldWorkerJobRequest.setBlankFormReturned(false);
+
+    return updateFieldWorkerJobRequest;
+  }
+
+    public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestReinstate() {
+      UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
+
+      updateFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+      updateFieldWorkerJobRequest.setAddressType("HH");
+      updateFieldWorkerJobRequest.setActionType("update");
+      updateFieldWorkerJobRequest.setUaa(false);
+      updateFieldWorkerJobRequest.setHoldUntil(OffsetDateTime.parse("2019-05-26T00:00+00:00"));
+      updateFieldWorkerJobRequest.setBlankFormReturned(true);
+
+      return updateFieldWorkerJobRequest;
   }
 }

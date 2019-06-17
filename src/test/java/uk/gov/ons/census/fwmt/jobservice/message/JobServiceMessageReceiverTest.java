@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
@@ -115,5 +116,22 @@ public class JobServiceMessageReceiverTest {
 
     Mockito.verify(jobService).createJob(any());
     Mockito.verify(jobService, never()).cancelJob(any());
+  }
+
+  @Test
+  public void receiveMessageUpdate() throws GatewayException, IOException {
+    JSONObject json = new JSONObject();
+    json.put("actionType", "update");
+    json.put("caseId", "f98e469e-1727-4ef8-bc87-354a7ebdf1de");
+
+    UpdateFieldWorkerJobRequest request = new UpdateFieldWorkerJobRequest();
+    request.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
+    Mockito.when(mapper.readValue(anyString(), eq(UpdateFieldWorkerJobRequest.class))).thenReturn(request);
+
+    String message = json.toString();
+
+    messageReceiver.receiveMessage(message);
+
+    Mockito.verify(jobService).updateJob(any());
   }
 }

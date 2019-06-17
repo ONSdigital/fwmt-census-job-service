@@ -9,16 +9,20 @@ public class GatewayEventsConfig {
 
   public static final String CANONICAL_CREATE_JOB_RECEIVED = "Canonical - Create Job Received";
   public static final String CANONICAL_CANCEL_RECEIVED = "Canonical - Cancel Job Received";
+  public static final String CANONICAL_UPDATE_RECEIVED = "Canonical - Update Job Received";
   public static final String COMET_CREATE_SENT = "Comet - Create Job Request";
   public static final String COMET_CREATE_ACK = "Comet - Create Job Acknowledged";
   public static final String COMET_CANCEL_SENT = "Comet - Cancel Job Request";
   public static final String COMET_CANCEL_ACK = "Comet - Cancel Job Acknowledged";
+  public static final String COMET_UPDATE_SENT = "Comet - Update Job Request";
+  public static final String COMET_UPDATE_ACK = "Comet - Update Job Acknowledged";
 
   @Bean
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
     gatewayEventManager.addEventTypes(new String[] {CANONICAL_CREATE_JOB_RECEIVED, CANONICAL_CANCEL_RECEIVED,
-        COMET_CREATE_SENT, COMET_CREATE_ACK, COMET_CANCEL_SENT, COMET_CANCEL_ACK});
+        CANONICAL_UPDATE_RECEIVED, COMET_CREATE_SENT, COMET_CREATE_ACK, COMET_CANCEL_SENT, COMET_CANCEL_ACK,
+        COMET_UPDATE_SENT, COMET_UPDATE_ACK});
     return gatewayEventManager;
   }
 }
