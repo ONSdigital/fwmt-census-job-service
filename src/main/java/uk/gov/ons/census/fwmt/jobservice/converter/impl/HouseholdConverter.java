@@ -35,8 +35,8 @@ public class HouseholdConverter implements CometConverter {
     // Category is not yet in the feed
     caseRequest.setCategory("Household");
 //    caseRequest.setCategory(ingest.getCategory());
+    caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setEstabType(ingest.getEstablishmentType());
-    caseRequest.setFieldOfficerId(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
 
     Contact contact = new Contact();

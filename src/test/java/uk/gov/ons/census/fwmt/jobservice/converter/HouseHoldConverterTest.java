@@ -54,7 +54,7 @@ public class HouseHoldConverterTest {
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
     assertEquals("HH", caseRequest.getType().toString());
-    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getFieldOfficerId());
+    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }
 
