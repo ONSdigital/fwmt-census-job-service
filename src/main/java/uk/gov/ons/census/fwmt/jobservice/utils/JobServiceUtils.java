@@ -27,6 +27,7 @@ public final class JobServiceUtils {
 
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine1());
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine2());
+    checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine3());
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getTownName());
 
     return addressLines;
