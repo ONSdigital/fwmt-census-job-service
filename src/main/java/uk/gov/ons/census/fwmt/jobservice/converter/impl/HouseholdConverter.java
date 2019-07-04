@@ -41,7 +41,7 @@ public class HouseholdConverter implements CometConverter {
 
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
-    if (!StringUtils.isEmpty(ingest.getContact())) {
+    if (ingest.getContact() != null) {
       contact.setOrganisationName(ingest.getContact().getOrganisationName());
 
       contact.setPhone(ingest.getContact().getPhoneNumber());
