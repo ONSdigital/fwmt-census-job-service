@@ -52,6 +52,41 @@ public class FieldWorkerJobRequestBuilder {
 
     return createFieldWorkerJobRequest;
   }
+
+  public CreateFieldWorkerJobRequest createFieldWorkerCEJobRequestForConvert() {
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+
+    createFieldWorkerJobRequest.setActionType("Create");
+    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    createFieldWorkerJobRequest.setCaseReference("caseReference");
+    createFieldWorkerJobRequest.setCaseType("CE");
+    createFieldWorkerJobRequest.setEstablishmentType("estabType");
+    createFieldWorkerJobRequest.setCoordinatorId("coordId");
+
+    createFieldWorkerJobRequest.setAddress(createNewAddress());
+
+    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
+
+    return createFieldWorkerJobRequest;
+  }
+
+  public CreateFieldWorkerJobRequest createFieldWorkerCCSJobRequestForConvert() {
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+
+    createFieldWorkerJobRequest.setActionType("Create");
+    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    createFieldWorkerJobRequest.setCaseReference("caseReference");
+    createFieldWorkerJobRequest.setCaseType("CCS");
+    createFieldWorkerJobRequest.setCoordinatorId("coordId");
+    createFieldWorkerJobRequest.setMandatoryResource("ccsInterviewer");
+
+    createFieldWorkerJobRequest.setAddress(createCCSNewAddress());
+
+    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
+
+    return createFieldWorkerJobRequest;
+  }
+
   public CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest() {
     CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = new CancelFieldWorkerJobRequest();
 
@@ -72,6 +107,16 @@ public class FieldWorkerJobRequestBuilder {
     address.setLatitude(BigDecimal.valueOf(1234.56));
     address.setLongitude(BigDecimal.valueOf(2345.67));
     address.setOa("oaTest");
+
+    return address;
+  }
+
+  private Address createCCSNewAddress() {
+    Address address = new Address();
+
+    address.setPostCode("AB1 2CD");
+    address.setLatitude(BigDecimal.valueOf(1234.56));
+    address.setLongitude(BigDecimal.valueOf(2345.67));
 
     return address;
   }

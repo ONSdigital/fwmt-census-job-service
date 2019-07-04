@@ -4,22 +4,15 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CeCaseExtension;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.data.modelcase.*;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
-import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CE;
+import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
 
-@Component("CE")
-public class CEConverter implements CometConverter {
+@Component("CCS")
+public class CCSConverter implements CometConverter {
 
   @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
     Address address = new Address();
@@ -29,10 +22,10 @@ public class CEConverter implements CometConverter {
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
-    caseRequest.setType(CE);
+    caseRequest.setType(CCS);
     caseRequest.setSurveyType(ingest.getCaseType());
     // Category is not yet in the feed
-    caseRequest.setCategory("CE");
+    caseRequest.setCategory("CCS");
     //    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());

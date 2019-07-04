@@ -5,30 +5,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.CEConverter;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
-
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CEConverterTest {
+public class CCSConverterTest {
 
   @InjectMocks
-  private CEConverter ceConverter;
+  private CCSConverter ccsConverter;
 
   @Mock
   private CometRestClient cometRestClient;
@@ -46,14 +38,14 @@ public class CEConverterTest {
   public void createConvertRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .createFieldWorkerCEJobRequestForConvert();
+        .createFieldWorkerJobRequestForConvert();
 
     // When
-    CaseRequest caseRequest = ceConverter.convert(createFieldWorkerJobRequest);
+    CaseRequest caseRequest = ccsConverter.convert(createFieldWorkerJobRequest);
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CE", caseRequest.getType().toString());
+    assertEquals("CCS", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }
