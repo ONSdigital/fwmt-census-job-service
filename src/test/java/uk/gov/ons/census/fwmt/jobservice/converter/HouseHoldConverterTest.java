@@ -59,6 +59,22 @@ public class HouseHoldConverterTest {
   }
 
   @Test
+  public void createConvertRequestWithoutContact() {
+    // Given
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
+            .createFieldWorkerJobRequestForConvertWithoutContact();
+
+    // When
+    CaseRequest caseRequest = householdConverter.convert(createFieldWorkerJobRequest);
+
+    // Then
+    assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
+    assertEquals("HH", caseRequest.getType().toString());
+    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
+
+  }
+
+  @Test
   public void createConvertPause() {
     // Given
     CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
