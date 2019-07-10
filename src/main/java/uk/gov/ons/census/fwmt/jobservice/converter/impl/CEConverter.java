@@ -30,9 +30,9 @@ public class CEConverter implements CometConverter {
 
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(CE);
-    caseRequest.setSurveyType(ingest.getCaseType());
+    caseRequest.setSurveyType(ingest.getSurveyType());
     // Category is not yet in the feed
-    caseRequest.setCategory("CE");
+    caseRequest.setCategory("Not applicable");
     //    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
@@ -43,7 +43,6 @@ public class CEConverter implements CometConverter {
       contact.setOrganisationName(ingest.getContact().getOrganisationName());
     }
     caseRequest.setContact(contact);
-
 
     // arin not yet part of Comet
     //    try {
@@ -62,7 +61,6 @@ public class CEConverter implements CometConverter {
     address.setTown(ingest.getAddress().getTownName());
     address.setPostcode(ingest.getAddress().getPostCode());
 
-
     geography.setOa(ingest.getAddress().getOa());
     address.setGeography(geography);
 
@@ -72,20 +70,14 @@ public class CEConverter implements CometConverter {
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
 
-    /*
-        These are still needed as part of a create house hold,
-        unsure where they are derived from.
-    */
-    caseRequest.setDescription("CENSUS");
-    caseRequest.setSpecialInstructions("Special Instructions");
-    //    caseRequest.setDescription(ingest.getDescription()) ;
-    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
-
     caseRequest.setUaa(ingest.isUua());
     caseRequest.setSai(ingest.isSai());
     caseRequest.setBlankFormReturned(ingest.isBlankFormReturned());
 
     ceCaseExtension.setExpectedResponses(ingest.getCeExpectedResponses());
+    ceCaseExtension.setActualResponses(ingest.getCeActualResponses());
+    ceCaseExtension.setDeliveryRequired(ingest.isCeDeliveryRequired());
+    ceCaseExtension.setCe1Complete(ingest.isCeCE1Complete());
     caseRequest.setCe(ceCaseExtension);
 
     return caseRequest;

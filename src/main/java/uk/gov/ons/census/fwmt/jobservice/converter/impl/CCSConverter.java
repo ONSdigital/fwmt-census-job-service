@@ -8,10 +8,9 @@ import uk.gov.ons.census.fwmt.common.data.modelcase.*;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
-import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
-import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
+import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCSPL;
 
-@Component("CCS")
+@Component("CCSPL")
 public class CCSConverter implements CometConverter {
 
   @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
@@ -22,39 +21,13 @@ public class CCSConverter implements CometConverter {
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
-    caseRequest.setType(CCS);
-    caseRequest.setSurveyType(ingest.getCaseType());
-    // Category is not yet in the feed
-    caseRequest.setCategory("CCS");
-    //    caseRequest.setCategory(ingest.getCategory());
+    caseRequest.setType(CCSPL);
+    caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
 
-    Contact contact = new Contact();
-    if (ingest.getContact() != null) {
-      contact.setOrganisationName(ingest.getContact().getOrganisationName());
-    }
-    caseRequest.setContact(contact);
-
-
-    // arin not yet part of Comet
-    //    try {
-    //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
-    //    } catch (Exception e) {
-    //      // if a problem resolving ARID, null is fine
-    //    }
-    try {
-      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
-    } catch (Exception e) {
-      // TODO is this still the case?
-      // if a problem resolving UPRN, null is fine
-    }
-
-    address.setLines(addAddressLines(ingest));
-    address.setTown(ingest.getAddress().getTownName());
     address.setPostcode(ingest.getAddress().getPostCode());
-
 
     geography.setOa(ingest.getAddress().getOa());
     address.setGeography(geography);
@@ -64,22 +37,6 @@ public class CCSConverter implements CometConverter {
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
-
-    /*
-        These are still needed as part of a create house hold,
-        unsure where they are derived from.
-    */
-    caseRequest.setDescription("CENSUS");
-    caseRequest.setSpecialInstructions("Special Instructions");
-    //    caseRequest.setDescription(ingest.getDescription()) ;
-    //    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
-
-    caseRequest.setUaa(ingest.isUua());
-    caseRequest.setSai(ingest.isSai());
-    caseRequest.setBlankFormReturned(ingest.isBlankFormReturned());
-
-    ceCaseExtension.setExpectedResponses(ingest.getCeExpectedResponses());
-    caseRequest.setCe(ceCaseExtension);
 
     return caseRequest;
   }

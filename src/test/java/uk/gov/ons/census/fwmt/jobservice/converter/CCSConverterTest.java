@@ -38,14 +38,14 @@ public class CCSConverterTest {
   public void createConvertRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .createFieldWorkerJobRequestForConvert();
+        .createFieldWorkerCCSJobRequestForConvert();
 
     // When
     CaseRequest caseRequest = ccsConverter.convert(createFieldWorkerJobRequest);
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCS", caseRequest.getType().toString());
+    assertEquals("CCSPL", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }
