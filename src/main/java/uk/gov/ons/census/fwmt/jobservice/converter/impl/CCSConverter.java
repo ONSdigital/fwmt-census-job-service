@@ -16,7 +16,6 @@ public class CCSConverter implements CometConverter {
   @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
     Address address = new Address();
     CaseRequest caseRequest = new CaseRequest();
-    CeCaseExtension ceCaseExtension = new CeCaseExtension();
     Geography geography = new Geography();
     Location location = new Location();
 
