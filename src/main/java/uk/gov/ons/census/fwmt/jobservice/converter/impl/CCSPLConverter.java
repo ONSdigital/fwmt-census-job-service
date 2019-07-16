@@ -4,18 +4,23 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.*;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCSPL;
 
 @Component("CCSPL")
-public class CCSConverter implements CometConverter {
+public class CCSPLConverter implements CometConverter {
 
-  @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
-    Address address = new Address();
+  @Override
+  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
+    Address address = new Address();
     Geography geography = new Geography();
     Location location = new Location();
 
@@ -40,12 +45,13 @@ public class CCSConverter implements CometConverter {
     return caseRequest;
   }
 
-  @Override public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase)
-      throws GatewayException {
+  @Override
+  public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) throws GatewayException {
+  @Override
+  public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) {
     throw new UnsupportedOperationException();
   }
 }

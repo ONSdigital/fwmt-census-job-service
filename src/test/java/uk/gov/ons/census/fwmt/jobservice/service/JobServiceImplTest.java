@@ -113,7 +113,8 @@ public class JobServiceImplTest {
     // When
     when(cometConverters.get("Household")).thenReturn(cometConverter);
     when(restClient.getCase(anyString())).thenReturn(modelCase);
-    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class))).thenReturn(caseRequest);
+    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class)))
+        .thenReturn(caseRequest);
 
     jobServiceImpl.convertAndSendUpdate(jobRequest);
 

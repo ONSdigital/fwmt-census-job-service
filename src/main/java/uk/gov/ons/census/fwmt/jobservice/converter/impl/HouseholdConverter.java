@@ -8,11 +8,11 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
@@ -21,7 +21,6 @@ import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddress
 
 @Component("Household")
 public class HouseholdConverter implements CometConverter {
-
 
   @Autowired
   private MapperFacade mapperFacade;
@@ -34,7 +33,7 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setSurveyType(ingest.getCaseType());
     // Category is not yet in the feed
     caseRequest.setCategory("Household");
-//    caseRequest.setCategory(ingest.getCategory());
+    //    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
@@ -51,11 +50,11 @@ public class HouseholdConverter implements CometConverter {
 
     Address address = new Address();
     // arin not yet part of Comet
-//    try {
-//      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
-//    } catch (Exception e) {
-//      // if a problem resolving ARID, null is fine
-//    }
+    //    try {
+    //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
+    //    } catch (Exception e) {
+    //      // if a problem resolving ARID, null is fine
+    //    }
 
     try {
       address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
@@ -113,14 +112,14 @@ public class HouseholdConverter implements CometConverter {
 
     if (ingest.getAddressType().equals("HH")) {
 
-      if(StringUtils.isEmpty(updateRequest.getPause())) {
+      if (StringUtils.isEmpty(updateRequest.getPause())) {
         updateRequest.setPause(casePauseRequest);
         dateComparison = 1;
       } else {
         dateComparison = ingest.getHoldUntil().compareTo(updateRequest.getPause().getUntil());
       }
 
-      if(!ingest.isBlankFormReturned() && dateComparison > 0) {
+      if (!ingest.isBlankFormReturned() && dateComparison > 0) {
         updateRequest.getPause().setUntil(ingest.getHoldUntil());
         updateRequest.getPause().setReason("HQ Case Pause");
       } else if (ingest.isBlankFormReturned() && !updateRequest.isBlankFormReturned()) {

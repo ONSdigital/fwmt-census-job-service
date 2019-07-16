@@ -40,19 +40,22 @@ public class GatewayActionsReceiver {
 
   private void processMessage(String message) throws GatewayException {
     if (message.contains("Create")) {
-      CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
+      CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
+          message);
       gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED,
           LocalTime.now());
       jobService.createJob(fwmtCreateJobRequest);
       log.info("Sending Create job to TM");
     } else if (message.contains("Cancel")) {
-      CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class, message);
+      CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
+          message);
       gatewayEventManager
           .triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
       jobService.cancelJob(fwmtCancelJobRequest);
       log.info("Sending Cancel job to TM");
     } else if (message.contains("update")) {
-      UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message);
+      UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
+          message);
       gatewayEventManager
           .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
       jobService.updateJob(fwmtUpdateJobRequest);

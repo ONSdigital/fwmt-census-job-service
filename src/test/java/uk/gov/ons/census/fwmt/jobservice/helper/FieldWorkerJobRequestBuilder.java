@@ -134,16 +134,16 @@ public class FieldWorkerJobRequestBuilder {
     return updateFieldWorkerJobRequest;
   }
 
-    public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestReinstate() {
-      UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
+  public UpdateFieldWorkerJobRequest updateFieldWorkerJobRequestReinstate() {
+    UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
 
-      updateFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-      updateFieldWorkerJobRequest.setAddressType("HH");
-      updateFieldWorkerJobRequest.setActionType("update");
-      updateFieldWorkerJobRequest.setUaa(false);
-      updateFieldWorkerJobRequest.setHoldUntil(OffsetDateTime.parse("2019-05-26T00:00+00:00"));
-      updateFieldWorkerJobRequest.setBlankFormReturned(true);
+    updateFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    updateFieldWorkerJobRequest.setAddressType("HH");
+    updateFieldWorkerJobRequest.setActionType("update");
+    updateFieldWorkerJobRequest.setUaa(false);
+    updateFieldWorkerJobRequest.setHoldUntil(OffsetDateTime.parse("2019-05-26T00:00+00:00"));
+    updateFieldWorkerJobRequest.setBlankFormReturned(true);
 
-      return updateFieldWorkerJobRequest;
+    return updateFieldWorkerJobRequest;
   }
 }
