@@ -104,6 +104,9 @@ dependencies {
     compile('io.springfox:springfox-swagger2:2.9.2')
     compile('io.springfox:springfox-swagger-ui:2.9.2')
 
+    compile ('org.springframework.data:spring-data-redis:2.0.10.RELEASE')
+    compile('redis.clients:jedis:2.9.0')
+    
     compile('org.yaml:snakeyaml')
     compile('org.json:json:20180813')
 

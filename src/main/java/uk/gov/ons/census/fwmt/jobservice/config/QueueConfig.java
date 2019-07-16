@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.retry.RetryOperations;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-
 import uk.gov.ons.census.fwmt.common.retry.GatewayMessageRecover;
 
 @Configuration
@@ -35,29 +34,7 @@ public class QueueConfig {
     this.virtualHost = virtualHost;
   }
 
-  // Interceptor
-  @Bean
-  public RetryOperationsInterceptor interceptor(
-      @Qualifier("retryTemplate") RetryOperations retryOperations) {
-    RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
-    interceptor.setRecoverer(new GatewayMessageRecover());
-    interceptor.setRetryOperations(retryOperations);
-    return interceptor;
-  }
-
-  @Bean
-  public AmqpAdmin amqpAdmin() {
-    return new RabbitAdmin(connectionFactory());
-  }
-
-  // Connection Factory
-  @Bean
-  @Primary
-  public ConnectionFactory connectionFactory() {
-    return createConnectionFactory(port, hostname, virtualHost, password, username);
-  }
-  
-  public static CachingConnectionFactory createConnectionFactory(int port, String hostname, String virtualHost,
+  private static CachingConnectionFactory createConnectionFactory(int port, String hostname, String virtualHost,
       String password, String username) {
     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname, port);
 
@@ -66,5 +43,27 @@ public class QueueConfig {
     cachingConnectionFactory.setUsername(username);
 
     return cachingConnectionFactory;
+  }
+
+  // Connection Factory
+  @Bean
+  @Primary
+  public ConnectionFactory connectionFactory() {
+    return createConnectionFactory(port, hostname, virtualHost, password, username);
+  }
+
+  @Bean
+  public AmqpAdmin amqpAdmin() {
+    return new RabbitAdmin(connectionFactory());
+  }
+
+  // Interceptor
+  @Bean
+  public RetryOperationsInterceptor interceptor(
+      @Qualifier("retryTemplate") RetryOperations retryOperations) {
+    RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
+    interceptor.setRecoverer(new GatewayMessageRecover());
+    interceptor.setRetryOperations(retryOperations);
+    return interceptor;
   }
 }

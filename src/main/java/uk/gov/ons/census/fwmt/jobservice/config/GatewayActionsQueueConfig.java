@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
-
 import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 
 @Configuration
@@ -26,7 +25,7 @@ public class GatewayActionsQueueConfig {
         .withArgument("x-dead-letter-routing-key", GATEWAY_ACTIONS_DLQ)
         .build();
     return queue;
-  } 
+  }
 
   //Dead Letter Queue
   @Bean
@@ -40,10 +39,10 @@ public class GatewayActionsQueueConfig {
   public MessageListenerAdapter gatewayActionsListenerAdapter(GatewayActionsReceiver receiver) {
     return new MessageListenerAdapter(receiver, "receiveMessage");
   }
-  
+
   //Message Listener
   @Bean
-  public SimpleMessageListenerContainer gatewayActionsMessagerListener(
+  public SimpleMessageListenerContainer gatewayActionsMessageListener(
       @Qualifier("connectionFactory") ConnectionFactory connectionFactory,
       @Qualifier("gatewayActionsListenerAdapter") MessageListenerAdapter messageListenerAdapter,
       @Qualifier("interceptor") RetryOperationsInterceptor retryOperationsInterceptor) {

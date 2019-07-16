@@ -72,7 +72,7 @@ public class JobServiceImpl implements JobService {
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
-    if(!StringUtils.isEmpty(caseRequest.getPause())) {
+    if (!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
     }

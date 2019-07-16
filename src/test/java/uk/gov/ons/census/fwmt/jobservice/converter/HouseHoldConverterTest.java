@@ -17,7 +17,6 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.impl.HouseholdConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
-import static org.mockito.ArgumentMatchers.any;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -62,7 +61,7 @@ public class HouseHoldConverterTest {
   public void createConvertRequestWithoutContact() {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-            .createFieldWorkerJobRequestForConvertWithoutContact();
+        .createFieldWorkerJobRequestForConvertWithoutContact();
 
     // When
     CaseRequest caseRequest = householdConverter.convert(createFieldWorkerJobRequest);
@@ -107,7 +106,6 @@ public class HouseHoldConverterTest {
     ModelCase modelCase = new ModelCase();
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
 
-
     Mockito.when(mapperFacade.map(modelCase, CaseRequest.class)).thenReturn(caseRequest);
 
     // When
@@ -137,7 +135,6 @@ public class HouseHoldConverterTest {
 
     ModelCase modelCase = new ModelCase();
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-
 
     Mockito.when(mapperFacade.map(modelCase, CaseRequest.class)).thenReturn(caseRequest);
 

@@ -1,16 +1,16 @@
 package uk.gov.ons.census.fwmt.jobservice.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.slf4j.Slf4j;
-
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
+import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public final class JobServiceUtils {
@@ -31,6 +31,35 @@ public final class JobServiceUtils {
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getTownName());
 
     return addressLines;
+  }
+
+  public static Address setAddress(CreateFieldWorkerJobRequest ingest) {
+    Address address = new Address();
+    Geography geography = new Geography();
+
+    // look into this method - may not require town
+    address.setLines(addAddressLines(ingest));
+
+    // arin not yet part of Comet
+    //    try {
+    //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
+    //    } catch (Exception e) {
+    //      // if a problem resolving ARID, null is fine
+    //    }
+    try {
+      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
+    } catch (Exception e) {
+      // TODO is this still the case?
+      // if a problem resolving UPRN, null is fine
+    }
+
+    address.setTown(ingest.getAddress().getTownName());
+    address.setPostcode(ingest.getAddress().getPostCode());
+
+    geography.setOa(ingest.getAddress().getOa());
+    address.setGeography(geography);
+
+    return address;
   }
 
   public static <T> void printJSON(T javaObject) {
