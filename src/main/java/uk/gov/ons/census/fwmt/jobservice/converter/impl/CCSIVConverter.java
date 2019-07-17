@@ -13,10 +13,7 @@ import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeEntity;
-import uk.gov.ons.census.fwmt.jobservice.repository.CCSOutcomeRepository;
 import uk.gov.ons.census.fwmt.jobservice.service.JobCacheManager;
-
-import java.util.Optional;
 
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
@@ -24,23 +21,10 @@ import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress
 public class CCSIVConverter implements CometConverter {
 
   @Autowired
-  private CCSOutcomeRepository ccsOutcomeRepository;
-
-  @Autowired
   private JobCacheManager jobCacheManager;
 
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
-
-
-
-    cacheJob();
-
-    retrieveCache();
-
-
-
-
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
@@ -78,15 +62,15 @@ public class CCSIVConverter implements CometConverter {
     return caseRequest;
   }
 
-  private void retrieveCache() {
+  private CCSOutcomeEntity retrieveCache(String caseId) {
     CCSOutcomeEntity ccsOutcomeEntity1;
 
-    ccsOutcomeEntity1 = jobCacheManager.getCachedCCSOutcome("id");
+    ccsOutcomeEntity1 = jobCacheManager.getCachedCCSOutcome(caseId);
 
-    System.out.println(ccsOutcomeEntity1.toString());
+    return ccsOutcomeEntity1;
   }
 
-  private void cacheJob() {
+  private void cacheJob(Object job) {
     CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
 
     ccsOutcomeEntity.setId("id");

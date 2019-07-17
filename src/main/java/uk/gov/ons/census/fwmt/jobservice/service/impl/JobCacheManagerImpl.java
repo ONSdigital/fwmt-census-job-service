@@ -17,13 +17,13 @@ public class JobCacheManagerImpl implements JobCacheManager {
   @Override
   public void cacheCCSOutcome(CCSOutcomeEntity ccsOutcomeEntity) {
     redisUtil.putValue(ccsOutcomeEntity.getId(), ccsOutcomeEntity);
-    log.info("Placed the following in cache {}", ccsOutcomeEntity);
+    log.info("Placed the following in cache: " +  ccsOutcomeEntity.toString());
   }
 
   @Override
   public CCSOutcomeEntity getCachedCCSOutcome(String caseId) {
     CCSOutcomeEntity ccsOutcomeEntity =redisUtil.getValue(caseId);
-    log.info("Received object from cache {}", ccsOutcomeEntity);
+    log.info("Received object from cache: " + ccsOutcomeEntity.toString());
 
     return ccsOutcomeEntity;
   }
