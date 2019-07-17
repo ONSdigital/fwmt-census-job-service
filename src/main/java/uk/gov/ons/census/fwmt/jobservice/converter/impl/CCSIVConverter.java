@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
@@ -15,6 +14,7 @@ import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeEntity;
 import uk.gov.ons.census.fwmt.jobservice.repository.CCSOutcomeRepository;
+import uk.gov.ons.census.fwmt.jobservice.service.JobCacheManager;
 
 import java.util.Optional;
 
@@ -27,18 +27,19 @@ public class CCSIVConverter implements CometConverter {
   private CCSOutcomeRepository ccsOutcomeRepository;
 
   @Autowired
-  private RedisTemplate redisTemplate;
+  private JobCacheManager jobCacheManager;
 
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
 
-    // USED ONLY FOR THE TESTING - PLS REMOVE
-    testData();
-    // DID YOU DELETE LINE ABOVE AFTER TESTING
 
-    String jsonMessage = redisLookup(ingest);
 
-    System.out.println(jsonMessage);
+    cacheJob();
+
+    retrieveCache();
+
+
+
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
     CaseRequest caseRequest = new CaseRequest();
@@ -46,7 +47,7 @@ public class CCSIVConverter implements CometConverter {
 
     caseRequest.setReference(ingest.getCaseReference());
 
-    caseRequest.setType(CaseRequest.TypeEnum.valueOf(ingest.getCaseType()));
+    caseRequest.setType(CaseRequest.TypeEnum.CCSIV);
 
     caseRequest.setSurveyType(ingest.getSurveyType());
 
@@ -77,21 +78,21 @@ public class CCSIVConverter implements CometConverter {
     return caseRequest;
   }
 
-  private void testData() {
-    CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
+  private void retrieveCache() {
+    CCSOutcomeEntity ccsOutcomeEntity1;
 
-    ccsOutcomeEntity.setId("jobId");
-    ccsOutcomeEntity.setJobJSON("jobContent");
+    ccsOutcomeEntity1 = jobCacheManager.getCachedCCSOutcome("id");
 
-    ccsOutcomeRepository.save(ccsOutcomeEntity);
+    System.out.println(ccsOutcomeEntity1.toString());
   }
 
-  private String redisLookup(CreateFieldWorkerJobRequest ingest) {
-    //    Optional<CCSOutcomeEntity> ccsOutcomeEntity = ccsOutcomeRepository.findById(String.valueOf(ingest.getCaseId()));
+  private void cacheJob() {
+    CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
 
-    Optional<CCSOutcomeEntity> ccsOutcomeEntity = ccsOutcomeRepository.findById("jobId");
+    ccsOutcomeEntity.setId("id");
+    ccsOutcomeEntity.setJobJSON("jobJSON");
 
-    return ccsOutcomeEntity.get().getJobJSON();
+    jobCacheManager.cacheCCSOutcome(ccsOutcomeEntity);
   }
 
   private Contact setContact(CreateFieldWorkerJobRequest ingest) {

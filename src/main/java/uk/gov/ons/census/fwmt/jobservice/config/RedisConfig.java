@@ -17,8 +17,8 @@ public class RedisConfig {
   private String redisHostname;
   private int redisPort;
 
-  public RedisConfig(@Value("${spring.redis.host}") String redisHostname,
-      @Value("${spring.redis.port}") int redisPort) {
+  public RedisConfig(@Value("${redis.host}") String redisHostname,
+      @Value("${redis.port}") int redisPort) {
     this.redisHostname = redisHostname;
     this.redisPort = redisPort;
   }
@@ -33,13 +33,13 @@ public class RedisConfig {
   }
 
   @Bean
-  public RedisTemplate<String, Object> redisTemplate() {
+  public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
     final RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
     redisTemplate.setKeySerializer(new StringRedisSerializer());
     redisTemplate.setHashKeySerializer(new GenericToStringSerializer<Object>(Object.class));
     redisTemplate.setHashValueSerializer(new JdkSerializationRedisSerializer());
     redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
-    redisTemplate.setConnectionFactory(jedisConnectionFactory());
+    redisTemplate.setConnectionFactory(jedisConnectionFactory);
     return redisTemplate;
   }
 
