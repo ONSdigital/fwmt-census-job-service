@@ -125,6 +125,7 @@ public class JobServiceMessageReceiverTest {
     String message = json.toString();
 
     messageReceiver.receiveMessage(message);
+  }
   
   @Test
   public void receiveMessageUpdate() throws GatewayException, IOException {
