@@ -30,30 +30,19 @@ public class CCSIVConverter implements CometConverter {
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
-
     caseRequest.setType(CaseRequest.TypeEnum.CCSIV);
-
     caseRequest.setSurveyType(ingest.getSurveyType());
-
     caseRequest.setEstabType(ingest.getEstablishmentType());
-
     // unsure of this one
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
-
     caseRequest.setCoordCode(ingest.getCoordinatorId());
-
     caseRequest.setContact(setContact(ingest));
-
     // check this method
     caseRequest.setAddress(setAddress(ingest));
-
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
-
     caseRequest.setLocation(location);
-
     caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
-
     // Removed mapping from actionRequest for the ccsQuestionnaireURL;
     // this will be derived from an environment variable and the caseId in the CCS specific mapping
     ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
@@ -63,20 +52,11 @@ public class CCSIVConverter implements CometConverter {
   }
 
   private CCSOutcomeEntity retrieveCache(String caseId) {
-    CCSOutcomeEntity ccsOutcomeEntity1;
-
-    ccsOutcomeEntity1 = jobCacheManager.getCachedCCSOutcome(caseId);
-
-    return ccsOutcomeEntity1;
+    return jobCacheManager.getCachedCCSOutcome(caseId);
   }
 
-  private void cacheJob(Object job) {
-    CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
-
-    ccsOutcomeEntity.setId("id");
-    ccsOutcomeEntity.setJobJSON("jobJSON");
-
-    jobCacheManager.cacheCCSOutcome(ccsOutcomeEntity);
+  private CCSOutcomeEntity cacheJob() {
+    return jobCacheManager.cacheCCSOutcome(new CCSOutcomeEntity("id", "jobJSON"));
   }
 
   private Contact setContact(CreateFieldWorkerJobRequest ingest) {
