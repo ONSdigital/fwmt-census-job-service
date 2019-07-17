@@ -8,15 +8,19 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
 
+import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,6 +30,8 @@ import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_SENT;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_ACK;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_SENT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceImplTest {
@@ -44,6 +50,12 @@ public class JobServiceImplTest {
 
   @Mock
   private CometConverter cometConverter;
+
+  @Mock
+  private ModelCase modelCase;
+
+  @Mock
+  private CaseRequest caseRequest;
 
   @Test
   public void createConvertAndSendCreateTest() throws GatewayException {
@@ -73,13 +85,42 @@ public class JobServiceImplTest {
 
     // When
     when(cometConverters.get("Household")).thenReturn(cometConverter);
-    when(cometConverter.convertPause(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
+    when(cometConverter.convertCancel(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
 
     jobServiceImpl.cancelJob(jobRequest);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_SENT), any());
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_ACK), any());
+
+  }
+
+  @Test
+  public void updateConvertAndSendUpdateTest() throws GatewayException {
+    // Given
+    UpdateFieldWorkerJobRequest jobRequest = new FieldWorkerJobRequestBuilder().updateFieldWorkerJobRequestWithPause();
+
+    CaseRequest caseRequest = new CaseRequest();
+    CasePauseRequest casePauseRequest = new CasePauseRequest();
+    caseRequest.setType(CaseRequest.TypeEnum.HH);
+    casePauseRequest.setUntil(OffsetDateTime.parse("2019-07-27T00:00+00:00"));
+    casePauseRequest.setId("a48bf28e-e7f4-4467-a9fb-e000b6a55676");
+    caseRequest.setPause(casePauseRequest);
+
+    ModelCase modelCase = new ModelCase();
+    modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+
+    // When
+    when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(restClient.getCase(anyString())).thenReturn(modelCase);
+    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class))).thenReturn(caseRequest);
+
+    jobServiceImpl.convertAndSendUpdate(jobRequest);
+
+    // Then
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_SENT), any());
+    Mockito.verify(restClient).sendRequest(casePauseRequest, String.valueOf(jobRequest.getCaseId()));
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_ACK), any());
 
   }
 }

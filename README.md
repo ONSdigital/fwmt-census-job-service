@@ -31,5 +31,9 @@ To run:
 
 ![](tm-canonical-ccs.png "tm - canonical - ccs - mapping")
 
+## tm-canonical-update
+
+![](tm-canonical-update.png "tm - canonical - update - mapping")
+
 ## Copyright
 Copyright (C) 2018 Crown Copyright (Office for National Statistics)

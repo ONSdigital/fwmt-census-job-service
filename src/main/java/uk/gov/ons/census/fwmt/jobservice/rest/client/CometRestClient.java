@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
 
 import java.net.MalformedURLException;
 import java.util.Date;
@@ -24,12 +24,12 @@ import java.util.concurrent.Future;
 
 @Component
 public class CometRestClient {
-  private final static String RESOURCE = "https://int-ons-comet-api-app-ukwest.azurewebsites.net";
+  private String resource;
 
   //O365 credentials for authentication w/o login prompt
 
   //Azure Directory OAUTH 2.0 AUTHORIZATION ENDPOINT
-  private final static String AUTHORITY = "https://login.microsoftonline.com/05057611-67c0-4390-85ef-2c623ff4104f/oauth2/v2.0/token";
+  private String authority;
 
   private transient RestTemplate restTemplate;
   private transient String cometURL;
@@ -43,7 +43,11 @@ public class CometRestClient {
       @Value("${totalmobile.baseUrl}") String baseUrl,
       @Value("${totalmobile.operation.case.create.path}") String tmPath,
       @Value("${totalmobile.comet.clientID}") String clientID,
-      @Value("${totalmobile.comet.clientSecret}") String clientSecret) {
+      @Value("${totalmobile.comet.clientSecret}") String clientSecret,
+      @Value("${totalmobile.comet.resource}") String resource,
+      @Value("${totalmobile.comet.authority}") String authority){
+    this.authority = authority;
+    this.resource = resource;
     this.restTemplate = restTemplate;
     this.cometURL = baseUrl + tmPath;
     this.clientID = clientID;
@@ -62,10 +66,10 @@ public class CometRestClient {
   private void auth() throws GatewayException {
     ExecutorService service = Executors.newFixedThreadPool(1);
     try {
-      AuthenticationContext context = new AuthenticationContext(AUTHORITY, false, service);
+      AuthenticationContext context = new AuthenticationContext(authority, false, service);
       ClientCredential cc = new ClientCredential(clientID, clientSecret);
 
-      Future<AuthenticationResult> future = context.acquireToken(RESOURCE, cc, null);
+      Future<AuthenticationResult> future = context.acquireToken(resource, cc, null);
       this.auth = future.get();
     } catch (MalformedURLException | InterruptedException | ExecutionException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e);
@@ -78,7 +82,6 @@ public class CometRestClient {
     String basePathway = cometURL + caseId;
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
-    JobServiceUtils.printJSON(caseRequest);
     HttpHeaders httpHeaders = new HttpHeaders();
     if (isAuthed())
       httpHeaders.setBearerAuth(auth.getAccessToken());
@@ -88,5 +91,19 @@ public class CometRestClient {
 
     HttpEntity<?> body = new HttpEntity<>(caseRequest, httpHeaders);
     restTemplate.exchange(basePathway, HttpMethod.PUT, body, Void.class);
+  }
+
+  public ModelCase getCase(String caseId) throws GatewayException {
+    String basePathway = cometURL + caseId;
+    if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
+      auth();
+    HttpHeaders httpHeaders = new HttpHeaders();
+    if (isAuthed())
+      httpHeaders.setBearerAuth(auth.getAccessToken());
+
+    HttpEntity<?> body = new HttpEntity<>(httpHeaders);
+    ResponseEntity<ModelCase> request = restTemplate.exchange(basePathway, HttpMethod.GET, body, ModelCase.class);
+
+    return request.getBody();
   }
 }

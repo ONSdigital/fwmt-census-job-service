@@ -22,7 +22,7 @@ management:
 logging:
   level:
     root: WARN
-    uk.gov.ons.fwmt: INFO
+    uk.gov.ons.fwmt: DEBUG
     org.springframework: INFO
     org.springframework.security: INFO
     org.springframework.web: INFO
@@ -50,6 +50,8 @@ totalmobile:
   comet:
     clientID: ""
     clientSecret: ""
+    resource: "https://int-ons-comet-api-app-ukwest.azurewebsites.net"
+    authority: "https://login.microsoftonline.com/05057611-67c0-4390-85ef-2c623ff4104f/oauth2/v2.0/token"
   operation:
     case:
       create:

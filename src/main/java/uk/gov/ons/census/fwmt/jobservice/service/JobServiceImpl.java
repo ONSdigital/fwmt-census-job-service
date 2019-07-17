@@ -2,15 +2,17 @@ package uk.gov.ons.census.fwmt.jobservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
-import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.time.LocalTime;
 import java.util.Map;
@@ -19,6 +21,8 @@ import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_SENT;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_ACK;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_SENT;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -42,6 +46,11 @@ public class JobServiceImpl implements JobService {
   }
 
   @Override
+  public void updateJob(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
+    convertAndSendUpdate(updateRequest);
+  }
+
+  @Override
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
@@ -52,10 +61,23 @@ public class JobServiceImpl implements JobService {
 
   public void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get("Household");
-    CasePauseRequest casePauseRequest = cometConverter.convertPause(cancelJobRequest);
+    CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT, LocalTime.now());
     cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK, LocalTime.now());
+  }
+
+  public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
+    final CometConverter cometConverter = cometConverters.get("Household");
+    ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
+    CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
+    if(!StringUtils.isEmpty(caseRequest.getPause())) {
+      CasePauseRequest casePauseRequest = caseRequest.getPause();
+      cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
+    }
+    cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getCaseId()));
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK, LocalTime.now());
   }
 
 }
