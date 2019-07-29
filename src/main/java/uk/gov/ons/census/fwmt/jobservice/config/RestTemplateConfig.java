@@ -18,7 +18,7 @@ public class RestTemplateConfig {
   public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
     return restTemplateBuilder
         .basicAuthentication(userName, password)
-        .interceptors()
+        .interceptors(new RestLogger())
         .build();
   }
 }

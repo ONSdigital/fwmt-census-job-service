@@ -33,7 +33,7 @@ plugins {
 }
 
 description = 'census-fwmt-job-service'
-version = '3.0.19-SNAPSHOT'
+version = '3.0.22-SNAPSHOT'
 group = 'uk.gov.ons.census.fwmt'
 
 mainClassName = 'uk.gov.ons.census.fwmt.jobservice.Application'
@@ -69,8 +69,9 @@ springBoot {
 
 dependencies {
 
+
     compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.14-RELEASE')
-    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.19-RELEASE')
+    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.21-RELEASE')
     compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE')
 
     compile('org.springframework.boot:spring-boot-starter')

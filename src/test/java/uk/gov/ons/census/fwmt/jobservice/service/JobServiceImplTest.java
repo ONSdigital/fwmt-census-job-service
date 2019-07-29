@@ -17,6 +17,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.impl.JobServiceImpl;
 
 import java.time.OffsetDateTime;
 import java.util.Map;

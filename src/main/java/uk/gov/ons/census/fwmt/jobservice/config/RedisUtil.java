@@ -3,6 +3,7 @@ package uk.gov.ons.census.fwmt.jobservice.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -14,15 +15,19 @@ public class RedisUtil<T> {
 
   private final RedisTemplate<String, T> redisTemplate;
   private HashOperations<String, Object, T> hashOperation;
-  //  private ListOperations<String, T> listOperation;
+  private ListOperations<String, T> listOperation;
   private ValueOperations<String, T> valueOperations;
 
   @Autowired
   public RedisUtil(RedisTemplate<String, T> redisTemplate) {
     this.hashOperation = redisTemplate.opsForHash();
-    //    this.listOperation = redisTemplate.opsForList();
+    this.listOperation = redisTemplate.opsForList();
     this.valueOperations = redisTemplate.opsForValue();
     this.redisTemplate = redisTemplate;
+  }
+  
+  public void removeFromList(String redisKey, long count, Object key){
+    listOperation.remove(redisKey, count, key);
   }
 
   public void putMap(String redisKey, Object key, T data) {
