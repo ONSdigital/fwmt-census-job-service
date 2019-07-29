@@ -11,6 +11,10 @@ spring:
     user:
       name: "user"
       password: "password"
+  redis:
+    host: "localhost"
+    port: 6379
+    password: "password"
 
 management:
   # Place /info and /health in the root
@@ -42,6 +46,11 @@ rabbitmq:
   initialinterval: 5000
   multiplier: 3.0
   maxInterval: 45000
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: "password"
 
 totalmobile:
   username: "user"

@@ -2,6 +2,7 @@
 
 # Log file
 *.log
+*.qzgit s
 
 # Package Files #
 *.war

@@ -17,6 +17,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.impl.JobServiceImpl;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -113,7 +114,8 @@ public class JobServiceImplTest {
     // When
     when(cometConverters.get("Household")).thenReturn(cometConverter);
     when(restClient.getCase(anyString())).thenReturn(modelCase);
-    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class))).thenReturn(caseRequest);
+    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class)))
+        .thenReturn(caseRequest);
 
     jobServiceImpl.convertAndSendUpdate(jobRequest);
 

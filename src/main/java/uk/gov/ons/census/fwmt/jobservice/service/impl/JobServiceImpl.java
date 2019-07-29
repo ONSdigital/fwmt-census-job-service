@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.jobservice.service;
+package uk.gov.ons.census.fwmt.jobservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.time.LocalTime;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class JobServiceImpl implements JobService {
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
-    if(!StringUtils.isEmpty(caseRequest.getPause())) {
+    if (!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
     }
