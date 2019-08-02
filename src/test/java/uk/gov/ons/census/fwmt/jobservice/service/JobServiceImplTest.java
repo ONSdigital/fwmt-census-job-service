@@ -85,7 +85,7 @@ public class JobServiceImplTest {
     CasePauseRequest casePauseRequest = new CasePauseRequest();
 
     // When
-    when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(cometConverter.convertCancel(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
 
     jobServiceImpl.cancelJob(jobRequest);
@@ -112,7 +112,7 @@ public class JobServiceImplTest {
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
 
     // When
-    when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(restClient.getCase(anyString())).thenReturn(modelCase);
     when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class)))
         .thenReturn(caseRequest);

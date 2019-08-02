@@ -61,7 +61,7 @@ public class JobServiceImpl implements JobService {
   }
 
   public void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get("Household");
+    final CometConverter cometConverter = cometConverters.get("HH");
     CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT, LocalTime.now());
     cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
@@ -69,7 +69,7 @@ public class JobServiceImpl implements JobService {
   }
 
   public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get("Household");
+    final CometConverter cometConverter = cometConverters.get("HH");
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
