@@ -57,6 +57,7 @@ public class JobServiceMessageReceiverTest {
     address.put("latitude", "61.7921776");
     address.put("longitude", "34.3739957");
     json.put("address", address);
+    json.put("gatewayType", "Create");
 
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
@@ -74,6 +75,7 @@ public class JobServiceMessageReceiverTest {
     json.put("actionType", "Cancel");
     json.put("caseId", "8ed3fc08-e95f-44db-a6d7-cde4e76a6182");
     json.put("reason", "incorrect address");
+    json.put("gatewayType", "Cancel");
 
     CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
@@ -107,6 +109,7 @@ public class JobServiceMessageReceiverTest {
     address.put("longitude", "34.3739957");
     json.put("address", address);
     json.put("mandatoryResource", "testFieldOfficerId");
+    json.put("gatewayType", "Create");
 
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
     Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
@@ -132,6 +135,7 @@ public class JobServiceMessageReceiverTest {
     JSONObject json = new JSONObject();
     json.put("actionType", "update");
     json.put("caseId", "f98e469e-1727-4ef8-bc87-354a7ebdf1de");
+    json.put("gatewayType", "Update");
 
     UpdateFieldWorkerJobRequest request = new UpdateFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));

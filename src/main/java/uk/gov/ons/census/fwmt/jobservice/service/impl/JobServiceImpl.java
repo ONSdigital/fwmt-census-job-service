@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.jobservice.service;
+package uk.gov.ons.census.fwmt.jobservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.time.LocalTime;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class JobServiceImpl implements JobService {
   }
 
   public void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get("Household");
+    final CometConverter cometConverter = cometConverters.get("HH");
     CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT);
     cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
@@ -68,11 +69,11 @@ public class JobServiceImpl implements JobService {
   }
 
   public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
-    final CometConverter cometConverter = cometConverters.get("Household");
+    final CometConverter cometConverter = cometConverters.get("HH");
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT);
-    if(!StringUtils.isEmpty(caseRequest.getPause())) {
+    if (!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
     }

@@ -10,17 +10,18 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSIVConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CEConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CCSConverterTest {
+public class CCSIVConverterTest {
 
   @InjectMocks
-  private CCSConverter ccsConverter;
+  private CCSIVConverter ccsivConverter;
 
   @Mock
   private CometRestClient cometRestClient;
@@ -38,14 +39,14 @@ public class CCSConverterTest {
   public void createConvertRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .createFieldWorkerCCSJobRequestForConvert();
+        .createFieldWorkerCEJobRequestForConvert();
 
     // When
-    CaseRequest caseRequest = ccsConverter.convert(createFieldWorkerJobRequest);
+    CaseRequest caseRequest = ccsivConverter.convert(createFieldWorkerJobRequest);
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCSPL", caseRequest.getType().toString());
+    assertEquals("CCSIV", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }

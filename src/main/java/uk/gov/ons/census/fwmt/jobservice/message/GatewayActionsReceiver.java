@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,29 +36,49 @@ public class GatewayActionsReceiver {
   @Autowired
   private ObjectMapper mapper;
 
+  @Autowired
+  private ObjectMapper jsonObjectMapper = new ObjectMapper();
+
   public void receiveMessage(String message) throws GatewayException {
     log.info("received a message from RM-Adapter");
-    processMessage(message);
+    convertAndSendMessage(message);
   }
 
-  private void processMessage(String message) throws GatewayException {
-    if (message.contains("Create")) {
-      CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class, message);
-      gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
-      jobService.createJob(fwmtCreateJobRequest);
-    } else if (message.contains("Cancel")) {
-      CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class, message);
-      gatewayEventManager.triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED);
-      jobService.cancelJob(fwmtCancelJobRequest);
-    } else if (message.contains("update")) {
-      UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message);
-      gatewayEventManager.triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED);
-      jobService.updateJob(fwmtUpdateJobRequest);
-    } else {
-      String errorMsg = "Invalid Canonical Action.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<UNKNOWN_CASE_ID>", GatewayEventsConfig.INVALID_CANONICAL_ACTION);
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, errorMsg);
+  private void convertAndSendMessage(String actualMessage) throws GatewayException {
+    JsonNode actualMessageRootNode;
+    try {
+      actualMessageRootNode = jsonObjectMapper.readTree(actualMessage);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
+    JsonNode gatewayType = actualMessageRootNode.path("gatewayType");
+    JsonNode caseId = actualMessageRootNode.path("caseId");
+
+    switch (gatewayType.asText()) {
+      case "Create":
+        CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
+        jobService.createJob(fwmtCreateJobRequest);
+        break;
+      case "Cancel":
+        CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED);
+        jobService.cancelJob(fwmtCancelJobRequest);
+        break;
+      case "Update":
+        UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED);
+        jobService.updateJob(fwmtUpdateJobRequest);
+        break;
+      default:
+        String errorMsg = "Invalid Canonical Action.";
+        gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<UNKNOWN_CASE_ID>", GatewayEventsConfig.INVALID_CANONICAL_ACTION);
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, errorMsg);
+    }
+    log.info("Sending " + caseId.asText() + " job to TM");
   }
 
   private <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {

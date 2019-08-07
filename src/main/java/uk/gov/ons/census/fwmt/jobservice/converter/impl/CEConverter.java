@@ -4,28 +4,24 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CeCaseExtension;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
+import uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CE;
-import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
 
 @Component("CE")
 public class CEConverter implements CometConverter {
 
-  @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
-    Address address = new Address();
+  @Override
+  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
     CeCaseExtension ceCaseExtension = new CeCaseExtension();
-    Geography geography = new Geography();
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
@@ -44,27 +40,7 @@ public class CEConverter implements CometConverter {
     }
     caseRequest.setContact(contact);
 
-    // arin not yet part of Comet
-    //    try {
-    //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
-    //    } catch (Exception e) {
-    //      // if a problem resolving ARID, null is fine
-    //    }
-    try {
-      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
-    } catch (Exception e) {
-      // TODO is this still the case?
-      // if a problem resolving UPRN, null is fine
-    }
-
-    address.setLines(addAddressLines(ingest));
-    address.setTown(ingest.getAddress().getTownName());
-    address.setPostcode(ingest.getAddress().getPostCode());
-
-    geography.setOa(ingest.getAddress().getOa());
-    address.setGeography(geography);
-
-    caseRequest.setAddress(address);
+    caseRequest.setAddress(JobServiceUtils.setAddress(ingest));
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
@@ -83,12 +59,13 @@ public class CEConverter implements CometConverter {
     return caseRequest;
   }
 
-  @Override public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase)
-      throws GatewayException {
+  @Override
+  public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) throws GatewayException {
+  @Override
+  public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) {
     throw new UnsupportedOperationException();
   }
 }

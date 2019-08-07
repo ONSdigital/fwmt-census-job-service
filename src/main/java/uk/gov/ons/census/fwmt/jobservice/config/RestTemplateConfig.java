@@ -17,8 +17,6 @@ public class RestTemplateConfig {
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
     return restTemplateBuilder
-        .basicAuthentication(userName, password)
-        .interceptors(new RestLogger())
-        .build();
+        .basicAuthentication(userName, password).build();
   }
 }

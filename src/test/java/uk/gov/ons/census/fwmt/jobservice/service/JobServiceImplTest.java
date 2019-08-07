@@ -17,6 +17,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
+import uk.gov.ons.census.fwmt.jobservice.service.impl.JobServiceImpl;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class JobServiceImplTest {
     CasePauseRequest casePauseRequest = new CasePauseRequest();
 
     // When
-    when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(cometConverter.convertCancel(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
 
     jobServiceImpl.cancelJob(jobRequest);
@@ -111,9 +112,10 @@ public class JobServiceImplTest {
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
 
     // When
-    when(cometConverters.get("Household")).thenReturn(cometConverter);
+    when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(restClient.getCase(anyString())).thenReturn(modelCase);
-    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class))).thenReturn(caseRequest);
+    when(cometConverter.convertUpdate(any(UpdateFieldWorkerJobRequest.class), any(ModelCase.class)))
+        .thenReturn(caseRequest);
 
     jobServiceImpl.convertAndSendUpdate(jobRequest);
 
