@@ -49,7 +49,6 @@ public class GatewayActionsReceiver {
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
-    JsonNode surveyType = actualMessageRootNode.path("surveyType");
     JsonNode gatewayType = actualMessageRootNode.path("gatewayType");
     JsonNode caseId = actualMessageRootNode.path("caseId");
 
