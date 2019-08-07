@@ -1,19 +1,26 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeEntity;
 import uk.gov.ons.census.fwmt.jobservice.service.JobCacheManager;
+
+import java.io.IOException;
 
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
@@ -23,8 +30,18 @@ public class CCSIVConverter implements CometConverter {
   @Autowired
   private JobCacheManager jobCacheManager;
 
+  @Autowired
+  private ObjectMapper mapper;
+
   @Override
-  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
+  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+    CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
+    CCSPropertyListingOutcome ccsPropertyListingOutcome = new CCSPropertyListingOutcome();
+
+    ccsOutcomeEntity = retrieveCache(String.valueOf(ingest.getCaseId()));
+
+    ccsPropertyListingOutcome = convertMessageToDTO(CCSPropertyListingOutcome.class, ccsOutcomeEntity.toString());
+
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
@@ -55,10 +72,6 @@ public class CCSIVConverter implements CometConverter {
     return jobCacheManager.getCachedCCSOutcome(caseId);
   }
 
-  private CCSOutcomeEntity cacheJob() {
-    return jobCacheManager.cacheCCSOutcome(new CCSOutcomeEntity("id", "jobJSON"));
-  }
-
   private Contact setContact(CreateFieldWorkerJobRequest ingest) {
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
@@ -73,5 +86,17 @@ public class CCSIVConverter implements CometConverter {
   @Override
   public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase) {
     throw new UnsupportedOperationException();
+  }
+
+  private <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {
+    mapper.registerModule(new JavaTimeModule());
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    T dto;
+    try {
+      dto = mapper.readValue(message, klass);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert message into DTO.", e);
+    }
+    return dto;
   }
 }

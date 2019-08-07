@@ -23,7 +23,7 @@ public class JobCacheManagerImpl implements JobCacheManager {
 
   @Override
   public CCSOutcomeEntity getCachedCCSOutcome(String caseId) {
-    CCSOutcomeEntity ccsOutcomeEntity =redisUtil.getValue(caseId);
+    CCSOutcomeEntity ccsOutcomeEntity = redisUtil.getValue(caseId);
     log.info("Received object from cache: " + ccsOutcomeEntity.toString());
 
     return ccsOutcomeEntity;
