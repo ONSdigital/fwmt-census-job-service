@@ -5,6 +5,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -38,6 +39,7 @@ public class FieldWorkerJobRequestBuilder {
 
   public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvertWithoutContact() {
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+
 
     createFieldWorkerJobRequest.setActionType("Create");
     createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
@@ -145,5 +147,43 @@ public class FieldWorkerJobRequestBuilder {
     updateFieldWorkerJobRequest.setBlankFormReturned(true);
 
     return updateFieldWorkerJobRequest;
+  }
+
+  public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForCCSIVConvert() {
+    Address address = new Address();
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+
+    createFieldWorkerJobRequest.setActionType("Create");
+    createFieldWorkerJobRequest.setCaseReference("Test");
+    createFieldWorkerJobRequest.setSurveyType("CCSIV");
+    createFieldWorkerJobRequest.setEstablishmentType("Household");
+    createFieldWorkerJobRequest.setMandatoryResource("Test_123");
+    createFieldWorkerJobRequest.setCoordinatorId("123_abc");
+
+    address.setOa("!23_abc");
+    address.setLine1("1");
+    address.setLine2("Station Road");
+    address.setTownName("Chingford");
+    address.setPostCode("E4 7NG");
+    address.setLatitude(BigDecimal.valueOf(51));
+    address.setLongitude(BigDecimal.valueOf(0.0001));
+    createFieldWorkerJobRequest.setAddress(address);
+
+    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    createFieldWorkerJobRequest.setCaseReference("caseReference");
+    createFieldWorkerJobRequest.setCaseType("Household");
+    createFieldWorkerJobRequest.setCcsQuestionnaireURL("1133244");
+    createFieldWorkerJobRequest.setSpecialInstructions("Test");
+
+    createFieldWorkerJobRequest.setAddress(createNewAddress());
+
+    Contact contact = new Contact();
+
+    contact.setOrganisationName("Test");
+    contact.setEmailAddress("Test@test.co.uk");
+    contact.setPhoneNumber("07123456789");
+    createFieldWorkerJobRequest.setContact(contact);
+
+    return createFieldWorkerJobRequest;
   }
 }

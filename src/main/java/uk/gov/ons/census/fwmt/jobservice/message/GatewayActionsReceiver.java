@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.message;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -33,36 +34,50 @@ public class GatewayActionsReceiver {
   @Autowired
   private ObjectMapper mapper;
 
+  @Autowired
+  private ObjectMapper jsonObjectMapper = new ObjectMapper();
+
   public void receiveMessage(String message) throws GatewayException {
     log.info("received a message from RM-Adapter");
-    processMessage(message);
+    convertAndSendMessage(message);
   }
 
-  private void processMessage(String message) throws GatewayException {
-    if (message.contains("Create")) {
-      CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
-          message);
-      gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED,
-          LocalTime.now());
-      jobService.createJob(fwmtCreateJobRequest);
-      log.info("Sending Create job to TM");
-    } else if (message.contains("Cancel")) {
-      CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
-          message);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
-      jobService.cancelJob(fwmtCancelJobRequest);
-      log.info("Sending Cancel job to TM");
-    } else if (message.contains("update")) {
-      UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
-          message);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
-      jobService.updateJob(fwmtUpdateJobRequest);
-      log.info("Sending Update job to TM");
-    } else {
-      throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message.");
+  private void convertAndSendMessage(String actualMessage) throws GatewayException {
+    JsonNode actualMessageRootNode;
+    try {
+      actualMessageRootNode = jsonObjectMapper.readTree(actualMessage);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
+    JsonNode gatewayType = actualMessageRootNode.path("gatewayType");
+    JsonNode caseId = actualMessageRootNode.path("caseId");
+
+    switch (gatewayType.asText()) {
+      case "Create":
+        CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager.triggerEvent(caseId.asText(), CANONICAL_CREATE_JOB_RECEIVED,
+                LocalTime.now());
+        jobService.createJob(fwmtCreateJobRequest);
+        break;
+      case "Cancel":
+        CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager
+                .triggerEvent(caseId.asText(), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
+        jobService.cancelJob(fwmtCancelJobRequest);
+        break;
+      case "Update":
+        UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
+                actualMessage);
+        gatewayEventManager
+                .triggerEvent(caseId.asText(), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
+        jobService.updateJob(fwmtUpdateJobRequest);
+        break;
+      default:
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message for case ID " + caseId.asText());
+    }
+    log.info("Sending " + caseId.asText() + " job to TM");
   }
 
   private <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {
@@ -76,4 +91,5 @@ public class GatewayActionsReceiver {
     }
     return dto;
   }
+
 }
