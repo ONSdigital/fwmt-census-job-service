@@ -28,20 +28,10 @@ import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress
 public class CCSIVConverter implements CometConverter {
 
   @Autowired
-  private JobCacheManager jobCacheManager;
-
-  @Autowired
   private ObjectMapper mapper;
 
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
-    CCSOutcomeEntity ccsOutcomeEntity = new CCSOutcomeEntity();
-    CCSPropertyListingOutcome ccsPropertyListingOutcome = new CCSPropertyListingOutcome();
-
-    ccsOutcomeEntity = retrieveCache(String.valueOf(ingest.getCaseId()));
-
-    ccsPropertyListingOutcome = convertMessageToDTO(CCSPropertyListingOutcome.class, ccsOutcomeEntity.toString());
-
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
@@ -66,10 +56,6 @@ public class CCSIVConverter implements CometConverter {
     caseRequest.setCcs(ccsCaseExtension);
 
     return caseRequest;
-  }
-
-  private CCSOutcomeEntity retrieveCache(String caseId) {
-    return jobCacheManager.getCachedCCSOutcome(caseId);
   }
 
   private Contact setContact(CreateFieldWorkerJobRequest ingest) {

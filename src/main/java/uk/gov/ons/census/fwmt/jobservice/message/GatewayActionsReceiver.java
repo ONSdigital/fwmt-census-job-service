@@ -37,14 +37,19 @@ public class GatewayActionsReceiver {
   @Autowired
   private ObjectMapper jsonObjectMapper = new ObjectMapper();
 
-  public void receiveMessage(String message) throws GatewayException, IOException {
+  public void receiveMessage(String message) throws GatewayException {
     log.info("received a message from RM-Adapter");
-    //processMessage(message);
-    checkForRequestType(message);
+    convertAndSendMessage(message);
   }
 
-  private void checkForRequestType(String actualMessage) throws GatewayException, IOException {
-    JsonNode actualMessageRootNode = jsonObjectMapper.readTree(actualMessage);
+  private void convertAndSendMessage(String actualMessage) throws GatewayException {
+    JsonNode actualMessageRootNode;
+    try {
+      actualMessageRootNode = jsonObjectMapper.readTree(actualMessage);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
+    }
+    JsonNode surveyType = actualMessageRootNode.path("surveyType");
     JsonNode gatewayType = actualMessageRootNode.path("gatewayType");
     JsonNode caseId = actualMessageRootNode.path("caseId");
 
