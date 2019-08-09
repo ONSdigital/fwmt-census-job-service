@@ -14,7 +14,7 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCSPL;
 
-@Component("CCSPL")
+@Component("CCS PL")
 public class CCSPLConverter implements CometConverter {
 
   @Override
