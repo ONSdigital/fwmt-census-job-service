@@ -1,25 +1,27 @@
 package uk.gov.ons.census.fwmt.jobservice.message;
 
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CANCEL_RECEIVED;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CREATE_JOB_RECEIVED;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_UPDATE_RECEIVED;
+
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
-
-import java.io.IOException;
-import java.time.LocalTime;
-
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CANCEL_RECEIVED;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CREATE_JOB_RECEIVED;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_UPDATE_RECEIVED;
 
 @Slf4j
 @Component
@@ -56,26 +58,25 @@ public class GatewayActionsReceiver {
       case "Create":
         CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
                 actualMessage);
-        gatewayEventManager.triggerEvent(caseId.asText(), CANONICAL_CREATE_JOB_RECEIVED,
-                LocalTime.now());
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
         jobService.createJob(fwmtCreateJobRequest);
         break;
       case "Cancel":
         CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
                 actualMessage);
-        gatewayEventManager
-                .triggerEvent(caseId.asText(), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED);
         jobService.cancelJob(fwmtCancelJobRequest);
         break;
       case "Update":
         UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
                 actualMessage);
-        gatewayEventManager
-                .triggerEvent(caseId.asText(), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED);
         jobService.updateJob(fwmtUpdateJobRequest);
         break;
       default:
-        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, "Cannot process message for case ID " + caseId.asText());
+        String errorMsg = "Invalid Canonical Action.";
+        gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<UNKNOWN_CASE_ID>", GatewayEventsConfig.INVALID_CANONICAL_ACTION);
+        throw new GatewayException(GatewayException.Fault.BAD_REQUEST, errorMsg);
     }
     log.info("Sending " + caseId.asText() + " job to TM");
   }
@@ -87,9 +88,10 @@ public class GatewayActionsReceiver {
     try {
       dto = mapper.readValue(message, klass);
     } catch (IOException e) {
+      String errorMsg = "Failed to unmarshall Canonical Action.";
+      gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<UNKNOWN_CASE_ID>", GatewayEventsConfig.FAILED_TO_UNMARSHALL_CANONICAL);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert message into DTO.", e);
     }
     return dto;
   }
-
 }

@@ -12,6 +12,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan({"uk.gov.ons.census.fwmt.jobservice", "uk.gov.ons.census.fwmt.events"})
 public class Application {
 
+  public static final String APPLICATION_NAME = "FWMT Gateway - Job Service";
+
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
   }
