@@ -2,8 +2,6 @@ package uk.gov.ons.census.fwmt.jobservice.message;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,6 +35,9 @@ public class GatewayActionsReceiver {
   @Autowired
   private ObjectMapper jsonObjectMapper = new ObjectMapper();
 
+  @Autowired
+  private MessageConverter messageConverter;
+
   public void receiveMessage(String message) throws GatewayException {
     log.info("received a message from RM-Adapter");
     convertAndSendMessage(message);
@@ -54,21 +55,21 @@ public class GatewayActionsReceiver {
 
     switch (gatewayType.asText()) {
       case "Create":
-        CreateFieldWorkerJobRequest fwmtCreateJobRequest = convertMessageToDTO(CreateFieldWorkerJobRequest.class,
+        CreateFieldWorkerJobRequest fwmtCreateJobRequest = messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class,
                 actualMessage);
         gatewayEventManager.triggerEvent(caseId.asText(), CANONICAL_CREATE_JOB_RECEIVED,
                 LocalTime.now());
         jobService.createJob(fwmtCreateJobRequest);
         break;
       case "Cancel":
-        CancelFieldWorkerJobRequest fwmtCancelJobRequest = convertMessageToDTO(CancelFieldWorkerJobRequest.class,
+        CancelFieldWorkerJobRequest fwmtCancelJobRequest = messageConverter.convertMessageToDTO(CancelFieldWorkerJobRequest.class,
                 actualMessage);
         gatewayEventManager
                 .triggerEvent(caseId.asText(), CANONICAL_CANCEL_RECEIVED, LocalTime.now());
         jobService.cancelJob(fwmtCancelJobRequest);
         break;
       case "Update":
-        UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
+        UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = messageConverter.convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
                 actualMessage);
         gatewayEventManager
                 .triggerEvent(caseId.asText(), CANONICAL_UPDATE_RECEIVED, LocalTime.now());
@@ -79,17 +80,4 @@ public class GatewayActionsReceiver {
     }
     log.info("Sending " + caseId.asText() + " job to TM");
   }
-
-  private <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {
-    mapper.registerModule(new JavaTimeModule());
-    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    T dto;
-    try {
-      dto = mapper.readValue(message, klass);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert message into DTO.", e);
-    }
-    return dto;
-  }
-
 }

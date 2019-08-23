@@ -11,20 +11,21 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSIVConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSPLConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.helper.CCSPropertyListedCachedBuilder;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CCSIVConverterTest {
+public class CCSPLConverterTest {
 
   @InjectMocks
-  private CCSIVConverter ccsivConverter;
+  private CCSPLConverter ccsplConverter;
 
   @Mock
   private CCSOutcomeStore ccsOutcomeStore;
@@ -39,7 +40,7 @@ public class CCSIVConverterTest {
   public void createConvertRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .createFieldWorkerCCSIVJobRequestForConvert();
+        .createFieldWorkerCCSPLJobRequestForConvert();
 
     CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListedCachedBuilder()
             .createCCSPropertyListedCache();
@@ -54,11 +55,11 @@ public class CCSIVConverterTest {
             .thenReturn(ccsPropertyListingCached);
 
     // When
-    CaseRequest caseRequest = ccsivConverter.convert(createFieldWorkerJobRequest);
+    CaseRequest caseRequest = ccsplConverter.convert(createFieldWorkerJobRequest);
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCSIV", caseRequest.getType().toString());
+    assertEquals("CCSPL", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }

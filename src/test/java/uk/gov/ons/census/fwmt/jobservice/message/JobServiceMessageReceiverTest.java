@@ -38,6 +38,9 @@ public class JobServiceMessageReceiverTest {
   @Mock
   private GatewayEventManager gatewayEventManager;
 
+  @Mock
+  private MessageConverter messageConverter;
+
   @Test
   public void receiveMessageCreate() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
@@ -60,7 +63,6 @@ public class JobServiceMessageReceiverTest {
     json.put("gatewayType", "Create");
 
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
-    Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
     String message = json.toString();
     messageReceiver.receiveMessage(message);
@@ -79,7 +81,6 @@ public class JobServiceMessageReceiverTest {
 
     CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
-    Mockito.when(mapper.readValue(anyString(), eq(CancelFieldWorkerJobRequest.class))).thenReturn(request);
 
     String message = json.toString();
 
@@ -112,7 +113,6 @@ public class JobServiceMessageReceiverTest {
     json.put("gatewayType", "Create");
 
     CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
-    Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
 
     String message = json.toString();
     messageReceiver.receiveMessage(message);
@@ -139,7 +139,6 @@ public class JobServiceMessageReceiverTest {
 
     UpdateFieldWorkerJobRequest request = new UpdateFieldWorkerJobRequest();
     request.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
-    Mockito.when(mapper.readValue(anyString(), eq(UpdateFieldWorkerJobRequest.class))).thenReturn(request);
 
     String message = json.toString();
 

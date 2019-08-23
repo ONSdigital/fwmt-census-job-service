@@ -68,10 +68,8 @@ springBoot {
 }
 
 dependencies {
-
-
     compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.16-RELEASE')
-    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.22-RELEASE')
+    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.29-RELEASE')
     compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE')
 
     compile('org.springframework.boot:spring-boot-starter')
