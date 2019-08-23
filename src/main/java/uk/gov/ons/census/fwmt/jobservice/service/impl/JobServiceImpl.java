@@ -55,30 +55,30 @@ public class JobServiceImpl implements JobService {
   public void convertAndSendCreate(CreateFieldWorkerJobRequest jobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get(jobRequest.getCaseType());
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT);
     cometRestClient.sendRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK);
   }
 
   public void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get("HH");
     CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
-    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT);
     cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK);
   }
 
   public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
     final CometConverter cometConverter = cometConverters.get("HH");
     ModelCase modelCase = cometRestClient.getCase(String.valueOf(updateRequest.getCaseId()));
     CaseRequest caseRequest = cometConverter.convertUpdate(updateRequest, modelCase);
-    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_SENT);
     if (!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
     }
     cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getCaseId()));
-    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK, LocalTime.now());
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK);
   }
 
 }

@@ -25,13 +25,9 @@ public class CometRestClientResponseErrorHandler implements ResponseErrorHandler
 
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
-        String errorMessage = new String(httpResponse.getBody().readAllBytes(), StandardCharsets.UTF_8);
-        if (httpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
-            log.error(errorMessage);
-            throw new RuntimeException();
-        } else if (httpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
-            log.error(errorMessage);
-            throw new RuntimeException();
-        }
+        String body = new String(httpResponse.getBody().readAllBytes(), StandardCharsets.UTF_8);
+        String message = "(" + httpResponse.getStatusCode().toString() + ") " + body;
+        log.error(message);
+        throw new RuntimeException(message);
     }
 }
