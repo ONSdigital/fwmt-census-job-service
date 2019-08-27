@@ -17,7 +17,7 @@ public class JobCacheManagerImpl implements JobCacheManager {
   public String getCachedCCSOutcome(String caseId) {
     String output = String.valueOf(redisUtil.getValue(caseId));
     if (output != null) {
-      log.info("Received object from cache: " + output);
+      log.info("Received object from cache with case ID: " + caseId);
     }
     return output;
   }

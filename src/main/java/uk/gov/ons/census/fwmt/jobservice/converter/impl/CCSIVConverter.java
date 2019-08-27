@@ -35,10 +35,8 @@ public class CCSIVConverter implements CometConverter {
 
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
-//    Address address = new Address();
-//    CeDetails ceDetails = new CeDetails();
 
-    String output = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
+    String output = getCachedOutcomeDetails(ingest);
     CCSPropertyListingCached ccsPropertyListingCached = messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, output);
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
@@ -78,6 +76,14 @@ public class CCSIVConverter implements CometConverter {
     Contact contact = new Contact();
     contact.setName(ingest.getAddress().getPostCode());
     return contact;
+  }
+
+  private String getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+    String retrievedCache = null;
+
+    retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
+
+    return retrievedCache;
   }
 
   @Override

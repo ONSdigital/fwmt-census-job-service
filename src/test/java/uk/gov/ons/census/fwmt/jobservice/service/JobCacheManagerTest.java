@@ -1,5 +1,3 @@
-package uk.gov.ons.census.fwmt.jobservice.service;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
