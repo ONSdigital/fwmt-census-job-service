@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
+import uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig;
 
 import java.net.MalformedURLException;
 import java.util.Date;
@@ -37,6 +39,10 @@ public class CometRestClient {
   private transient String clientSecret;
   private transient AuthenticationResult auth;
 
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
+
+  
   @Autowired
   public CometRestClient(
       RestTemplate restTemplate,
@@ -72,7 +78,9 @@ public class CometRestClient {
       Future<AuthenticationResult> future = context.acquireToken(resource, cc, null);
       this.auth = future.get();
     } catch (MalformedURLException | InterruptedException | ExecutionException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e);
+      String errorMsg = "Failed to Authenticate with Totalmobile";
+      gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<N/A_CASE_ID>", GatewayEventsConfig.FAILED_TM_AUTHENTICATION);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, errorMsg, e);
     } finally {
       service.shutdown();
     }
