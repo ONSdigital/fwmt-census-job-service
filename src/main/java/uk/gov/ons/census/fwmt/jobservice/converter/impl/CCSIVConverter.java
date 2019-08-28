@@ -36,9 +36,6 @@ public class CCSIVConverter implements CometConverter {
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
-    String output = getCachedOutcomeDetails(ingest);
-    CCSPropertyListingCached ccsPropertyListingCached = messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, output);
-
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
@@ -63,12 +60,7 @@ public class CCSIVConverter implements CometConverter {
     caseRequest.setCcs(ccsCaseExtension);
 
 
-    try {
-      String ccsPLToTM = objectMapper.writeValueAsString(ccsPropertyListingCached);
-      caseRequest.setSpecialInstructions(ccsPLToTM);
-    } catch (JsonProcessingException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert CCSPL cached data to string");
-    }
+      caseRequest.setSpecialInstructions(getCachedOutcomeDetails(ingest));
     return caseRequest;
   }
 
@@ -79,11 +71,17 @@ public class CCSIVConverter implements CometConverter {
   }
 
   private String getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
-    String retrievedCache = null;
+    String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
-    retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
+    CCSPropertyListingCached ccsPropertyListingCached = messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, retrievedCache);
 
-    return retrievedCache;
+    try {
+      String ccsPLToTM = objectMapper.writeValueAsString(ccsPropertyListingCached);
+      return ccsPLToTM;
+    } catch (JsonProcessingException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert CCSPL cached data to string");
+    }
+    
   }
 
   @Override
