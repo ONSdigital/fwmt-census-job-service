@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.message;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -16,53 +17,68 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceMessageReceiverTest {
 
   @InjectMocks
-  GatewayActionsReceiver messageReceiver;
+  private GatewayActionsReceiver messageReceiver;
 
   @Mock
   private JobService jobService;
 
   @Mock
-  private ObjectMapper mapper;
+  private ObjectMapper mapper = new ObjectMapper();
 
   @Mock
   private GatewayEventManager gatewayEventManager;
+
+  @Mock
+  private MessageConverter messageConverter = new MessageConverter();
+
+  @Mock
+  private CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+
+  @Mock
+  private CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest = new CancelFieldWorkerJobRequest();
+
+  @Mock
+  private UpdateFieldWorkerJobRequest updateFieldWorkerJobRequest = new UpdateFieldWorkerJobRequest();
 
   @Test
   public void receiveMessageCreate() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     JSONObject address = new JSONObject();
     json.put("actionType", "Create");
-    json.put("jobIdentity", "1234");
+    json.put("caseId", "a48bf28e-e7f4-4467-a9fb-e000b6a55676");
+    json.put("caseReference", "caseReference");
+    json.put("caseType", "Household");
+    json.put("establishmentType", "estabType");
+    json.put("coordinatorId", "coordId");
     json.put("surveyType", "HH");
-    json.put("preallocatedJob", "true");
-    json.put("mandatoryResourceAuthNo", "1234");
-    json.put("dueDate", "20180216");
-    address.put("line1", "886");
-    address.put("line2", "Prairie Rose");
-    address.put("line3", "Trail");
-    address.put("line4", "RU");
-    address.put("townName", "Borodinskiy");
-    address.put("postCode", "188961");
-    address.put("latitude", "61.7921776");
-    address.put("longitude", "34.3739957");
+    json.put("mandatoryResource", "1234");
+    address.put("line1", "1 Station Road");
+    address.put("townName", "Town");
+    address.put("postCode", "AB1 2CD");
+    address.put("latitude", "1234.56");
+    address.put("longitude", "2345.67");
+    address.put("oa", "oaTest");
     json.put("address", address);
     json.put("gatewayType", "Create");
 
-    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
-    Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
-
     String message = json.toString();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(message);
+
+    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message)).thenReturn(createFieldWorkerJobRequest);
+
+    when(mapper.readTree(message)).thenReturn(jsonNode);
+
     messageReceiver.receiveMessage(message);
 
     Mockito.verify(jobService).createJob(any());
@@ -77,15 +93,17 @@ public class JobServiceMessageReceiverTest {
     json.put("reason", "incorrect address");
     json.put("gatewayType", "Cancel");
 
-    CancelFieldWorkerJobRequest request = new CancelFieldWorkerJobRequest();
-    request.setCaseId(UUID.fromString("8ed3fc08-e95f-44db-a6d7-cde4e76a6182"));
-    Mockito.when(mapper.readValue(anyString(), eq(CancelFieldWorkerJobRequest.class))).thenReturn(request);
-
     String message = json.toString();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(message);
+
+    when(messageConverter.convertMessageToDTO(CancelFieldWorkerJobRequest.class, message)).thenReturn(cancelFieldWorkerJobRequest);
+
+    when(mapper.readTree(message)).thenReturn(jsonNode);
 
     messageReceiver.receiveMessage(message);
 
-    Mockito.verify(jobService, never()).createJob(any());
     Mockito.verify(jobService).cancelJob(any());
   }
 
@@ -111,10 +129,15 @@ public class JobServiceMessageReceiverTest {
     json.put("mandatoryResource", "testFieldOfficerId");
     json.put("gatewayType", "Create");
 
-    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
-    Mockito.when(mapper.readValue(anyString(), eq(CreateFieldWorkerJobRequest.class))).thenReturn(request);
-
     String message = json.toString();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(message);
+
+    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message)).thenReturn(createFieldWorkerJobRequest);
+
+    when(mapper.readTree(message)).thenReturn(jsonNode);
+
     messageReceiver.receiveMessage(message);
 
     Mockito.verify(jobService).createJob(any());
@@ -122,10 +145,18 @@ public class JobServiceMessageReceiverTest {
   }
 
   @Test(expected = GatewayException.class)
-  public void receiveBadProcessMessage() throws GatewayException {
+  public void receiveBadProcessMessage() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
     json.put("actionType", "");
+    json.put("caseId", "8ed3fc08-e95f-44db-a6d7-cde4e76a6182");
+    json.put("gatewayType", "Incorrect");
+
     String message = json.toString();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(message);
+
+    when(mapper.readTree(message)).thenReturn(jsonNode);
 
     messageReceiver.receiveMessage(message);
   }
@@ -137,11 +168,14 @@ public class JobServiceMessageReceiverTest {
     json.put("caseId", "f98e469e-1727-4ef8-bc87-354a7ebdf1de");
     json.put("gatewayType", "Update");
 
-    UpdateFieldWorkerJobRequest request = new UpdateFieldWorkerJobRequest();
-    request.setCaseId(UUID.fromString("f98e469e-1727-4ef8-bc87-354a7ebdf1de"));
-    Mockito.when(mapper.readValue(anyString(), eq(UpdateFieldWorkerJobRequest.class))).thenReturn(request);
-
     String message = json.toString();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(message);
+
+    when(messageConverter.convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message)).thenReturn(updateFieldWorkerJobRequest);
+
+    when(mapper.readTree(message)).thenReturn(jsonNode);
 
     messageReceiver.receiveMessage(message);
 

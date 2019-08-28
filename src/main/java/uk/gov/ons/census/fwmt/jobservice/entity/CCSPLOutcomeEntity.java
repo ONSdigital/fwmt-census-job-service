@@ -10,11 +10,11 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("CCSOutcomeEntity")
-public class CCSOutcomeEntity implements Serializable {
+@RedisHash("CCSPLOutcomeEntity")
+public class CCSPLOutcomeEntity implements Serializable {
 
-  private String id;
+  private String caseId;
 
-  private String jobJSON;
+  private String ccsPropertyListingOutcome;
 
 }
