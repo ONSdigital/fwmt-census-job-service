@@ -15,7 +15,7 @@ import java.io.IOException;
 public class MessageConverter {
 
   @Autowired
-  private ObjectMapper mapper;
+  private ObjectMapper mapper = new ObjectMapper();
 
   public <T> T convertMessageToDTO(Class<T> klass, String message) throws GatewayException {
     mapper.registerModule(new JavaTimeModule());

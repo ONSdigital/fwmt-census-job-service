@@ -3,7 +3,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.config.RedisUtil;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSPLOutcomeEntity;
 import uk.gov.ons.census.fwmt.jobservice.service.impl.JobCacheManagerImpl;
@@ -24,9 +23,7 @@ public class JobCacheManagerTest {
   private String caseId = "8ed3fc08-e95f-44db-a6d7-cde4e76a6182";
 
   @Test
-  public void getCachedHouseholdCaseIdTest() throws GatewayException {
-    CCSPLOutcomeEntity ccsplOutcomeEntity = new CCSPLOutcomeEntity();
-    ccsplOutcomeEntity.setCaseId(caseId);
+  public void getCachedHouseholdCaseIdTest() {
 
     when(jobCacheManagerImpl.getCachedCCSOutcome(caseId)).thenReturn(anyString());
 

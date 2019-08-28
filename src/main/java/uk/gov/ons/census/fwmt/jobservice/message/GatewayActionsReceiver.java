@@ -31,9 +31,6 @@ public class GatewayActionsReceiver {
   private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private ObjectMapper mapper;
-
-  @Autowired
   private ObjectMapper jsonObjectMapper = new ObjectMapper();
 
   @Autowired

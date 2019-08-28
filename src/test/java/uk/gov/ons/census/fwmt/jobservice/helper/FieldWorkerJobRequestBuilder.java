@@ -5,7 +5,6 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -202,4 +201,6 @@ public class FieldWorkerJobRequestBuilder {
 
     return createFieldWorkerJobRequest;
   }
+
+
 }
