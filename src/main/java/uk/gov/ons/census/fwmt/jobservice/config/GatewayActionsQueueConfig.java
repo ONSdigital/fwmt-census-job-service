@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
@@ -16,22 +17,25 @@ import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 public class GatewayActionsQueueConfig {
   public static final String GATEWAY_ACTIONS_QUEUE = "Gateway.Actions";
   public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
+  private int concurrentConsumers;
+
+  public GatewayActionsQueueConfig(@Value("${rabbitmq.concurrentConsumers}") Integer concurrentConsumers) {
+    this.concurrentConsumers = concurrentConsumers;
+  }
 
   //Queues
   @Bean
   public Queue gatewayActionsQueue() {
-    Queue queue = QueueBuilder.durable(GATEWAY_ACTIONS_QUEUE)
+    return QueueBuilder.durable(GATEWAY_ACTIONS_QUEUE)
         .withArgument("x-dead-letter-exchange", "")
         .withArgument("x-dead-letter-routing-key", GATEWAY_ACTIONS_DLQ)
         .build();
-    return queue;
   }
 
   //Dead Letter Queue
   @Bean
   public Queue gatewayActionsDeadLetterQueue() {
-    Queue queue = QueueBuilder.durable(GATEWAY_ACTIONS_DLQ).build();
-    return queue;
+    return QueueBuilder.durable(GATEWAY_ACTIONS_DLQ).build();
   }
 
   //Listener Adapter
@@ -52,6 +56,7 @@ public class GatewayActionsQueueConfig {
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(GATEWAY_ACTIONS_QUEUE);
     container.setMessageListener(messageListenerAdapter);
+    container.setConcurrentConsumers(concurrentConsumers);
     return container;
   }
 
