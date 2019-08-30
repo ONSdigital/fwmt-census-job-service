@@ -41,7 +41,8 @@ rabbitmq:
   virtualHost: "/"
   initialinterval: 5000
   multiplier: 3.0
-  maxInterval: 45000
+  maxInterval: 450c
+  concurrentConsumers: 5
 
 redis:
   host: "localhost"
