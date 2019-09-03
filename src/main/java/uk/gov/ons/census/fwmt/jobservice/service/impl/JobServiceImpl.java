@@ -77,6 +77,7 @@ public class JobServiceImpl implements JobService {
     CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT);
     ResponseEntity<Void> response = cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
+    
     if (!isValidResponse(response)) {
       String msg = "Unable to Create FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(cancelJobRequest.getCaseId()), FAILED_TO_CREATE_TM_JOB);
