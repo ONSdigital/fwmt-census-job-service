@@ -21,6 +21,7 @@ public class GatewayEventsConfig {
   public static final String FAILED_TO_UNMARSHALL_CANONICAL = "FAILED_TO_UNMARSHALL_CANONICAL";
   public static final String INVALID_CANONICAL_ACTION = "INVALID_CANONICAL_ACTION";
   public static final String FAILED_TM_AUTHENTICATION = "FAILED_TM_AUTHENTICATION";
+  public static final String FAILED_TO_CREATE_TM_JOB = "FAILED_TO_CREATE_TM_JOB";
 
   @Bean
   public GatewayEventManager gatewayEventManager() {

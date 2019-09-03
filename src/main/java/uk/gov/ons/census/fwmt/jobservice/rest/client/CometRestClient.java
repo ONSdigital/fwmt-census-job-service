@@ -86,7 +86,7 @@ public class CometRestClient {
     }
   }
 
-  public <A> void sendRequest(A caseRequest, String caseId) throws GatewayException {
+  public <A> ResponseEntity<Void> sendRequest(A caseRequest, String caseId) throws GatewayException {
     String basePathway = cometURL + caseId;
     if ((!isAuthed() || isExpired()) && !clientID.isEmpty() && !clientSecret.isEmpty())
       auth();
@@ -98,7 +98,8 @@ public class CometRestClient {
     }
 
     HttpEntity<?> body = new HttpEntity<>(caseRequest, httpHeaders);
-    restTemplate.exchange(basePathway, HttpMethod.PUT, body, Void.class);
+    ResponseEntity<Void> exchange = restTemplate.exchange(basePathway, HttpMethod.PUT, body, Void.class);
+    return exchange;
   }
 
   public ModelCase getCase(String caseId) throws GatewayException {
