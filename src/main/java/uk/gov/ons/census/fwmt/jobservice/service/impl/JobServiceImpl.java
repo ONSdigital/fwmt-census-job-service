@@ -27,7 +27,9 @@ import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_ACK;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_SENT;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.FAILED_TO_CREATE_TM_JOB;;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.FAILED_TO_CREATE_TM_JOB;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.FAILED_TO_CANCEL_TM_JOB;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.FAILED_TO_UPDATE_TM_JOB;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -79,8 +81,8 @@ public class JobServiceImpl implements JobService {
     ResponseEntity<Void> response = cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
     
     if (!isValidResponse(response)) {
-      String msg = "Unable to Create FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
-      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(cancelJobRequest.getCaseId()), FAILED_TO_CREATE_TM_JOB);
+      String msg = "Unable to Cancel FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
+      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(cancelJobRequest.getCaseId()), FAILED_TO_CANCEL_TM_JOB);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK);
@@ -95,15 +97,15 @@ public class JobServiceImpl implements JobService {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       ResponseEntity<Void> response = cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
       if (!isValidResponse(response)) {
-        String msg = "Unable to Create FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
-        gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(updateRequest.getCaseId()), FAILED_TO_CREATE_TM_JOB);
+        String msg = "Unable to Update FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
+        gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(updateRequest.getCaseId()), FAILED_TO_UPDATE_TM_JOB);
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
       }
     }
     ResponseEntity<Void> response = cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getCaseId()));
     if (!isValidResponse(response)) {
-      String msg = "Unable to Create FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
-      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(updateRequest.getCaseId()), FAILED_TO_CREATE_TM_JOB);
+      String msg = "Unable to Update FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
+      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(updateRequest.getCaseId()), FAILED_TO_UPDATE_TM_JOB);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK);

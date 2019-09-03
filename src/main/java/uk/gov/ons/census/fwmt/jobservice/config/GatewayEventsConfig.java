@@ -22,7 +22,8 @@ public class GatewayEventsConfig {
   public static final String INVALID_CANONICAL_ACTION = "INVALID_CANONICAL_ACTION";
   public static final String FAILED_TM_AUTHENTICATION = "FAILED_TM_AUTHENTICATION";
   public static final String FAILED_TO_CREATE_TM_JOB = "FAILED_TO_CREATE_TM_JOB";
-
+  public static final String FAILED_TO_CANCEL_TM_JOB = "FAILED_TO_CANCEL_TM_JOB";
+  public static final String FAILED_TO_UPDATE_TM_JOB = "FAILED_TO_UPDATE_TM_JOB";
   @Bean
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
@@ -30,7 +31,8 @@ public class GatewayEventsConfig {
     gatewayEventManager.addEventTypes(new String[] {CANONICAL_CREATE_JOB_RECEIVED, CANONICAL_CANCEL_RECEIVED,
         CANONICAL_UPDATE_RECEIVED, COMET_CREATE_SENT, COMET_CREATE_ACK, COMET_CANCEL_SENT, COMET_CANCEL_ACK,
         COMET_UPDATE_SENT, COMET_UPDATE_ACK});
-    gatewayEventManager.addErrorEventTypes(new String[] {FAILED_TO_UNMARSHALL_CANONICAL, INVALID_CANONICAL_ACTION, FAILED_TM_AUTHENTICATION});
+    gatewayEventManager.addErrorEventTypes(new String[] {FAILED_TO_UNMARSHALL_CANONICAL, INVALID_CANONICAL_ACTION, FAILED_TM_AUTHENTICATION,
+        FAILED_TO_CREATE_TM_JOB, FAILED_TO_CANCEL_TM_JOB, FAILED_TO_UPDATE_TM_JOB});
 
     return gatewayEventManager;
   }
