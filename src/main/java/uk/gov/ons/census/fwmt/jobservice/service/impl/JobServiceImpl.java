@@ -71,7 +71,7 @@ public class JobServiceImpl implements JobService {
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(jobRequest.getCaseId()), FAILED_TO_CREATE_TM_JOB);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
-    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK);
+    gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, Map.of("Response Code", response.getStatusCode().name()));
   }
 
   public void convertAndSendCancel(CancelFieldWorkerJobRequest cancelJobRequest) throws GatewayException {
@@ -85,7 +85,7 @@ public class JobServiceImpl implements JobService {
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(cancelJobRequest.getCaseId()), FAILED_TO_CANCEL_TM_JOB);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
-    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK);
+    gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK, Map.of("Response Code", response.getStatusCode().name()));
   }
 
   public void convertAndSendUpdate(UpdateFieldWorkerJobRequest updateRequest) throws GatewayException {
@@ -108,7 +108,7 @@ public class JobServiceImpl implements JobService {
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(updateRequest.getCaseId()), FAILED_TO_UPDATE_TM_JOB);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
-    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK);
+    gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK, Map.of("Response Code", response.getStatusCode().name()));
   }
 
   private boolean isValidResponse(ResponseEntity<Void> response) {
