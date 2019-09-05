@@ -17,6 +17,8 @@ import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 public class GatewayActionsQueueConfig {
   public static final String GATEWAY_ACTIONS_QUEUE = "Gateway.Actions";
   public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
+  public static final String GATEWAY_ACTIONS_ROUTING_KEY = "Gateway.Action.Request";
+
   private int concurrentConsumers;
 
   public GatewayActionsQueueConfig(@Value("${rabbitmq.concurrentConsumers}") Integer concurrentConsumers) {
