@@ -19,6 +19,8 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
+import java.util.HashMap;
+
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
 @Component("CCS")
