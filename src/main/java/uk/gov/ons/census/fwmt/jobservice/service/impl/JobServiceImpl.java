@@ -67,7 +67,7 @@ public class JobServiceImpl implements JobService {
     CaseRequest caseRequest = cometConverter.convert(jobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_SENT, "Case Ref", jobRequest.getCaseReference());
     ResponseEntity<Void> response = cometRestClient.sendRequest(caseRequest, String.valueOf(jobRequest.getCaseId()));
-    validateResponse(response, jobRequest.getCaseId(), FAILED_TO_CREATE_TM_JOB);
+    validateResponse(response, jobRequest.getCaseId(), "Create", FAILED_TO_CREATE_TM_JOB);
     gatewayEventManager.triggerEvent(String.valueOf(jobRequest.getCaseId()), COMET_CREATE_ACK, "Response Code", response.getStatusCode().name());
   }
 
@@ -76,7 +76,7 @@ public class JobServiceImpl implements JobService {
     CasePauseRequest casePauseRequest = cometConverter.convertCancel(cancelJobRequest);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_SENT);
     ResponseEntity<Void> response = cometRestClient.sendRequest(casePauseRequest, String.valueOf(cancelJobRequest.getCaseId()));
-    validateResponse(response, cancelJobRequest.getCaseId(), FAILED_TO_CANCEL_TM_JOB);
+    validateResponse(response, cancelJobRequest.getCaseId(), "Cancel", FAILED_TO_CANCEL_TM_JOB);
     gatewayEventManager.triggerEvent(String.valueOf(cancelJobRequest.getCaseId()), COMET_CANCEL_ACK, "Response Code", response.getStatusCode().name());
   }
 
@@ -88,10 +88,10 @@ public class JobServiceImpl implements JobService {
     if (!StringUtils.isEmpty(caseRequest.getPause())) {
       CasePauseRequest casePauseRequest = caseRequest.getPause();
       ResponseEntity<Void> response = cometRestClient.sendRequest(casePauseRequest, String.valueOf(updateRequest.getCaseId()));
-      validateResponse(response, updateRequest.getCaseId(), FAILED_TO_UPDATE_TM_JOB);
+      validateResponse(response, updateRequest.getCaseId(), "Pause", FAILED_TO_UPDATE_TM_JOB);
     }
     ResponseEntity<Void> response = cometRestClient.sendRequest(caseRequest, String.valueOf(updateRequest.getCaseId()));
-    validateResponse(response, updateRequest.getCaseId(), FAILED_TO_UPDATE_TM_JOB);
+    validateResponse(response, updateRequest.getCaseId(), "Pause", FAILED_TO_UPDATE_TM_JOB);
     gatewayEventManager.triggerEvent(String.valueOf(updateRequest.getCaseId()), COMET_UPDATE_ACK, "Response Code", response.getStatusCode().name());
   }
 
@@ -99,9 +99,9 @@ public class JobServiceImpl implements JobService {
     return validResponses.contains(response.getStatusCode());
   }
 
-  private void validateResponse(ResponseEntity<Void> response, UUID caseId, String errorCode) throws GatewayException {
+  private void validateResponse(ResponseEntity<Void> response, UUID caseId, String verb, String errorCode) throws GatewayException {
     if (!isValidResponse(response)) {
-      String msg = "Unable to Create FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
+      String msg = "Unable to " + verb + " FieldWorkerJobRequest: HTTP_STATUS:" + response.getStatusCode() + ":" + response.getStatusCodeValue();
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, String.valueOf(caseId), errorCode);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
     }
