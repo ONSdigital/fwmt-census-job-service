@@ -38,6 +38,7 @@ public class CEConverter implements CometConverter {
     if (ingest.getContact() != null) {
       contact.setOrganisationName(ingest.getContact().getOrganisationName());
     }
+    contact.setName("The Manager");
     caseRequest.setContact(contact);
 
     caseRequest.setAddress(JobServiceUtils.setAddress(ingest));
