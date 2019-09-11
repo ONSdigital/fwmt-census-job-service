@@ -76,8 +76,8 @@ public class JobServiceImplTest {
     jobServiceImpl.createJob(jobRequest);
 
     // Then
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_SENT));
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_ACK), Mockito.anyMap());
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_SENT), anyString(), anyString());
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CREATE_ACK), anyString(), anyString());
 
   }
 
@@ -97,7 +97,7 @@ public class JobServiceImplTest {
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_SENT));
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_ACK), Mockito.anyMap());
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_CANCEL_ACK), anyString(), anyString());
 
   }
 
@@ -129,7 +129,7 @@ public class JobServiceImplTest {
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_SENT));
     Mockito.verify(restClient).sendRequest(casePauseRequest, String.valueOf(jobRequest.getCaseId()));
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_ACK), Mockito.anyMap());
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(COMET_UPDATE_ACK), anyString(), anyString());
 
   }
 }

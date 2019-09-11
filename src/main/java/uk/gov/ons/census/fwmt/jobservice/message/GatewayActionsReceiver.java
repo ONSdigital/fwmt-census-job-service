@@ -5,6 +5,7 @@ import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANON
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_UPDATE_RECEIVED;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,7 +56,7 @@ public class GatewayActionsReceiver {
       case "Create":
         CreateFieldWorkerJobRequest fwmtCreateJobRequest = messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class,
                 actualMessage);
-        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED, "Case Ref", fwmtCreateJobRequest.getCaseReference());
         jobService.createJob(fwmtCreateJobRequest);
         break;
       case "Cancel":
