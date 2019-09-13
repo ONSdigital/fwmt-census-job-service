@@ -37,15 +37,16 @@ public class GatewayActionsReceiver {
   @Autowired
   private MessageConverter messageConverter;
 
-  public void receiveMessage(String message) throws GatewayException {
+  public void receiveMessage(Object message) throws GatewayException {
     log.info("received a message from RM-Adapter");
     convertAndSendMessage(message);
   }
 
-  private void convertAndSendMessage(String actualMessage) throws GatewayException {
+  private void convertAndSendMessage(Object actualMessage) throws GatewayException {
+    String messageToString = actualMessage.toString();
     JsonNode actualMessageRootNode;
     try {
-      actualMessageRootNode = jsonObjectMapper.readTree(actualMessage);
+      actualMessageRootNode = jsonObjectMapper.readTree(messageToString);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Cannot process message JSON");
     }
@@ -55,19 +56,19 @@ public class GatewayActionsReceiver {
     switch (gatewayType.asText()) {
       case "Create":
         CreateFieldWorkerJobRequest fwmtCreateJobRequest = messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class,
-                actualMessage);
-        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED, "Case Ref", fwmtCreateJobRequest.getCaseReference());
+                messageToString);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtCreateJobRequest.getCaseId()), CANONICAL_CREATE_JOB_RECEIVED);
         jobService.createJob(fwmtCreateJobRequest);
         break;
       case "Cancel":
         CancelFieldWorkerJobRequest fwmtCancelJobRequest = messageConverter.convertMessageToDTO(CancelFieldWorkerJobRequest.class,
-                actualMessage);
+                messageToString);
         gatewayEventManager.triggerEvent(String.valueOf(fwmtCancelJobRequest.getCaseId()), CANONICAL_CANCEL_RECEIVED);
         jobService.cancelJob(fwmtCancelJobRequest);
         break;
       case "Update":
         UpdateFieldWorkerJobRequest fwmtUpdateJobRequest = messageConverter.convertMessageToDTO(UpdateFieldWorkerJobRequest.class,
-                actualMessage);
+                messageToString);
         gatewayEventManager.triggerEvent(String.valueOf(fwmtUpdateJobRequest.getCaseId()), CANONICAL_UPDATE_RECEIVED);
         jobService.updateJob(fwmtUpdateJobRequest);
         break;
