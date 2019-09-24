@@ -94,7 +94,7 @@ public class CCSIVConverter implements CometConverter {
   }
 
   private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
-    Address updatedAddress = new Address();
+    Address updatedAddress;
 
     updatedAddress = ingest.getAddress();
     updatedAddress.setOa(cachedOa);
