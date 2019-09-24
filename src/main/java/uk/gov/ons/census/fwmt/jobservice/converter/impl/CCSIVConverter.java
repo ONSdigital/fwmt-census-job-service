@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
@@ -39,6 +41,7 @@ public class CCSIVConverter implements CometConverter {
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
+    CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
 
@@ -52,7 +55,6 @@ public class CCSIVConverter implements CometConverter {
     caseRequest.setContact(setContact(ingest));
     // check this method
 
-    caseRequest.setAddress(setAddress(ingest));
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
@@ -61,8 +63,12 @@ public class CCSIVConverter implements CometConverter {
     ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     caseRequest.setCcs(ccsCaseExtension);
 
+    ccsPropertyListingCached = getCachedOutcomeDetails(ingest);
 
-      caseRequest.setSpecialInstructions(getCachedOutcomeDetails(ingest));
+    ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getOa()));
+
+    caseRequest.setSpecialInstructions(getSpecialInstructions(ccsPropertyListingCached));
+    caseRequest.setAddress(setAddress(ingest));
     return caseRequest;
   }
 
@@ -72,18 +78,30 @@ public class CCSIVConverter implements CometConverter {
     return contact;
   }
 
-  private String getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+  private CCSPropertyListingCached getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
     CCSPropertyListingCached ccsPropertyListingCached = messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, retrievedCache);
 
+    return ccsPropertyListingCached;
+  }
+
+  private String getSpecialInstructions(CCSPropertyListingCached cachedSpecialInstructions) throws GatewayException {
     try {
-      String ccsPLToTM = objectMapper.writeValueAsString(ccsPropertyListingCached);
+      String ccsPLToTM = objectMapper.writeValueAsString(cachedSpecialInstructions);
       return ccsPLToTM;
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert CCSPL cached data to string");
     }
-    
+  }
+
+  private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
+    Address updatedAddress = new Address();
+
+    updatedAddress = ingest.getAddress();
+    updatedAddress.setOa(cachedOa);
+
+    return updatedAddress;
   }
 
   @Override
