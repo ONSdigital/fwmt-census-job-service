@@ -21,8 +21,6 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
-import java.util.HashMap;
-
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
 @Component("CCS")
@@ -41,7 +39,7 @@ public class CCSIVConverter implements CometConverter {
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
-    CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
+    CCSPropertyListingCached ccsPropertyListingCached;
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
 
