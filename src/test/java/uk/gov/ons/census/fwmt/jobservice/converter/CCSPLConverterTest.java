@@ -41,7 +41,7 @@ public class CCSPLConverterTest {
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCSPL", caseRequest.getType().toString());
+    assertEquals("CCS", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }

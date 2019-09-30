@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.*;
 public class CCSINTConverterTest {
 
   @InjectMocks
-  private CCSINTConverterTest ccsintConverter;
+  private CCSINTConverter ccsintConverter;
 
   @Mock
   private CCSOutcomeStore ccsOutcomeStore;
@@ -58,7 +58,7 @@ public class CCSINTConverterTest {
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCSINT", caseRequest.getType().toString());
+    assertEquals("CCS", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }
