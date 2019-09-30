@@ -12,6 +12,9 @@ import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 
 
@@ -31,8 +34,13 @@ public class CCSPLConverter implements CometConverter {
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
+    caseRequest.setCategory(ingest.getCategory());
 
     address.setPostcode(ingest.getAddress().getPostCode());
+
+    List<String> addressLines = new ArrayList<>();
+    addressLines.add(ingest.getAddress().getPostCode());
+    address.setLines(addressLines);
 
     geography.setOa(ingest.getAddress().getOa());
     address.setGeography(geography);
