@@ -22,9 +22,10 @@ import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
+import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 
 @Component("CCS")
-public class CCSIVConverter implements CometConverter {
+public class CCSINTConverter implements CometConverter {
 
   @Autowired
   private CCSOutcomeStore ccsOutcomeStore;
@@ -44,7 +45,7 @@ public class CCSIVConverter implements CometConverter {
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
-    caseRequest.setType(CaseRequest.TypeEnum.CCSIV);
+    caseRequest.setType(CCS);
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     // unsure of this one
