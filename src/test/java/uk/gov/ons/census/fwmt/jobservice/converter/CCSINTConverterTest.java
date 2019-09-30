@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.*;
 public class CCSINTConverterTest {
 
   @InjectMocks
-  private ccsintConverter ccsintConverter;
+  private CCSINTConverterTest ccsintConverter;
 
   @Mock
   private CCSOutcomeStore ccsOutcomeStore;
