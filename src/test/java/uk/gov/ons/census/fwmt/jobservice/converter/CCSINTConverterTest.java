@@ -11,7 +11,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSIVConverter;
+import uk.gov.ons.census.fwmt.jobservice.converter.impl.CCSINTConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.helper.CCSPropertyListedCachedBuilder;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
@@ -21,10 +21,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CCSIVConverterTest {
+public class CCSINTConverterTest {
 
   @InjectMocks
-  private CCSIVConverter ccsivConverter;
+  private CCSINTConverter CCSINTConverter;
 
   @Mock
   private CCSOutcomeStore ccsOutcomeStore;
@@ -54,11 +54,11 @@ public class CCSIVConverterTest {
             .thenReturn(ccsPropertyListingCached);
 
     // When
-    CaseRequest caseRequest = ccsivConverter.convert(createFieldWorkerJobRequest);
+    CaseRequest caseRequest = CCSINTConverter.convert(createFieldWorkerJobRequest);
 
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
-    assertEquals("CCSIV", caseRequest.getType().toString());
+    assertEquals("CCSINT", caseRequest.getType().toString());
     assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
 
   }

@@ -12,7 +12,8 @@ import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
-import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCSPL;
+import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
+
 
 @Component("CCSPL")
 public class CCSPLConverter implements CometConverter {
@@ -25,7 +26,7 @@ public class CCSPLConverter implements CometConverter {
     Location location = new Location();
 
     caseRequest.setReference(ingest.getCaseReference());
-    caseRequest.setType(CCSPL);
+    caseRequest.setType(CCS);
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
