@@ -49,6 +49,7 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCategory(ingest.getCategory());
+    caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     // unsure of this one
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
