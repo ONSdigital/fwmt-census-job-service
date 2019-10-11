@@ -48,6 +48,7 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setType(CCS);
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
+    caseRequest.setCategory(ingest.getCategory());
     // unsure of this one
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
@@ -80,9 +81,7 @@ public class CCSINTConverter implements CometConverter {
   private CCSPropertyListingCached getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
-    CCSPropertyListingCached ccsPropertyListingCached = messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, retrievedCache);
-
-    return ccsPropertyListingCached;
+    return messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, retrievedCache);
   }
 
   private String getSpecialInstructions(CCSPropertyListingCached cachedSpecialInstructions) throws GatewayException {
