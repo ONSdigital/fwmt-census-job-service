@@ -33,7 +33,7 @@ plugins {
 }
 
 description = 'census-fwmt-job-service'
-version = '3.0.42-SNAPSHOT'
+version = '3.0.43-SNAPSHOT'
 group = 'uk.gov.ons.census.fwmt'
 
 mainClassName = 'uk.gov.ons.census.fwmt.jobservice.Application'
