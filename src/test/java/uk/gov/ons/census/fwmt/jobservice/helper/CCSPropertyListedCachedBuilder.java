@@ -22,6 +22,7 @@ public class CCSPropertyListedCachedBuilder {
     CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListingCached();
     CareCode careCode = new CareCode();
 
+    ccsPropertyListingCached.setAllocatedOfficer("TestMand");
     ccsPropertyListingCached.setPrimaryOutcome("Household");
     ccsPropertyListingCached.setSecondaryOutcome("Contact made");
     ccsPropertyListingCached.setManagerName("Mr Smith");
