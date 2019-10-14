@@ -40,7 +40,7 @@ public class CCSINTConverter implements CometConverter {
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
-    CCSPropertyListingCached ccsPropertyListingCached;
+    CCSPropertyListingCached ccsPropertyListingCached = getCachedOutcomeDetails(ingest);
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
 
@@ -49,22 +49,16 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCategory(ingest.getCategory());
-    caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
-    // unsure of this one
-    caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
+    caseRequest.setRequiredOfficer(ccsPropertyListingCached.getAllocatedOfficer());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
     caseRequest.setContact(setContact(ingest));
-    // check this method
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
-    // Removed mapping from actionRequest for the ccsQuestionnaireURL;
-    // this will be derived from an environment variable and the caseId in the CCS specific mapping
+    // TODO : Removed mapping from actionRequest for the ccsQuestionnaireURL this will be derived from an environment variable and the caseId in the CCS specific mapping
     ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     caseRequest.setCcs(ccsCaseExtension);
-
-    ccsPropertyListingCached = getCachedOutcomeDetails(ingest);
 
     ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getOa()));
 
@@ -87,17 +81,14 @@ public class CCSINTConverter implements CometConverter {
 
   private String getSpecialInstructions(CCSPropertyListingCached cachedSpecialInstructions) throws GatewayException {
     try {
-      String ccsPLToTM = objectMapper.writeValueAsString(cachedSpecialInstructions);
-      return ccsPLToTM;
+      return objectMapper.writeValueAsString(cachedSpecialInstructions);
     } catch (JsonProcessingException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert CCSPL cached data to string");
     }
   }
 
   private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
-    Address updatedAddress;
-
-    updatedAddress = ingest.getAddress();
+    Address updatedAddress = ingest.getAddress();
     updatedAddress.setOa(cachedOa);
 
     return updatedAddress;
