@@ -2,6 +2,6 @@ ignore:
   - ".*/config/.*"  # ignore folders and all its contents
   - ".*/entity/.*" # ignore folders and all its contents
   - ".*/health/.*" # ignore folders and all its contents
-  - ".*/ApplicationConfig.java"
+  - ".*/Application.java"
   - ".*/WebConfig.java"
   - ".*/interceptor/.*"
