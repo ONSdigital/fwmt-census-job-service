@@ -40,18 +40,14 @@ public class CCSINTConverterTest {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
         .createFieldWorkerCCSIVJobRequestForConvert();
-
     CCSPropertyListingCached ccsPropertyListingCached = new CCSPropertyListedCachedBuilder()
-            .createCCSPropertyListedCache();
+        .createCCSPropertyListedCache();
 
     String caseId = createFieldWorkerJobRequest.getCaseId().toString();
-
     String output = "Any";
 
     Mockito.when(ccsOutcomeStore.retrieveCache(caseId)).thenReturn(output);
-
-    Mockito.when(messageConverter.convertMessageToDTO(any(), anyString()))
-            .thenReturn(ccsPropertyListingCached);
+    Mockito.when(messageConverter.convertMessageToDTO(any(), anyString())).thenReturn(ccsPropertyListingCached);
 
     // When
     CaseRequest caseRequest = ccsintConverter.convert(createFieldWorkerJobRequest);
@@ -59,7 +55,6 @@ public class CCSINTConverterTest {
     // Then
     assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
     assertEquals("CCS", caseRequest.getType().toString());
-    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), caseRequest.getRequiredOfficer());
-
+    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), ccsPropertyListingCached.getAllocatedOfficer());
   }
 }
