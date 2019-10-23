@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.health;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
@@ -30,8 +29,6 @@ public class TMHealthIndicator extends AbstractHealthIndicator {
   @Value("${totalmobile.password}")
   private String tmPassword;
 
-  private String tmDownErrorDetails;
-
   @Override protected void doHealthCheck(Health.Builder builder) {
     int responseCode = 0;
 
@@ -54,28 +51,12 @@ public class TMHealthIndicator extends AbstractHealthIndicator {
 
     int response = 0;
 
-    HttpHeaders headers = createBasicAuthHeaders(tmUsername, tmPassword);
-
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
     RestTemplate restTemplate = new RestTemplate();
 
     swaggerUrl = tmBaseUrl + "swagger-ui.html#/";
 
-    HttpEntity<String> get = new HttpEntity<>(null, headers);
-
-      ResponseEntity<Void> tmResponse = restTemplate.exchange(swaggerUrl, HttpMethod.GET, get, Void.class);
-      response = tmResponse.getStatusCode().value();
-      return response;
-  }
-
-  private HttpHeaders createBasicAuthHeaders(String username, String password) {
-    HttpHeaders headers = new HttpHeaders();
-    final String plainCreds = username + ":" + password;
-    byte[] plainCredsBytes = plainCreds.getBytes();
-    byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-    String base64Creds = new String(base64CredsBytes);
-    headers.add("Authorization", "Basic " + base64Creds);
-    return headers;
+    ResponseEntity<Void> tmResponse = restTemplate.exchange(swaggerUrl, HttpMethod.GET, null, Void.class);
+    response = tmResponse.getStatusCode().value();
+    return response;
   }
 }
