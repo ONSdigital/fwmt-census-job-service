@@ -9,16 +9,14 @@ import uk.gov.ons.census.fwmt.jobservice.config.RedisUtil;
 @Component
 public class CCSOutcomeStore {
 
-    @Autowired
-    private RedisUtil<String> redisUtil;
-
+  @Autowired
+  private RedisUtil<String> redisUtil;
 
   public String retrieveCache(String caseId) {
-
-      String output = String.valueOf(redisUtil.getValue(caseId));
-      if (output != null) {
-          log.info("Received object from cache with case ID: " + caseId);
-      }
-      return output;
+    String output = String.valueOf(redisUtil.getValue(caseId));
+    if (output != null) {
+      log.info("Received object from cache with case ID: " + caseId);
+    }
+    return output;
   }
 }

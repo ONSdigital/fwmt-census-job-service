@@ -9,7 +9,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingCached;
+import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
@@ -40,7 +40,7 @@ public class CCSINTConverter implements CometConverter {
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
     CcsCaseExtension ccsCaseExtension = new CcsCaseExtension();
-    CCSPropertyListingCached ccsPropertyListingCached = getCachedOutcomeDetails(ingest);
+    CCSPropertyListingOutcome ccsPropertyListingCached = getCachedOutcomeDetails(ingest);
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
 
@@ -49,7 +49,7 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setSurveyType(ingest.getSurveyType());
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCategory(ingest.getCategory());
-    caseRequest.setRequiredOfficer(ccsPropertyListingCached.getAllocatedOfficer());
+    caseRequest.setRequiredOfficer(ccsPropertyListingCached.getUsername());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
     caseRequest.setContact(setContact(ingest));
 
@@ -60,7 +60,7 @@ public class CCSINTConverter implements CometConverter {
     ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     caseRequest.setCcs(ccsCaseExtension);
 
-    ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getOa()));
+    ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getAddress().getOa()));
 
     caseRequest.setSpecialInstructions(getSpecialInstructions(ccsPropertyListingCached));
     caseRequest.setAddress(setAddress(ingest));
@@ -73,13 +73,13 @@ public class CCSINTConverter implements CometConverter {
     return contact;
   }
 
-  private CCSPropertyListingCached getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+  private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
-    return messageConverter.convertMessageToDTO(CCSPropertyListingCached.class, retrievedCache);
+    return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);
   }
 
-  private String getSpecialInstructions(CCSPropertyListingCached cachedSpecialInstructions) throws GatewayException {
+  private String getSpecialInstructions(CCSPropertyListingOutcome cachedSpecialInstructions) throws GatewayException {
     try {
       return objectMapper.writeValueAsString(cachedSpecialInstructions);
     } catch (JsonProcessingException e) {
