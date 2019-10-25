@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
@@ -21,8 +20,8 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
-import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
+import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
 @Component("CCS")
 public class CCSINTConverter implements CometConverter {
@@ -47,16 +46,21 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(CCS);
     caseRequest.setSurveyType(ingest.getSurveyType());
-    caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCategory(ingest.getCategory());
     caseRequest.setRequiredOfficer(ccsPropertyListingCached.getUsername());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
     caseRequest.setContact(setContact(ingest));
 
+    if (ccsPropertyListingCached.getCeDetails() != null
+        && ccsPropertyListingCached.getCeDetails().getEstablishmentType().equals("CE")) {
+      caseRequest.setEstabType(ccsPropertyListingCached.getCeDetails().getEstablishmentType());
+    } else {
+      caseRequest.setEstabType("HH");
+    }
+
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
-    // TODO : Removed mapping from actionRequest for the ccsQuestionnaireURL this will be derived from an environment variable and the caseId in the CCS specific mapping
     ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     caseRequest.setCcs(ccsCaseExtension);
 
