@@ -36,6 +36,29 @@ public class CCSINTConverterTest {
   private ObjectMapper objectMapper;
 
   @Test
+  public void createConvertCeRequest() throws GatewayException {
+    // Given
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
+        .createFieldWorkerCCSIVJobRequestForConvert();
+    CCSPropertyListingOutcome ccsPropertyListingCached = new CcsPropertyListedOutcomeBuilder()
+        .createCcsPropertyListingCeOutcome();
+
+    String caseId = createFieldWorkerJobRequest.getCaseId().toString();
+    String output = "Any";
+
+    Mockito.when(ccsOutcomeStore.retrieveCache(caseId)).thenReturn(output);
+    Mockito.when(messageConverter.convertMessageToDTO(any(), anyString())).thenReturn(ccsPropertyListingCached);
+
+    // When
+    CaseRequest caseRequest = ccsintConverter.convert(createFieldWorkerJobRequest);
+
+    // Then
+    assertEquals(createFieldWorkerJobRequest.getCaseReference(), caseRequest.getReference());
+    assertEquals("CCS", caseRequest.getType().toString());
+    assertEquals(createFieldWorkerJobRequest.getMandatoryResource(), ccsPropertyListingCached.getUsername());
+  }
+
+  @Test
   public void createConvertRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
