@@ -8,95 +8,69 @@ import java.util.UUID;
 
 public class FieldWorkerJobRequestBuilder {
 
-  public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvert() {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
+  private CreateFieldWorkerJobRequest createDefaultCreateRequest() {
+    CreateFieldWorkerJobRequest request = new CreateFieldWorkerJobRequest();
 
-    createFieldWorkerJobRequest.setActionType("Create");
-    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    createFieldWorkerJobRequest.setCaseReference("caseReference");
-    createFieldWorkerJobRequest.setCaseType("Household");
-    createFieldWorkerJobRequest.setEstablishmentType("estabType");
-    createFieldWorkerJobRequest.setCoordinatorId("coordId");
+    request.setActionType("Create");
+    request.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
+    request.setCaseReference("caseReference");
+    request.setCaseType("Household");
+    request.setEstablishmentType("estabType");
+    request.setCoordinatorId("coordId");
 
-    createFieldWorkerJobRequest.setAddress(createNewAddress());
+    request.setAddress(createNewAddress());
 
     Contact contact = new Contact();
 
     contact.setOrganisationName("Test");
     contact.setEmailAddress("Test@test.co.uk");
     contact.setPhoneNumber("07123456789");
-    createFieldWorkerJobRequest.setContact(contact);
+    request.setContact(contact);
 
-    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
+    request.setMandatoryResource("TestMand");
 
-    return createFieldWorkerJobRequest;
+    return request;
+  }
+
+  public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvert() {
+    return createDefaultCreateRequest();
   }
 
   public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvertWithoutContact() {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
-
-    createFieldWorkerJobRequest.setActionType("Create");
-    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    createFieldWorkerJobRequest.setCaseReference("caseReference");
-    createFieldWorkerJobRequest.setCaseType("Household");
-    createFieldWorkerJobRequest.setEstablishmentType("estabType");
-    createFieldWorkerJobRequest.setCoordinatorId("coordId");
-
-    createFieldWorkerJobRequest.setAddress(createNewAddress());
-
-    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
-
-    return createFieldWorkerJobRequest;
+    CreateFieldWorkerJobRequest request = createDefaultCreateRequest();
+    request.setContact(null);
+    return request;
   }
 
   public CreateFieldWorkerJobRequest createFieldWorkerCEJobRequestForConvert() {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
-
-    createFieldWorkerJobRequest.setActionType("Create");
-    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    createFieldWorkerJobRequest.setCaseReference("caseReference");
-    createFieldWorkerJobRequest.setCaseType("CE");
-    createFieldWorkerJobRequest.setEstablishmentType("estabType");
-    createFieldWorkerJobRequest.setCoordinatorId("coordId");
-
-    createFieldWorkerJobRequest.setAddress(createNewAddress());
-
-    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
-
-    return createFieldWorkerJobRequest;
+    CreateFieldWorkerJobRequest request = createDefaultCreateRequest();
+    request.setCaseType("CE");
+    request.setContact(null);
+    return request;
   }
 
   public CreateFieldWorkerJobRequest createFieldWorkerCCSIVJobRequestForConvert() {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
-
-    createFieldWorkerJobRequest.setActionType("Create");
-    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    createFieldWorkerJobRequest.setCaseReference("caseReference");
-    createFieldWorkerJobRequest.setCaseType("CCS");
-    createFieldWorkerJobRequest.setCoordinatorId("coordId");
-    createFieldWorkerJobRequest.setMandatoryResource("ccsInterviewer");
-
-    createFieldWorkerJobRequest.setAddress(createCCSNewAddress());
-
-    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
-
-    return createFieldWorkerJobRequest;
+    CreateFieldWorkerJobRequest request = createDefaultCreateRequest();
+    request.setCaseType("CCS");
+    request.setMandatoryResource("ccsInterviewer");
+    request.setEstablishmentType(null);
+    request.setMandatoryResource("TestMand");
+    request.setEstablishmentType(null);
+    request.setAddress(createCCSNewAddress());
+    request.setContact(null);
+    return request;
   }
 
   public CreateFieldWorkerJobRequest createFieldWorkerCCSPLJobRequestForConvert() {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
-
-    createFieldWorkerJobRequest.setActionType("Create");
-    createFieldWorkerJobRequest.setCaseReference("123456789");
-    createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
-    createFieldWorkerJobRequest.setCoordinatorId("coordId");
-    createFieldWorkerJobRequest.setMandatoryResource("ccsInterviewer");
-
-    createFieldWorkerJobRequest.setAddress(createCCSNewAddress());
-
-    createFieldWorkerJobRequest.setMandatoryResource("TestMand");
-
-    return createFieldWorkerJobRequest;
+    CreateFieldWorkerJobRequest request = createDefaultCreateRequest();
+    request.setCaseReference("123456789");
+    request.setMandatoryResource("ccsInterviewer");
+    request.setMandatoryResource("TestMand");
+    request.setCaseType(null);
+    request.setEstablishmentType(null);
+    request.setAddress(createCCSNewAddress());
+    request.setContact(null);
+    return request;
   }
 
   public CancelFieldWorkerJobRequest cancelFieldWorkerJobRequest() {
