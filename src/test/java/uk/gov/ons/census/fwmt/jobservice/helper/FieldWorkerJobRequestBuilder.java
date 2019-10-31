@@ -1,6 +1,10 @@
 package uk.gov.ons.census.fwmt.jobservice.helper;
 
-import uk.gov.ons.census.fwmt.canonical.v1.*;
+import uk.gov.ons.census.fwmt.canonical.v1.Address;
+import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.Contact;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

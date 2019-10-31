@@ -15,7 +15,9 @@ import uk.gov.ons.census.fwmt.jobservice.service.JobService;
 
 import java.io.IOException;
 
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.*;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CANCEL_RECEIVED;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_CREATE_JOB_RECEIVED;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.CANONICAL_UPDATE_RECEIVED;
 
 @Slf4j
 @Component
