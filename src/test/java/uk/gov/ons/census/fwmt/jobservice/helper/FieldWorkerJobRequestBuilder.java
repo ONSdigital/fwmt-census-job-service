@@ -1,10 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.helper;
 
-import uk.gov.ons.census.fwmt.canonical.v1.Address;
-import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.canonical.v1.Contact;
-import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -38,7 +34,6 @@ public class FieldWorkerJobRequestBuilder {
 
   public CreateFieldWorkerJobRequest createFieldWorkerJobRequestForConvertWithoutContact() {
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new CreateFieldWorkerJobRequest();
-
 
     createFieldWorkerJobRequest.setActionType("Create");
     createFieldWorkerJobRequest.setCaseId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
@@ -201,6 +196,5 @@ public class FieldWorkerJobRequestBuilder {
 
     return createFieldWorkerJobRequest;
   }
-
 
 }

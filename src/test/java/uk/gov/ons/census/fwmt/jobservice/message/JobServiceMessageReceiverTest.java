@@ -75,7 +75,8 @@ public class JobServiceMessageReceiverTest {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(message);
 
-    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message)).thenReturn(createFieldWorkerJobRequest);
+    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message))
+        .thenReturn(createFieldWorkerJobRequest);
 
     when(mapper.readTree(message)).thenReturn(jsonNode);
 
@@ -98,7 +99,8 @@ public class JobServiceMessageReceiverTest {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(message);
 
-    when(messageConverter.convertMessageToDTO(CancelFieldWorkerJobRequest.class, message)).thenReturn(cancelFieldWorkerJobRequest);
+    when(messageConverter.convertMessageToDTO(CancelFieldWorkerJobRequest.class, message))
+        .thenReturn(cancelFieldWorkerJobRequest);
 
     when(mapper.readTree(message)).thenReturn(jsonNode);
 
@@ -134,7 +136,8 @@ public class JobServiceMessageReceiverTest {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(message);
 
-    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message)).thenReturn(createFieldWorkerJobRequest);
+    when(messageConverter.convertMessageToDTO(CreateFieldWorkerJobRequest.class, message))
+        .thenReturn(createFieldWorkerJobRequest);
 
     when(mapper.readTree(message)).thenReturn(jsonNode);
 
@@ -160,7 +163,7 @@ public class JobServiceMessageReceiverTest {
 
     messageReceiver.receiveMessage(message);
   }
-  
+
   @Test
   public void receiveMessageUpdate() throws GatewayException, IOException {
     JSONObject json = new JSONObject();
@@ -173,7 +176,8 @@ public class JobServiceMessageReceiverTest {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(message);
 
-    when(messageConverter.convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message)).thenReturn(updateFieldWorkerJobRequest);
+    when(messageConverter.convertMessageToDTO(UpdateFieldWorkerJobRequest.class, message))
+        .thenReturn(updateFieldWorkerJobRequest);
 
     when(mapper.readTree(message)).thenReturn(jsonNode);
 
