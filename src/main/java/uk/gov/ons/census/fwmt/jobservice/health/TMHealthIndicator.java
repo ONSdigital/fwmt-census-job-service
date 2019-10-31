@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -46,7 +47,7 @@ public class TMHealthIndicator extends AbstractHealthIndicator {
     gatewayEventManager.triggerErrorEvent(this.getClass(), "Cannot reach TM", "<NA>", TM_SERVICE_DOWN);
   }
 
-  private int getResponseFromTM(){
+  private int getResponseFromTM() {
     String swaggerUrl;
 
     int response = 0;

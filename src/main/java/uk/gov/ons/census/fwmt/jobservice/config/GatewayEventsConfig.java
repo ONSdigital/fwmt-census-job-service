@@ -66,8 +66,7 @@ public class GatewayEventsConfig {
 
     if (useJsonLogging) {
       configs = LoggingConfigs.builder().customMapper(customMappers).build().useJson();
-    }
-    else {
+    } else {
       configs = LoggingConfigs.builder().customMapper(customMappers).build();
     }
     LoggingConfigs.setCurrent(configs);

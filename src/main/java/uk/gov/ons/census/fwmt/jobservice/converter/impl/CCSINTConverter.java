@@ -9,12 +9,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
-import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
+import uk.gov.ons.census.fwmt.common.data.modelcase.*;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
@@ -77,7 +72,8 @@ public class CCSINTConverter implements CometConverter {
     return contact;
   }
 
-  private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+  private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest)
+      throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
     return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);

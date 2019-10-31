@@ -42,7 +42,6 @@ public class CometRestClient {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  
   @Autowired
   public CometRestClient(
       RestTemplate restTemplate,
@@ -51,7 +50,7 @@ public class CometRestClient {
       @Value("${totalmobile.comet.clientID}") String clientID,
       @Value("${totalmobile.comet.clientSecret}") String clientSecret,
       @Value("${totalmobile.comet.resource}") String resource,
-      @Value("${totalmobile.comet.authority}") String authority){
+      @Value("${totalmobile.comet.authority}") String authority) {
     this.authority = authority;
     this.resource = resource;
     this.restTemplate = restTemplate;
@@ -79,7 +78,8 @@ public class CometRestClient {
       this.auth = future.get();
     } catch (MalformedURLException | InterruptedException | ExecutionException e) {
       String errorMsg = "Failed to Authenticate with Totalmobile";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), errorMsg, "<N/A_CASE_ID>", GatewayEventsConfig.FAILED_TM_AUTHENTICATION);
+      gatewayEventManager
+          .triggerErrorEvent(this.getClass(), errorMsg, "<N/A_CASE_ID>", GatewayEventsConfig.FAILED_TM_AUTHENTICATION);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, errorMsg, e);
     } finally {
       service.shutdown();
