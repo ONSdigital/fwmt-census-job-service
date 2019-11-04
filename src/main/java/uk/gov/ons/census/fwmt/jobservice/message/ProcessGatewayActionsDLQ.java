@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayActionsQueueConfig.*;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayActionsQueueConfig.GATEWAY_ACTIONS_DLQ;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayActionsQueueConfig.GATEWAY_ACTIONS_QUEUE;
 
 @Slf4j
 @Component

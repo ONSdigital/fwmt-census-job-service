@@ -77,7 +77,8 @@ public class CCSINTConverter implements CometConverter {
     return contact;
   }
 
-  private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest) throws GatewayException {
+  private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest)
+      throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
     return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);

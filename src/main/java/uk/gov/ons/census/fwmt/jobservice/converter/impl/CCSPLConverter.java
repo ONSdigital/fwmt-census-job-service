@@ -17,7 +17,6 @@ import java.util.List;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 
-
 @Component("CCSPL")
 public class CCSPLConverter implements CometConverter {
 

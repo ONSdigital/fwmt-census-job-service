@@ -4,17 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.data.redis.connection.RedisClusterConnection;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.REDIS_SERVICE_UP;
 import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.REDIS_SERVICE_DOWN;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.REDIS_SERVICE_UP;
 
 @Component
 public class RedisHealthLogging extends AbstractHealthIndicator {
@@ -26,7 +24,6 @@ public class RedisHealthLogging extends AbstractHealthIndicator {
   private RedisConnectionFactory redisConnectionFactory;
 
   private RedisConnection connection;
-
 
   public RedisHealthLogging(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
     super("Redis health check failed");

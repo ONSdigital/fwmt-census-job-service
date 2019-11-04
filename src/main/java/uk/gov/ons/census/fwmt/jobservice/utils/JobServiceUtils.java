@@ -46,12 +46,13 @@ public final class JobServiceUtils {
     //    } catch (Exception e) {
     //      // if a problem resolving ARID, null is fine
     //    }
+    Long uprn = null;
     try {
-      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
-    } catch (Exception e) {
-      // TODO is this still the case?
-      // if a problem resolving UPRN, null is fine
+      uprn = Long.valueOf(ingest.getAddress().getUprn());
+    } catch (NumberFormatException e) {
+      // null is okay
     }
+    address.setUprn(uprn);
 
     address.setTown(ingest.getAddress().getTownName());
     address.setPostcode(ingest.getAddress().getPostCode());

@@ -17,7 +17,6 @@ public class QueueListenerController {
   @Autowired
   SimpleMessageListenerContainer simpleMessageListenerContainer;
 
-
   @GetMapping("/processDLQ")
   public ResponseEntity startDLQProcessor() throws GatewayException {
     processGatewayActionsDLQ.processDLQ();

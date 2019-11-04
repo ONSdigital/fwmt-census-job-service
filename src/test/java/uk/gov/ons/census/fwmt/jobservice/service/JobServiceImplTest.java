@@ -1,20 +1,5 @@
 package uk.gov.ons.census.fwmt.jobservice.service;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_ACK;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_SENT;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_ACK;
-import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_SENT;
-
-import java.time.OffsetDateTime;
-import java.util.Map;
-import java.util.UUID;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,7 +8,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
@@ -36,6 +20,21 @@ import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.helper.FieldWorkerJobRequestBuilder;
 import uk.gov.ons.census.fwmt.jobservice.rest.client.CometRestClient;
 import uk.gov.ons.census.fwmt.jobservice.service.impl.JobServiceImpl;
+
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_ACK;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CANCEL_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_ACK;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_ACK;
+import static uk.gov.ons.census.fwmt.jobservice.config.GatewayEventsConfig.COMET_UPDATE_SENT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JobServiceImplTest {
@@ -72,7 +71,7 @@ public class JobServiceImplTest {
     when(cometConverters.get(jobRequest.getCaseType())).thenReturn(cometConverter);
     when(cometConverter.convert(any(CreateFieldWorkerJobRequest.class))).thenReturn(caseRequest);
     when(restClient.sendRequest(any(CaseRequest.class), anyString())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
-    
+
     jobServiceImpl.createJob(jobRequest);
 
     // Then
@@ -91,8 +90,9 @@ public class JobServiceImplTest {
     // When
     when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(cometConverter.convertCancel(any(CancelFieldWorkerJobRequest.class))).thenReturn(casePauseRequest);
-    when(restClient.sendRequest(any(CasePauseRequest.class), anyString())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
-    
+    when(restClient.sendRequest(any(CasePauseRequest.class), anyString()))
+        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
     jobServiceImpl.cancelJob(jobRequest);
 
     // Then
@@ -117,7 +117,8 @@ public class JobServiceImplTest {
     modelCase.setId(UUID.fromString("a48bf28e-e7f4-4467-a9fb-e000b6a55676"));
 
     // When
-    when(restClient.sendRequest(any(CasePauseRequest.class), anyString())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+    when(restClient.sendRequest(any(CasePauseRequest.class), anyString()))
+        .thenReturn(new ResponseEntity<>(HttpStatus.OK));
     when(restClient.sendRequest(any(CaseRequest.class), anyString())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
     when(cometConverters.get("HH")).thenReturn(cometConverter);
     when(restClient.getCase(anyString())).thenReturn(modelCase);
