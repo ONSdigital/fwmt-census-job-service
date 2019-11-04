@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
+import uk.gov.ons.census.fwmt.common.data.ccs.CareCode;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
@@ -19,6 +21,9 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 import uk.gov.ons.census.fwmt.jobservice.entity.CCSOutcomeStore;
 import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
@@ -52,7 +57,7 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setContact(setContact(ingest));
 
     if (ccsPropertyListingCached.getCeDetails() != null
-        && ccsPropertyListingCached.getCeDetails().getEstablishmentType().equals("CE")) {
+            && ccsPropertyListingCached.getCeDetails().getEstablishmentType().equals("CE")) {
       caseRequest.setEstabType(ccsPropertyListingCached.getCeDetails().getEstablishmentType());
     } else {
       caseRequest.setEstabType("HH");
@@ -66,7 +71,8 @@ public class CCSINTConverter implements CometConverter {
 
     ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getAddress().getOa()));
 
-    caseRequest.setSpecialInstructions(getSpecialInstructions(ccsPropertyListingCached));
+    caseRequest.setSpecialInstructions(getAdditionalInformation(ccsPropertyListingCached, true));
+    caseRequest.setDescription(getAdditionalInformation(ccsPropertyListingCached, false));
     caseRequest.setAddress(setAddress(ingest));
     return caseRequest;
   }
@@ -78,18 +84,40 @@ public class CCSINTConverter implements CometConverter {
   }
 
   private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest)
-      throws GatewayException {
+          throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
     return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);
   }
 
-  private String getSpecialInstructions(CCSPropertyListingOutcome cachedSpecialInstructions) throws GatewayException {
-    try {
-      return objectMapper.writeValueAsString(cachedSpecialInstructions);
-    } catch (JsonProcessingException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Failed to convert CCSPL cached data to string");
+  private String getAdditionalInformation(CCSPropertyListingOutcome cachedSpecialInstructions, boolean isSpecialInstruction) throws GatewayException {
+    List<String> additionalInformation = new ArrayList<>();
+    String accessInfo;
+    String careCode;
+    String additionalInformationToString;
+    additionalInformation.add("Primary Outcome: " + cachedSpecialInstructions.getPrimaryOutcome());
+    additionalInformation.add("Secondary Outcome: " + cachedSpecialInstructions.getSecondaryOutcome());
+
+    if (isSpecialInstruction) {
+      if (cachedSpecialInstructions.getAccessInfo() != null) {
+        accessInfo = cachedSpecialInstructions.getAccessInfo();
+      } else {
+        accessInfo = "None";
+      }
+      additionalInformation.add("Access Info: " + accessInfo);
+      if (!StringUtils.isEmpty(cachedSpecialInstructions.getCareCodes())) {
+        careCode = formatCareCodeList(cachedSpecialInstructions.getCareCodes());
+        additionalInformation.add("CareCodes: " + careCode);
+      } else {
+        additionalInformation.add("CareCode: None");
+      }
     }
+
+    additionalInformationToString = additionalInformation.toString();
+    additionalInformationToString = additionalInformationToString.replaceAll("[\\[\\](){}]", "");
+    additionalInformationToString = additionalInformationToString.replaceAll("," , "\n");
+
+    return additionalInformationToString;
   }
 
   private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
@@ -97,6 +125,18 @@ public class CCSINTConverter implements CometConverter {
     updatedAddress.setOa(cachedOa);
 
     return updatedAddress;
+  }
+
+  private String formatCareCodeList (List<CareCode> careCode) {
+    String careCodes = "";
+
+    for (int i =0; i <= careCode.size(); i++) {
+      careCodes = careCode.toString();
+      careCodes = careCodes.replaceAll("careCode=", "");
+      careCodes = careCodes.replaceAll("CareCode", "");
+      careCodes = careCodes.replaceAll("[\\[\\](){}]","");
+    }
+    return careCodes;
   }
 
   @Override
