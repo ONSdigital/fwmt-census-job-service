@@ -1,7 +1,5 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -37,9 +35,6 @@ public class CCSINTConverter implements CometConverter {
   @Autowired
   private MessageConverter messageConverter;
 
-  @Autowired
-  private ObjectMapper objectMapper;
-
   @Override
   public CaseRequest convert(CreateFieldWorkerJobRequest ingest) throws GatewayException {
 
@@ -61,12 +56,12 @@ public class CCSINTConverter implements CometConverter {
       caseRequest.setEstabType(ccsPropertyListingCached.getCeDetails().getEstablishmentType());
     } else {
       caseRequest.setEstabType("HH");
+      ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     }
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
-    ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     caseRequest.setCcs(ccsCaseExtension);
 
     ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getAddress().getOa()));
@@ -90,13 +85,11 @@ public class CCSINTConverter implements CometConverter {
     return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);
   }
 
-  private String getAdditionalInformation(CCSPropertyListingOutcome cachedSpecialInstructions, boolean isSpecialInstruction) throws GatewayException {
+  private String getAdditionalInformation(CCSPropertyListingOutcome cachedSpecialInstructions, boolean isSpecialInstruction) {
     List<String> additionalInformation = new ArrayList<>();
     String accessInfo;
     String careCode;
     String additionalInformationToString;
-    additionalInformation.add("Primary Outcome: " + cachedSpecialInstructions.getPrimaryOutcome());
-    additionalInformation.add("Secondary Outcome: " + cachedSpecialInstructions.getSecondaryOutcome());
 
     if (isSpecialInstruction) {
       if (cachedSpecialInstructions.getAccessInfo() != null) {
@@ -111,6 +104,9 @@ public class CCSINTConverter implements CometConverter {
       } else {
         additionalInformation.add("CareCode: None");
       }
+    } else {
+      additionalInformation.add("Primary Outcome: " + cachedSpecialInstructions.getPrimaryOutcome());
+      additionalInformation.add("Secondary Outcome: " + cachedSpecialInstructions.getSecondaryOutcome());
     }
 
     additionalInformationToString = additionalInformation.toString();
