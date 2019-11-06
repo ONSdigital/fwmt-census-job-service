@@ -56,14 +56,12 @@ public class CCSINTConverter implements CometConverter {
       caseRequest.setEstabType(ccsPropertyListingCached.getCeDetails().getEstablishmentType());
     } else {
       caseRequest.setEstabType("HH");
+      ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     }
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
-    if (!ccsPropertyListingCached.getCeDetails().getEstablishmentType().equals("CE")) {
-      ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
-    }
     caseRequest.setCcs(ccsCaseExtension);
 
     ingest.setAddress(updateAddressWithOa(ingest, ccsPropertyListingCached.getAddress().getOa()));
