@@ -1,7 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
@@ -24,8 +23,6 @@ import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
@@ -128,22 +125,22 @@ public class CCSINTConverter implements CometConverter {
     String ceDetailsToreturn = "";
 
     if (ceDetails.getEstablishmentType() != null) {
-      ceDetailsToreturn = "Establishment Type: " + ceDetails.getEstablishmentType();
+      ceDetailsToreturn = "Establishment Type: " + ceDetails.getEstablishmentType() + "\n";
     }
     if (ceDetails.getOrganisationName() != null) {
-      ceDetailsToreturn = ceDetailsToreturn + "Organisation Name: " + ceDetails.getOrganisationName();
+      ceDetailsToreturn = ceDetailsToreturn + "Organisation Name: " + ceDetails.getOrganisationName() + "\n";
     }
     if (ceDetails.getManagerName() != null) {
-      ceDetailsToreturn = ceDetailsToreturn + "Manager Name: " + ceDetails.getManagerName();
+      ceDetailsToreturn = ceDetailsToreturn + "Manager Name: " + ceDetails.getManagerName() + "\n";
     }
     if (ceDetails.getContactPhone() != null) {
-      ceDetailsToreturn = ceDetailsToreturn + "Contact Phone: " + ceDetails.getContactPhone();
+      ceDetailsToreturn = ceDetailsToreturn + "Contact Phone: " + ceDetails.getContactPhone() + "\n";
     }
     if (ceDetails.getBedspaces() != null) {
-      ceDetailsToreturn = ceDetailsToreturn + "Bed Spaces: " + ceDetails.getBedspaces();
+      ceDetailsToreturn = ceDetailsToreturn + "Bed Spaces: " + ceDetails.getBedspaces() + "\n";
     }
     if (ceDetails.getUsualResidents() != null) {
-      ceDetailsToreturn = ceDetailsToreturn + "Usual Residents: " + ceDetails.getUsualResidents();
+      ceDetailsToreturn = ceDetailsToreturn + "Usual Residents: " + ceDetails.getUsualResidents() + "\n";
     }
 
     return ceDetailsToreturn;
