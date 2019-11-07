@@ -51,10 +51,7 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setCoordCode(ingest.getCoordinatorId());
     caseRequest.setContact(setContact(ingest));
 
-    if (ccsPropertyListingCached.getCeDetails() != null
-            && ccsPropertyListingCached.getCeDetails().getEstablishmentType().equals("CE")) {
-      caseRequest.setEstabType(ccsPropertyListingCached.getCeDetails().getEstablishmentType());
-    } else {
+    if (ingest.getEstablishmentType().equals("Household")) {
       caseRequest.setEstabType("HH");
       ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
     }
@@ -79,7 +76,7 @@ public class CCSINTConverter implements CometConverter {
   }
 
   private CCSPropertyListingOutcome getCachedOutcomeDetails(CreateFieldWorkerJobRequest ingest)
-          throws GatewayException {
+      throws GatewayException {
     String retrievedCache = ccsOutcomeStore.retrieveCache(String.valueOf(ingest.getCaseId()));
 
     return messageConverter.convertMessageToDTO(CCSPropertyListingOutcome.class, retrievedCache);
