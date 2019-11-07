@@ -9,6 +9,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CareCode;
+import uk.gov.ons.census.fwmt.common.data.ccs.CeDetails;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
@@ -86,9 +87,10 @@ public class CCSINTConverter implements CometConverter {
 
   private String getAdditionalInformation(CCSPropertyListingOutcome cachedSpecialInstructions, boolean isSpecialInstruction) {
     List<String> additionalInformation = new ArrayList<>();
+    String additionalInformationToString;
     String accessInfo;
     String careCode;
-    String additionalInformationToString;
+    String ceDetails;
 
     if (isSpecialInstruction) {
       if (cachedSpecialInstructions.getAccessInfo() != null) {
@@ -97,11 +99,16 @@ public class CCSINTConverter implements CometConverter {
         accessInfo = "None";
       }
       additionalInformation.add("Access Info: " + accessInfo);
-      if (!StringUtils.isEmpty(cachedSpecialInstructions.getCareCodes())) {
+      if (cachedSpecialInstructions.getCareCodes() != null &&
+              !cachedSpecialInstructions.getCareCodes().isEmpty()) {
         careCode = formatCareCodeList(cachedSpecialInstructions.getCareCodes());
         additionalInformation.add("CareCodes: " + careCode);
       } else {
         additionalInformation.add("CareCode: None");
+      }
+      if (cachedSpecialInstructions.getCeDetails() != null) {
+        ceDetails = getCEDetails(cachedSpecialInstructions.getCeDetails());
+        additionalInformation.add("CE Details: " + ceDetails);
       }
     } else {
       additionalInformation.add("Primary Outcome: " + cachedSpecialInstructions.getPrimaryOutcome());
@@ -115,23 +122,48 @@ public class CCSINTConverter implements CometConverter {
     return additionalInformationToString;
   }
 
-  private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
-    Address updatedAddress = ingest.getAddress();
-    updatedAddress.setOa(cachedOa);
+  private String getCEDetails (CeDetails ceDetails) {
+    String ceDetailsToreturn = "";
 
-    return updatedAddress;
+    if (ceDetails.getEstablishmentType() != null) {
+      ceDetailsToreturn = "Establishment Type: " + ceDetails.getEstablishmentType() + "\n";
+    }
+    if (ceDetails.getOrganisationName() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Organisation Name: " + ceDetails.getOrganisationName() + "\n";
+    }
+    if (ceDetails.getManagerName() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Manager Name: " + ceDetails.getManagerName() + "\n";
+    }
+    if (ceDetails.getContactPhone() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Contact Phone: " + ceDetails.getContactPhone() + "\n";
+    }
+    if (ceDetails.getBedspaces() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Bed Spaces: " + ceDetails.getBedspaces() + "\n";
+    }
+    if (ceDetails.getUsualResidents() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Usual Residents: " + ceDetails.getUsualResidents() + "\n";
+    }
+
+    return ceDetailsToreturn;
   }
 
   private String formatCareCodeList (List<CareCode> careCode) {
     String careCodes = "";
 
-    for (int i =0; i <= careCode.size(); i++) {
+    for (int i = 0; i <= careCode.size(); i++) {
       careCodes = careCode.toString();
       careCodes = careCodes.replaceAll("careCode=", "");
       careCodes = careCodes.replaceAll("CareCode", "");
       careCodes = careCodes.replaceAll("[\\[\\](){}]","");
     }
     return careCodes;
+  }
+
+  private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
+    Address updatedAddress = ingest.getAddress();
+    updatedAddress.setOa(cachedOa);
+
+    return updatedAddress;
   }
 
   @Override
