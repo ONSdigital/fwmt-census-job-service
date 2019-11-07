@@ -83,7 +83,18 @@ public class FieldWorkerJobRequestBuilder {
     // TODO this used to be set, then later overridden by the default. Commented for posterity.
     // request.setMandatoryResource("ccsInterviewer");
     request.setCaseType("CCS");
-    request.setEstablishmentType(null);
+    request.setEstablishmentType("Household");
+    request.setAddress(createCCSNewAddress());
+    request.setContact(null);
+    return request;
+  }
+
+  public CreateFieldWorkerJobRequest createFieldWorkerCCSIVCeJobRequestForConvert() {
+    CreateFieldWorkerJobRequest request = createDefaultCreateRequest();
+    // TODO this used to be set, then later overridden by the default. Commented for posterity.
+    // request.setMandatoryResource("ccsInterviewer");
+    request.setCaseType("CCS");
+    request.setEstablishmentType("CE");
     request.setAddress(createCCSNewAddress());
     request.setContact(null);
     return request;
