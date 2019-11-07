@@ -99,7 +99,8 @@ public class CCSINTConverter implements CometConverter {
         accessInfo = "None";
       }
       additionalInformation.add("Access Info: " + accessInfo);
-      if (!StringUtils.isEmpty(cachedSpecialInstructions.getCareCodes())) {
+      if (cachedSpecialInstructions.getCareCodes() != null &&
+              !cachedSpecialInstructions.getCareCodes().isEmpty()) {
         careCode = formatCareCodeList(cachedSpecialInstructions.getCareCodes());
         additionalInformation.add("CareCodes: " + careCode);
       } else {
