@@ -54,6 +54,8 @@ public class CCSINTConverter implements CometConverter {
     if (ingest.getEstablishmentType().equals("Household")) {
       caseRequest.setEstabType("HH");
       ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
+    } else if (ingest.getEstablishmentType().equals("CE")) {
+      caseRequest.setEstabType("CE");
     }
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
