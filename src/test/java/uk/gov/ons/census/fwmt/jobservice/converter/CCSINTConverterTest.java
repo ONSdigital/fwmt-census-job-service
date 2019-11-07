@@ -40,7 +40,7 @@ public class CCSINTConverterTest {
   public void createConvertCeRequest() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = new FieldWorkerJobRequestBuilder()
-        .createFieldWorkerCCSIVJobRequestForConvert();
+        .createFieldWorkerCCSIVCeJobRequestForConvert();
     CCSPropertyListingOutcome ccsPropertyListingCached = new CcsPropertyListedOutcomeBuilder()
         .createCcsPropertyListingCeOutcome();
 
