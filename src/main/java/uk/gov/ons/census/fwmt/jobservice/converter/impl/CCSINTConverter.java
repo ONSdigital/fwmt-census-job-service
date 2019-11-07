@@ -1,6 +1,7 @@
 package uk.gov.ons.census.fwmt.jobservice.converter.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
@@ -9,6 +10,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.data.ccs.CCSPropertyListingOutcome;
 import uk.gov.ons.census.fwmt.common.data.ccs.CareCode;
+import uk.gov.ons.census.fwmt.common.data.ccs.CeDetails;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CcsCaseExtension;
@@ -22,6 +24,8 @@ import uk.gov.ons.census.fwmt.jobservice.message.MessageConverter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.CCS;
 import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
@@ -86,9 +90,10 @@ public class CCSINTConverter implements CometConverter {
 
   private String getAdditionalInformation(CCSPropertyListingOutcome cachedSpecialInstructions, boolean isSpecialInstruction) {
     List<String> additionalInformation = new ArrayList<>();
+    String additionalInformationToString;
     String accessInfo;
     String careCode;
-    String additionalInformationToString;
+    String ceDetails;
 
     if (isSpecialInstruction) {
       if (cachedSpecialInstructions.getAccessInfo() != null) {
@@ -103,6 +108,10 @@ public class CCSINTConverter implements CometConverter {
       } else {
         additionalInformation.add("CareCode: None");
       }
+      if (cachedSpecialInstructions.getCeDetails() != null) {
+        ceDetails = getCEDetails(cachedSpecialInstructions.getCeDetails());
+        additionalInformation.add("CE Details: " + ceDetails);
+      }
     } else {
       additionalInformation.add("Primary Outcome: " + cachedSpecialInstructions.getPrimaryOutcome());
       additionalInformation.add("Secondary Outcome: " + cachedSpecialInstructions.getSecondaryOutcome());
@@ -115,23 +124,48 @@ public class CCSINTConverter implements CometConverter {
     return additionalInformationToString;
   }
 
-  private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
-    Address updatedAddress = ingest.getAddress();
-    updatedAddress.setOa(cachedOa);
+  private String getCEDetails (CeDetails ceDetails) {
+    String ceDetailsToreturn = "";
 
-    return updatedAddress;
+    if (ceDetails.getEstablishmentType() != null) {
+      ceDetailsToreturn = "Establishment Type: " + ceDetails.getEstablishmentType();
+    }
+    if (ceDetails.getOrganisationName() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Organisation Name: " + ceDetails.getOrganisationName();
+    }
+    if (ceDetails.getManagerName() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Manager Name: " + ceDetails.getManagerName();
+    }
+    if (ceDetails.getContactPhone() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Contact Phone: " + ceDetails.getContactPhone();
+    }
+    if (ceDetails.getBedspaces() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Bed Spaces: " + ceDetails.getBedspaces();
+    }
+    if (ceDetails.getUsualResidents() != null) {
+      ceDetailsToreturn = ceDetailsToreturn + "Usual Residents: " + ceDetails.getUsualResidents();
+    }
+
+    return ceDetailsToreturn;
   }
 
   private String formatCareCodeList (List<CareCode> careCode) {
     String careCodes = "";
 
-    for (int i =0; i <= careCode.size(); i++) {
+    for (int i = 0; i <= careCode.size(); i++) {
       careCodes = careCode.toString();
       careCodes = careCodes.replaceAll("careCode=", "");
       careCodes = careCodes.replaceAll("CareCode", "");
       careCodes = careCodes.replaceAll("[\\[\\](){}]","");
     }
     return careCodes;
+  }
+
+  private Address updateAddressWithOa(CreateFieldWorkerJobRequest ingest, String cachedOa) {
+    Address updatedAddress = ingest.getAddress();
+    updatedAddress.setOa(cachedOa);
+
+    return updatedAddress;
   }
 
   @Override
