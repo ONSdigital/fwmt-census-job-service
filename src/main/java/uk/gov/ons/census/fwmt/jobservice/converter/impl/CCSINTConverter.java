@@ -52,11 +52,11 @@ public class CCSINTConverter implements CometConverter {
     caseRequest.setCoordCode(ingest.getCoordinatorId());
     caseRequest.setContact(setContact(ingest));
 
-    if (ingest.getEstablishmentType().equals("Household")) {
+    if (ccsPropertyListingCached.getPrimaryOutcome().equals("CE")) {
+      caseRequest.setEstabType("CE");
+    } else {
       caseRequest.setEstabType("HH");
       ccsCaseExtension.setQuestionnaireUrl(ingest.getCcsQuestionnaireURL());
-    } else if (ingest.getEstablishmentType().equals("CE")) {
-      caseRequest.setEstabType("CE");
     }
 
     location.setLat(ingest.getAddress().getLatitude().floatValue());
