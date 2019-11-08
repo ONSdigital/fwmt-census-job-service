@@ -24,6 +24,9 @@ public class TMHealthIndicator extends AbstractHealthIndicator {
   @Value("${totalmobile.baseUrl}")
   private String tmBaseUrl;
 
+  @Value("${totalmobile.healthcheckPath}")
+  private String healthcheckPath;
+
   @Value("${totalmobile.username}")
   private String tmUsername;
 
@@ -31,7 +34,7 @@ public class TMHealthIndicator extends AbstractHealthIndicator {
   private String tmPassword;
 
   @Override protected void doHealthCheck(Health.Builder builder) {
-    String swaggerUrl = tmBaseUrl + "swagger-ui.html#/";
+    String swaggerUrl = tmBaseUrl + healthcheckPath;
     
     int responseCode = 0;
 
