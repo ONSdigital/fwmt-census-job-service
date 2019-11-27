@@ -6,4 +6,4 @@ ignore:
   - ".*/WebConfig.java"
   - ".*/interceptor/.*"
   - ".*/controller/.*"
-  - ".*/rest/client/.*"
+  - ".*/rest/*"
