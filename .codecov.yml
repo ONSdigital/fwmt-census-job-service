@@ -5,3 +5,5 @@ ignore:
   - ".*/Application.java"
   - ".*/WebConfig.java"
   - ".*/interceptor/.*"
+  - ".*/controller/.*"
+  - ".*/rest/*"
