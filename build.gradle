@@ -70,7 +70,7 @@ springBoot {
 dependencies {
     compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.16-RELEASE')
     compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.18-RELEASE')
-    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.46-RELEASE')
+    compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.45-RELEASE')
 
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-security')
