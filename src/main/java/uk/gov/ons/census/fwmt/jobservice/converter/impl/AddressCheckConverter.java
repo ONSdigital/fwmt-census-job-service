@@ -15,7 +15,9 @@ import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.
 
 @Component("AC")
 public class AddressCheckConverter implements CometConverter {
-  @Override public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
+
+  @Override
+  public CaseRequest convert(CreateFieldWorkerJobRequest ingest) {
     CaseRequest caseRequest = new CaseRequest();
     Location location = new Location();
 
@@ -38,11 +40,13 @@ public class AddressCheckConverter implements CometConverter {
     return caseRequest;
   }
 
-  @Override public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) {
+  @Override
+  public CasePauseRequest convertCancel(CancelFieldWorkerJobRequest cancelIngest) {
     throw new UnsupportedOperationException();
   }
 
-  @Override public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase) {
+  @Override
+  public CaseRequest convertUpdate(UpdateFieldWorkerJobRequest ingest, ModelCase modelCase) {
     throw new UnsupportedOperationException();
   }
 }
