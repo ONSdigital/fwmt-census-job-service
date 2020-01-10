@@ -51,7 +51,7 @@ totalmobile:
   username: "user"
   password: "password"
   baseUrl: "http://localhost:8000/"
-  healthcheckPath: "/swagger/index.html"
+  healthcheckPath: "swagger/index.html"
   comet:
     clientID: ""
     clientSecret: ""
