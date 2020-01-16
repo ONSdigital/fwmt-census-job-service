@@ -27,6 +27,8 @@ public class AddressCheckConverter implements CometConverter {
     caseRequest.setCategory("Not applicable");
     caseRequest.setEstabType(ingest.getEstablishmentType());
     caseRequest.setCoordCode(ingest.getCoordinatorId());
+    caseRequest.setDescription(ingest.getDescription());
+    caseRequest.setSpecialInstructions(ingest.getSpecialInstructions());
 
     caseRequest.setAddress(JobServiceUtils.setAddress(ingest));
 
