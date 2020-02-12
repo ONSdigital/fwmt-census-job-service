@@ -24,11 +24,9 @@ public final class JobServiceUtils {
 
   public static List<String> addAddressLines(CreateFieldWorkerJobRequest ingest) {
     List<String> addressLines = new ArrayList<>();
-
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine1());
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine2());
     checkAddressLineNotBlank(addressLines, ingest.getAddress().getLine3());
-    checkAddressLineNotBlank(addressLines, ingest.getAddress().getTownName());
 
     return addressLines;
   }
@@ -37,7 +35,6 @@ public final class JobServiceUtils {
     Address address = new Address();
     Geography geography = new Geography();
 
-    // look into this method - may not require town
     address.setLines(addAddressLines(ingest));
 
     // arin not yet part of Comet
