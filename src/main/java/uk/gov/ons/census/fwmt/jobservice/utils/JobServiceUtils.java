@@ -35,6 +35,8 @@ public final class JobServiceUtils {
     Address address = new Address();
     Geography geography = new Geography();
 
+    address.setLines(addAddressLines(ingest));
+
     // arin not yet part of Comet
     //    try {
     //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));

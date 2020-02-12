@@ -7,17 +7,15 @@ import org.springframework.util.StringUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Address;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CasePauseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Contact;
-import uk.gov.ons.census.fwmt.common.data.modelcase.Geography;
 import uk.gov.ons.census.fwmt.common.data.modelcase.Location;
 import uk.gov.ons.census.fwmt.common.data.modelcase.ModelCase;
 import uk.gov.ons.census.fwmt.jobservice.converter.CometConverter;
 
 import static uk.gov.ons.census.fwmt.common.data.modelcase.CaseRequest.TypeEnum.HH;
-import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.addAddressLines;
+import static uk.gov.ons.census.fwmt.jobservice.utils.JobServiceUtils.setAddress;
 
 @Component("HH")
 public class HouseholdConverter implements CometConverter {
@@ -31,7 +29,7 @@ public class HouseholdConverter implements CometConverter {
     caseRequest.setReference(ingest.getCaseReference());
     caseRequest.setType(HH);
     caseRequest.setSurveyType(ingest.getCaseType());
-    // Category is not yet in the feed
+    // TODO: Category is not yet in the feed - will it ever?
     caseRequest.setCategory("Household");
     //    caseRequest.setCategory(ingest.getCategory());
     caseRequest.setRequiredOfficer(ingest.getMandatoryResource());
@@ -48,40 +46,14 @@ public class HouseholdConverter implements CometConverter {
     }
     caseRequest.setContact(contact);
 
-    Address address = new Address();
-    // arin not yet part of Comet
-    //    try {
-    //      address.setArid(Long.valueOf(ingest.getAddress().getArid()));
-    //    } catch (Exception e) {
-    //      // if a problem resolving ARID, null is fine
-    //    }
-
-    try {
-      address.setUprn(Long.valueOf(ingest.getAddress().getUprn()));
-    } catch (Exception e) {
-      // TODO is this still the case?
-      // if a problem resolving UPRN, null is fine
-    }
-
-    address.setLines(addAddressLines(ingest));
-    address.setTown(ingest.getAddress().getTownName());
-    address.setPostcode(ingest.getAddress().getPostCode());
-
-    Geography geography = new Geography();
-    geography.setOa(ingest.getAddress().getOa());
-    address.setGeography(geography);
-
-    caseRequest.setAddress(address);
+    caseRequest.setAddress(setAddress(ingest));
 
     Location location = new Location();
     location.setLat(ingest.getAddress().getLatitude().floatValue());
     location.set_long(ingest.getAddress().getLongitude().floatValue());
     caseRequest.setLocation(location);
 
-    /*
-        These are still needed as part of a create house hold,
-        unsure where they are derived from.
-    */
+    // TODO: These are still needed as part of a create household, unsure where they are derived from.
     caseRequest.setDescription("CENSUS");
     caseRequest.setSpecialInstructions("Special Instructions");
     //    caseRequest.setDescription(ingest.getDescription()) ;
@@ -108,8 +80,7 @@ public class HouseholdConverter implements CometConverter {
     CaseRequest updateRequest = mapperFacade.map(modelCase, CaseRequest.class);
     CasePauseRequest casePauseRequest = new CasePauseRequest();
 
-    int dateComparison = 0;
-
+    int dateComparison;
     if (ingest.getAddressType().equals("HH")) {
 
       if (StringUtils.isEmpty(updateRequest.getPause())) {
