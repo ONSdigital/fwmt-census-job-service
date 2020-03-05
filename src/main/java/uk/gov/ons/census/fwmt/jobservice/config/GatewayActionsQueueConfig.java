@@ -1,8 +1,6 @@
 package uk.gov.ons.census.fwmt.jobservice.config;
 
 import org.aopalliance.aop.Advice;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -18,27 +16,11 @@ import uk.gov.ons.census.fwmt.jobservice.message.GatewayActionsReceiver;
 public class GatewayActionsQueueConfig {
   public static final String GATEWAY_ACTIONS_QUEUE = "Gateway.Actions";
   public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
-  public static final String GATEWAY_ACTIONS_ROUTING_KEY = "Gateway.Action.Request";
 
   private int concurrentConsumers;
 
   public GatewayActionsQueueConfig(@Value("${rabbitmq.concurrentConsumers}") Integer concurrentConsumers) {
     this.concurrentConsumers = concurrentConsumers;
-  }
-
-  //Queues
-  @Bean
-  public Queue gatewayActionsQueue() {
-    return QueueBuilder.durable(GATEWAY_ACTIONS_QUEUE)
-        .withArgument("x-dead-letter-exchange", "")
-        .withArgument("x-dead-letter-routing-key", GATEWAY_ACTIONS_DLQ)
-        .build();
-  }
-
-  //Dead Letter Queue
-  @Bean
-  public Queue gatewayActionsDeadLetterQueue() {
-    return QueueBuilder.durable(GATEWAY_ACTIONS_DLQ).build();
   }
 
   //Listener Adapter

@@ -12,25 +12,25 @@ import uk.gov.ons.census.fwmt.jobservice.message.ProcessGatewayActionsDLQ;
 public class QueueListenerController {
 
   @Autowired
-  ProcessGatewayActionsDLQ processGatewayActionsDLQ;
+  private ProcessGatewayActionsDLQ processGatewayActionsDLQ;
 
   @Autowired
-  SimpleMessageListenerContainer simpleMessageListenerContainer;
+  private SimpleMessageListenerContainer simpleMessageListenerContainer;
 
   @GetMapping("/processDLQ")
-  public ResponseEntity startDLQProcessor() throws GatewayException {
+  public ResponseEntity<String> startDLQProcessor() throws GatewayException {
     processGatewayActionsDLQ.processDLQ();
     return ResponseEntity.ok("DLQ listener started.");
   }
 
   @GetMapping("/startListener")
-  public ResponseEntity startListener() {
+  public ResponseEntity<String> startListener() {
     simpleMessageListenerContainer.start();
     return ResponseEntity.ok("Queue listener started.");
   }
 
   @GetMapping("/stopListener")
-  public ResponseEntity stopListener() {
+  public ResponseEntity<String> stopListener() {
     simpleMessageListenerContainer.stop();
     return ResponseEntity.ok("Queue listener stopped.");
   }
